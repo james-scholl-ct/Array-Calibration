@@ -3,8 +3,8 @@
 Created on Thu Dec  4 15:21:17 2025
 
 @author: SchollJamesAC3CARILL
-192 element high band
-24x8
+96 Element LB reflectarray calibration
+
 """
 
 import numpy as np
@@ -12,15 +12,20 @@ import math
 import time
 import paramiko
 from typing import Optional
-#import matplotlib
-#matplotlib.use("Qt5Agg")   # or "TkAgg"
 import matplotlib.pyplot as plt
 from datetime import datetime
 from pathlib import Path
 import gc
 import win32com.client
+import json
+import subprocess
 
-CAL_DIRECTORY = r"C:\NSI2000\Data\Carillon"
+#Place to store raw data
+RAW_CAL_DIRECTORY = r"C:\NSI2000\Data\Carillon\reflectarray_calibration\raw"
+
+#Github experiment directory used
+EXP_DIR = r"C:\Users\SchollJamesAC3CARILL\Array-Calibration\UConn_Range\Experiments"
+
 SCAN_FILENAME = r"C:\NSI2000\Data\Carillon\calibration_scan_real.nsi"
 
 #PHASE_MAP_FILE_LB = r"C:\Users\labuser\Documents\ReflecTekCalibrationScholl\phases_with_beam_steering_0theta_0phi_hex_12x8.txt" 
@@ -28,7 +33,7 @@ SCAN_FILENAME = r"C:\NSI2000\Data\Carillon\calibration_scan_real.nsi"
 PI_HOST = "192.168.6.30" #IP of PI controlling DACs
 USERNAME = "feix"         
 PASSWORD = "password"          
-KEY_FILE = None               # if using an SSH key, set path like "C:/Users/you/.ssh/id_rsa"
+KEY_FILE = None # if using an SSH key, set path like "C:/Users/you/.ssh/id_rsa"
 
 LOCAL_FILE_HB = r"C:\NSI2000\Data\Carillon\HB_voltages.txt"   #HB voltage file to send to PI
 LOCAL_FILE_LB = r"C:\NSI2000\Data\Carillon\LB_voltages.txt" #LB voltage file to send to PI
@@ -37,12 +42,6 @@ REMOTE_FILE_LB = r"/home/feix/Downloads/2025-12-18 VoltageMap_HornCorrection.csv
 REMOTE_PROGRAM = "/home/feix/Gen3DAC60096EVM_SPI_RPi5.py" #Location of program on PI that updates DACs
 # Command to run on the Pi once file is uploaded
 REMOTE_COMMAND = f"python3 {REMOTE_PROGRAM}"
-
-#IP_ADDR_VNA = "TCPIP0::192.168.6.150::inst0::INSTR" #VNA in new haven lab IP addr
-#VNA sweep params
-START = 16e9
-STOP = 16.1e9
-POINTS = 2
 
 INIT_VOLTAGE_MAP = np.array([ #From Sams 0-100V data and expected phase at 0,0 az and el interpolated already transposed and flipped
     [1.1554, 1.1554, 1.1554, 1.3384, 1.5020, 1.5020, 1.3869, 1.2366],
@@ -58,48 +57,34 @@ INIT_VOLTAGE_MAP = np.array([ #From Sams 0-100V data and expected phase at 0,0 a
     [1.4570, 1.8255, 2.0536, 2.1515, 2.2458, 2.2612, 2.1833, 2.1030],
     [5.8092, 5.8092, 1.1554, 1.1554, 1.1554, 1.1554, 1.1554, 1.1554],
 ], dtype=float)
-
+  
+#Size of array representing elements on the board-12x8 for LB
 SIZE = (12,8)
+
 LC_DELAY_TIME = 40 #in secs
 
-DAC_MIN_STEP_SIZE = 20/4096
+DAC_MIN_STEP_SIZE = float(21/4096) #DAC60096 12-bit +/-10.5
 
+#Set the beam (corresponds to frequency measured) number that you put in NSI software. 19.3 Ghz is ideal for low band
+BEAM = 1
+
+ELEVATION = 0
+AZIMUTH = 0
+
+FREQUENCY = "19.3 Ghz"
+
+#Loss function params
+MAIN_LOBE_HALF_WIDTH = 2 #Number of points in scan for the main lobe half width
+CENTER_INDEX = 15 #Index where the center lobe should be
+GUARD_BAND_HALF_WIDTH = 4 #Number of points in the scan for a guard band not considered in loss function
+ 
 
 # SPSA hyperparameters
 a0 = 300   # learning-rate scale in dac steps
 c0 = 600  # perturbation scale in DAC steps should be 2-5x a0
-alpha = 0.4 #.6-.8
+alpha = 0.6 #.6-.8
 gamma = 0.1
 num_iters = 1000
-
-class LiveLossPlot:
-    def __init__(self, title="SPSA Loss", ylabel="loss"):
-        plt.ion()  # interactive on
-        self.fig, self.ax = plt.subplots()
-        self.ax.set_title(title)
-        self.ax.set_xlabel("iteration")
-        self.ax.set_ylabel(ylabel)
-        self.line, = self.ax.plot([], [])  # empty line
-        self.losses = []
-        self.iters = []
-
-        self.ax.grid(True)
-        self.fig.show()
-
-    def update(self, k, loss):
-        self.iters.append(k)
-        self.losses.append(float(loss))
-
-        self.line.set_data(self.iters, self.losses)
-
-        # Rescale axes to fit new data
-        self.ax.relim()
-        self.ax.autoscale_view()
-
-        # Make GUI breathe
-        self.fig.canvas.draw_idle()
-        self.fig.canvas.flush_events()
-        plt.pause(0.001)  # tiny pause = allows GUI event loop
 
 def read_phase_map_file(filename):
     phasemap = []
@@ -211,7 +196,7 @@ class NSI2000Client:
 
         gc.collect()
         
-    def run_scan_get_hor_amp(self, filename, k, is_loss_plus:bool, cal_folder):
+    def run_scan_get_hor_amp(self, filename):
         #Runs the scan specified in filename, gets the amplitude at all horizontal points
         #for beam 1 at the first vertical point
         #Also saves a listing of the data and test
@@ -223,7 +208,7 @@ class NSI2000Client:
         #print(objNSI2000.FFPOL1Array())
         nf_hpts = int(self.cmd.NF_HPTS)
         amp = np.zeros(nf_hpts)
-        self.cmd.SELECT_BEAM(1)
+        self.cmd.SELECT_BEAM(BEAM)
         for i in range(nf_hpts):
             #print(nsi.cmd.NFPOL1_AMP(i, j))
             amp[i] = self.cmd.NFPOL1_AMP(i, 0)[0]
@@ -233,18 +218,17 @@ class NSI2000Client:
         #    time.sleep(0.1)  # 100 ms polling
 
         elapsed = time.time() - start_time
+        print(f"Acquisition completed in {elapsed:.1f} seconds")
+    def save_scan(self, k, is_loss_plus:bool, cal_folder):
         if (is_loss_plus):
             cal_file = cal_folder / f"cal_iter_{k}_Lp.asc"
         else:
             cal_file = cal_folder / f"cal_iter_{k}_Lm.asc"
         self.cmd.NF_LISTING_TO_FILE(cal_file)
-        print(f"Acquisition completed in {elapsed:.1f} seconds")
-        
         cal_folder = Path(CAL_DIRECTORY)
         cal_file = cal_folder / f"cal_iter_{k}.asc"
         self.cmd.NF_LISTING_TO_FILE(cal_file)
-        
-        return amp
+        #Add code to also perform an hcut and save the graph
     # Context manager support: ensures cleanup 
     def __enter__(self): 
         return self.connect() 
@@ -332,16 +316,18 @@ def compute_loss(v, vna_instance, k, is_loss_plus, cal_folder):
         key_filename=KEY_FILE,
     )
     time.sleep(LC_DELAY_TIME)
-    pattern = vna_instance.run_scan_get_hor_amp(SCAN_FILENAME, k, is_loss_plus, cal_folder)
     
-    loss = loss_center_vs_sidelobes_db(pattern, 15, 2, 4)
+    pattern = vna_instance.run_scan_get_hor_amp(SCAN_FILENAME, k, is_loss_plus, cal_folder)
+    vna_instance.save_scan(k, is_loss_plus, cal_folder)
+    
+    loss = loss_center_vs_sidelobes_db(pattern, CENTER_INDEX, MAIN_LOBE_HALF_WIDTH, GUARD_BAND_HALF_WIDTH)
 
     return loss, pattern
     
 def calibration_step(v, k, vna_instance, cal_folder):
     """
-    Perform one SPSA iteration updating (a,b,c).
-    Returns updated (a,b,c) and (L_plus, L_minus).
+    Perform one SPSA iteration updating v.
+    Returns updated v and (L_plus, L_minus).
     """
     ak = max(int(a0 / (k + 1) ** alpha), 1)  # learning rate
     ck = max(int(c0 / (k + 1) ** gamma), 1)  # perturbation magnitude
@@ -377,18 +363,12 @@ def calibration_step(v, k, vna_instance, cal_folder):
 def main():
     #v_model = np.random.randint(0,2095, SIZE)  #initially assume random voltages [0,10)
     v_model = np.clip(np.round(INIT_VOLTAGE_MAP/DAC_MIN_STEP_SIZE), 0, 2047)
-    #x = np.linspace(0,10,100)
-    #plot_sinc(x, a_model[0][0], b_model[0][0], c_model[0][0])
-    #From UconnDataProcessing program phases are 8x12, this returns a 12x8 transposed then flipped up/down array for Sam's code that writes to the DACs
-    #target_angle_deg = read_phase_map_file(PHASE_MAP_FILE_LB)  # beam steering target includes horn cancellization and steering angle
-    #print(target_angle_deg)
     lp_arr = []
     pattern_point_arr = []
     all_patterns = []
     ak_arr = []
     ck_arr = []
     v_arr = []
-    #plotter = LiveLossPlot()
     nsi = NSI2000Client().connect()
     cal_path = Path(CAL_DIRECTORY)
     ts = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
@@ -406,10 +386,7 @@ def main():
         ck_arr.append(ck)
         v_arr.append(v_new)
         t1 = time.time()
-        #try:
-            #plotter.update(k, Lp)
-        #except Exception:
-        #    pass
+
         if k+1 % 5 == 0 or k == num_iters - 1:
             # Also compute loss at current (unperturbed) parameters for logging
             Lp_print = float(Lp) #convert to python scalar for printing
@@ -422,61 +399,109 @@ def main():
 
     nsi.disconnect()
     
+    params = {
+            "algorithm": "SPSA perturbing voltages"
+            "git_commit": null
+            "a0": a0
+            "c0": c0
+            "alpha": alpha
+            "gamma": gamma
+            "num_iters": num_iters
+            "pi_program_ran": REMOTE_PROGRAM
+            "initial_voltage_map": INIT_VOLTAGE_MAP
+            "low_or_high_band": "Low Band"
+            "frequency": FREQUENCY
+            "main_lobe_half_width": MAIN_LOBE_HALF_WIDTH
+            "center_index": CENTER_INDEX
+            "guard_band_half_width": GUARD_BAND_HALF_WIDTH
+        }
+    
+    commit = subprocess.check_output(["git", "rev-parse", "HEAD"]).decode().strip()
+    params["git_commit"] = commit
+    
+    experiment_dir = Path(EXP_DIR)
+    exp_folder = experiment_dir / f"Calibration_{ts}"
+    exp_folder.mkdir(parents = True, exist_ok = True)
+    
+    with open(exp_folder / "params.json", "w") as f:
+        json.dump(params, f, indent=2)
+    
+    with open(exp_folder / "git_commit.txt", "w") as f:
+        f.write(commit)
+        
+    np.savez(
+        exp_folder / "results.npz",
+        final_voltages= v_new
+    )
+    
+    plot_dir = exp_folder / "plots"
+    plot_dir.mkdir()
+    
     #Plot Loss
-    plt.figure()
+    fig1, ax1 = plt.subplots()
     x = np.arange(1,len(lp_arr)+1)
-    plt.plot(x,lp_arr)
-    plt.title("Loss_plus")
-    plt.xlabel("Iteration")
-    plt.ylabel("Lp")
-    plt.grid()
- 
+    ax1.plot(x,lp_arr)
+    ax1.title("Loss_plus")
+    ax1label("Iteration")
+    ax1.ylabel("Lp")
+    ax1.grid()
+    fig1.savefig(plot_dir / "LpVsIter.png", dpi=200)
+
     
     #Plot perterbattion scale
-    plt.figure()
-    plt.plot(x,ck_arr)
-    plt.title("c_k")
-    plt.xlabel("Iteration (k)")
-    plt.ylabel("c_k")
-    plt.grid()
-
+    fig2, ax2 = plt.subplots()
+    ax2.plot(x,ck_arr)
+    ax2.title("c_k")
+    ax2.xlabel("Iteration (k)")
+    ax2.ylabel("c_k")
+    ax2.grid()
+    fig2.savefig(plot_dir / "c_kVsIter.png", dpi=200)
     
     #Plot learning scale
-    plt.figure()
-    plt.plot(x,ak_arr)
-    plt.title("a_k")
-    plt.xlabel("Iteration (k)")
-    plt.ylabel("a_k")
-    plt.grid()
-
+    fig3, ax3 = plt.subplots()
+    ax3.plot(x,ak_arr)
+    ax3.title("a_k")
+    ax3.xlabel("Iteration (k)")
+    ax3.ylabel("a_k")
+    ax3.grid()
+    fig3.savefig(plot_dir / "c_kVsIter.png", dpi=200)
     
     #Plot magnitude received in center
-    plt.figure()
-    plt.plot(x,pattern_point_arr)
-    plt.title("Magnitude at 19.4 GHz")
-    plt.xlabel("Iteration (k)")
-    plt.ylabel("Magnitude (dB)")
-    plt.grid()
+    fig4, ax4 = plt.subplots()
+    ax4.plot(x,pattern_point_arr)
+    ax4.title("Magnitude at 19.4 GHz")
+    ax4.xlabel("Iteration (k)")
+    ax4.ylabel("Magnitude (dB)")
+    ax4.grid()
+    fig4.savefig(plot_dir / "MagInCenterVsIter.png", dpi=200)
     
     #Plot magnitude vs span for last iteration
-    plt.figure()
-    plt.plot(all_patterns[num_iters-1])
-    plt.title("Magnitude vs span")
-    plt.xlabel("span: -2.5 to 2.5 in")
-    plt.ylabel("Magnitdue (dB)")
-    plt.grid()
+    fig5, ax5 = plt.subplots()
+    ax5.plot(all_patterns[num_iters-1])
+    ax5.title("Magnitude vs span")
+    ax5.xlabel("span: -2.5 to 2.5 in")
+    ax5.ylabel("Magnitdue (dB)")
+    ax5.grid()
+    fig5.savefig(plot_dir / "FinalMagVsSpan.png", dpi=200)
     
     #Plot perturbed voltages
-    plt.figure()
+    fig6, ax6 = plt.subplots()
     v_arr = np.array(v_arr)
-    plt.plot(x, np.round(v_arr*10/2047,3))
-    plt.title("Perturbed Voltage at element [0][0]")
-    plt.xlabel("Iteration (k)")
-    plt.ylabel("Voltage (V)")
-    plt.grid()
-
+    ax6.plot(x, np.round(v_arr*10.5/2047,3))
+    ax6.title("Perturbed Voltage at element [0][0]")
+    ax6.xlabel("Iteration (k)")
+    ax6.ylabel("Voltage (V)")
+    ax6.grid()
+    fig6.savefig(plot_dir / "PerturbedVoltageAt00VsIter.png", dpi=200)
     
     plt.show()
+    
+    plt.close(fig1)
+    plt.close(fig2)
+    plt.close(fig3)
+    plt.close(fig4)
+    plt.close(fig5)
+    plt.close(fig6)
     
     print("Done.")
     
