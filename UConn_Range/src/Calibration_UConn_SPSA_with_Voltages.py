@@ -32,16 +32,17 @@ USERNAME = "feix"
 PASSWORD = "password"          
 KEY_FILE = None # if using an SSH key, set path like "C:/Users/you/.ssh/id_rsa"
 
+STOP_FILE = r"/home/feix/STOP.txt"
 LOCAL_FILE_HB = r"C:\NSI2000\Data\Carillon\HB_voltages.txt"   #HB voltage file to send to PI
 LOCAL_FILE_LB = r"C:\NSI2000\Data\Carillon\LB_voltages.txt" #LB voltage file to send to PI
 REMOTE_FILE_HB = r"/home/feix/Desktop/dataHB.csv"  # where to put it on the Pi
 REMOTE_FILE_LB = r"/home/feix/Downloads/2025-12-18 VoltageMap_HornCorrection.csv"  # where to put it on the Pi
-REMOTE_PROGRAM = "/home/feix/Gen3DAC60096EVM_SPI_RPi5.py" #Location of program on PI that updates DACs
+REMOTE_PROGRAM = "/home/feix/Gen3DAC60096EVM_SPI_RPi5_scholl.py" #Location of program on PI that updates DACs
 # Command to run on the Pi once file is uploaded
 REMOTE_COMMAND = f"python3 {REMOTE_PROGRAM}"
 
 INIT_VOLTAGE_MAP = np.array([
-    [[1.859, 1.859, 1.859, 1.928, 1.995, 1.995, 1.948, 1.889],
+     [1.859, 1.859, 1.859, 1.928, 1.995, 1.995, 1.948, 1.889],
      [9.769, 9.769, 9.769, 1.859, 1.859, 1.859, 1.859, 1.859],
      [9.769, 9.769, 9.769, 9.769, 9.769, 9.769, 9.769, 9.769],
      [2.577, 2.784, 3.104, 3.767, 4.87,  5.109, 5.109, 4.065],
@@ -63,7 +64,7 @@ LC_DELAY_TIME = 1 #in secs
 DAC_MIN_STEP_SIZE = float(21/4096) #DAC60096 12-bit +/-10.5
 
 #Set the beam (corresponds to frequency measured) number that you put in NSI software. 19.3 Ghz is ideal for low band
-BEAM = 1
+BEAM = 27
 
 ELEVATION = 0
 AZIMUTH = 0
@@ -139,6 +140,13 @@ def ssh_and_update_dacs(
 
     # --- Copy HB file using SFTP ---
     sftp = client.open_sftp()
+    
+    try:
+        sftp.remove(STOP_FILE)
+        print("Stop File removed")
+    except FileNotFoundError:
+        pass
+    
     print(f"Uploading {local_file_hb} -> {remote_file_hb} ...")
     sftp.put(local_file_lb, remote_file_lb)
     print("Upload complete.")
@@ -154,19 +162,48 @@ def ssh_and_update_dacs(
     # --- Run command on the Pi ---
     print(f"Running remote command: {remote_command}")
     
-    stddin, stdout, stderr = client.exec_command(remote_command)
+    client.exec_command(remote_command)
+    #stddin, stdout, stderr = client.exec_command(remote_command)
 
     # IMPORTANT: wait for completion first
-    exit_status = stdout.channel.recv_exit_status()
+    #exit_status = stdout.channel.recv_exit_status()
 
-    out = stdout.read().decode("utf-8", errors="replace")
-    err = stderr.read().decode("utf-8", errors="replace")
+    #out = stdout.read().decode("utf-8", errors="replace")
+    #err = stderr.read().decode("utf-8", errors="replace")
 
     #print("STDOUT:", out)
-    print("STDERR:", err)
-    print(f"Command finished with exit code {exit_status}\n")
+    #print("STDERR:", err)
+    #print(f"Command finished with exit code {exit_status}\n")
     
     client.close()
+    
+def stop_program(
+    host: str,
+    username: str,
+    password: Optional[str],
+    local_file_hb: str,
+    local_file_lb: str,
+    remote_file_hb: str,
+    remote_file_lb: str,
+    remote_command: str,
+    port: int = 22,
+    key_filename: Optional[str] = None,
+):
+    client = paramiko.SSHClient()
+    client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+        
+    client.connect(
+        hostname=host,
+        port=port,
+        username=username,
+        password=password,
+        key_filename=key_filename,
+        look_for_keys=True,
+    )
+        
+    sftp = client.open_sftp()
+    with sftp.open(STOP_FILE, "w"):
+        pass
 
 class NSI2000Client:
     def __init__(self, visible=True):
@@ -216,13 +253,13 @@ class NSI2000Client:
 
         elapsed = time.time() - start_time
         print(f"Acquisition completed in {elapsed:.1f} seconds")
+        return amp
     def save_scan(self, k, is_loss_plus:bool, cal_folder):
         if (is_loss_plus):
             cal_file = cal_folder / f"cal_iter_{k}_Lp.asc"
         else:
             cal_file = cal_folder / f"cal_iter_{k}_Lm.asc"
         self.cmd.NF_LISTING_TO_FILE(cal_file)
-        cal_folder = Path(CAL_DIRECTORY)
         cal_file = cal_folder / f"cal_iter_{k}.asc"
         self.cmd.NF_LISTING_TO_FILE(cal_file)
         #Add code to also perform an hcut and save the graph
@@ -314,7 +351,7 @@ def compute_loss(v, vna_instance, k, is_loss_plus, cal_folder):
     )
     time.sleep(LC_DELAY_TIME)
     
-    pattern = vna_instance.run_scan_get_hor_amp(SCAN_FILENAME, k, is_loss_plus, cal_folder)
+    pattern = vna_instance.run_scan_get_hor_amp(SCAN_FILENAME)
     vna_instance.save_scan(k, is_loss_plus, cal_folder)
     
     loss = loss_center_vs_sidelobes_db(pattern, CENTER_INDEX, MAIN_LOBE_HALF_WIDTH, GUARD_BAND_HALF_WIDTH)
@@ -400,21 +437,30 @@ def main():
                 )
 
     nsi.disconnect()
+    stop_program(
+        host=PI_HOST,
+        username=USERNAME,
+        password=PASSWORD,
+        local_file_hb=LOCAL_FILE_HB,
+        local_file_lb=LOCAL_FILE_LB,
+        remote_file_hb=REMOTE_FILE_HB,
+        remote_file_lb=REMOTE_FILE_LB,
+        remote_command=REMOTE_COMMAND,
+        key_filename=KEY_FILE,
+    )
     
     params = {
-            "algorithm": "SPSA perturbing voltages"
-            "git_commit": null
-            "a0": a0
-            "c0": c0
-            "alpha": alpha
-            "gamma": gamma
-            "num_iters": num_iters
-            "pi_program_ran": REMOTE_PROGRAM
-            "initial_voltage_map": INIT_VOLTAGE_MAP
-            "low_or_high_band": "Low Band"
-            "frequency": FREQUENCY
-            "main_lobe_half_width": MAIN_LOBE_HALF_WIDTH
-            "center_index": CENTER_INDEX
+            "algorithm": "SPSA perturbing voltages",
+            "a0": a0,
+            "c0": c0,
+            "alpha": alpha,
+            "gamma": gamma,
+            "num_iters": num_iters,
+            "pi_program_ran": REMOTE_PROGRAM,
+            "low_or_high_band": "Low Band",
+            "frequency": FREQUENCY,
+            "main_lobe_half_width": MAIN_LOBE_HALF_WIDTH,
+            "center_index": CENTER_INDEX,
             "guard_band_half_width": GUARD_BAND_HALF_WIDTH
         }
     
@@ -423,7 +469,8 @@ def main():
         
     np.savez(
         exp_folder / "results.npz",
-        final_voltages= v_new
+        final_voltages= v_new,
+        init_voltage_map=INIT_VOLTAGE_MAP
     )
     
     plot_dir = exp_folder / "plots"
@@ -433,9 +480,9 @@ def main():
     fig1, ax1 = plt.subplots()
     x = np.arange(1,len(lp_arr)+1)
     ax1.plot(x,lp_arr)
-    ax1.title("Loss_plus")
-    ax1label("Iteration")
-    ax1.ylabel("Lp")
+    ax1.set_title("Loss_plus")
+    ax1.set_xlabel("Iteration")
+    ax1.set_ylabel("Lp")
     ax1.grid()
     fig1.savefig(plot_dir / "LpVsIter.png", dpi=200)
 
@@ -443,36 +490,36 @@ def main():
     #Plot perterbattion scale
     fig2, ax2 = plt.subplots()
     ax2.plot(x,ck_arr)
-    ax2.title("c_k")
-    ax2.xlabel("Iteration (k)")
-    ax2.ylabel("c_k")
+    ax2.set_title("c_k")
+    ax2.set_xlabel("Iteration (k)")
+    ax2.set_ylabel("c_k")
     ax2.grid()
     fig2.savefig(plot_dir / "c_kVsIter.png", dpi=200)
     
     #Plot learning scale
     fig3, ax3 = plt.subplots()
     ax3.plot(x,ak_arr)
-    ax3.title("a_k")
-    ax3.xlabel("Iteration (k)")
-    ax3.ylabel("a_k")
+    ax3.set_title("a_k")
+    ax3.set_xlabel("Iteration (k)")
+    ax3.set_ylabel("a_k")
     ax3.grid()
     fig3.savefig(plot_dir / "c_kVsIter.png", dpi=200)
     
     #Plot magnitude received in center
     fig4, ax4 = plt.subplots()
     ax4.plot(x,pattern_point_arr)
-    ax4.title("Magnitude at 19.4 GHz")
-    ax4.xlabel("Iteration (k)")
-    ax4.ylabel("Magnitude (dB)")
+    ax4.set_title("Magnitude at 19.4 GHz")
+    ax4.set_xlabel("Iteration (k)")
+    ax4.set_ylabel("Magnitude (dB)")
     ax4.grid()
     fig4.savefig(plot_dir / "MagInCenterVsIter.png", dpi=200)
     
     #Plot magnitude vs span for last iteration
     fig5, ax5 = plt.subplots()
     ax5.plot(all_patterns[num_iters-1])
-    ax5.title("Magnitude vs span")
-    ax5.xlabel("span: -2.5 to 2.5 in")
-    ax5.ylabel("Magnitdue (dB)")
+    ax5.set_title("Magnitude vs span")
+    ax5.set_xlabel("span: -2.5 to 2.5 in")
+    ax5.set_ylabel("Magnitdue (dB)")
     ax5.grid()
     fig5.savefig(plot_dir / "FinalMagVsSpan.png", dpi=200)
     
@@ -480,9 +527,9 @@ def main():
     fig6, ax6 = plt.subplots()
     v_arr = np.array(v_arr)
     ax6.plot(x, np.round(v_arr*10.5/2047,3))
-    ax6.title("Perturbed Voltage at element [0][0]")
-    ax6.xlabel("Iteration (k)")
-    ax6.ylabel("Voltage (V)")
+    ax6.set_title("Perturbed Voltage at element [0][0]")
+    ax6.set_xlabel("Iteration (k)")
+    ax6.set_ylabel("Voltage (V)")
     ax6.grid()
     fig6.savefig(plot_dir / "PerturbedVoltageAt00VsIter.png", dpi=200)
     
