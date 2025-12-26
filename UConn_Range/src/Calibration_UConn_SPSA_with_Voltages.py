@@ -20,11 +20,8 @@ import win32com.client
 import json
 import subprocess
 
-#Place to store raw data
-RAW_CAL_DIRECTORY = r"C:\NSI2000\Data\Carillon\reflectarray_calibration\raw"
-
-#Github experiment directory used
-EXP_DIR = r"C:\Users\SchollJamesAC3CARILL\Array-Calibration\UConn_Range\Experiments"
+#Place to store experiment results
+EXP_DIR = r"C:\NSI2000\Data\Carillon\reflectarray_calibration\Experiments"
 
 SCAN_FILENAME = r"C:\NSI2000\Data\Carillon\calibration_scan_real.nsi"
 
@@ -61,7 +58,7 @@ INIT_VOLTAGE_MAP = np.array([
 #Size of array representing elements on the board-12x8 for LB
 SIZE = (12,8)
 
-LC_DELAY_TIME = 40 #in secs
+LC_DELAY_TIME = 1 #in secs
 
 DAC_MIN_STEP_SIZE = float(21/4096) #DAC60096 12-bit +/-10.5
 
@@ -84,7 +81,7 @@ a0 = 300   # learning-rate scale in dac steps
 c0 = 600  # perturbation scale in DAC steps should be 2-5x a0
 alpha = 0.6 #.6-.8
 gamma = 0.1
-num_iters = 1000
+num_iters = 1
 
 def read_phase_map_file(filename):
     phasemap = []
@@ -370,15 +367,20 @@ def main():
     ck_arr = []
     v_arr = []
     nsi = NSI2000Client().connect()
-    cal_path = Path(CAL_DIRECTORY)
+    
+    experiment_dir = Path(EXP_DIR)
     ts = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
-    cal_folder = cal_path / f"Calibration_{ts}"
-    cal_folder.mkdir(parents = True, exist_ok = False)
+    exp_folder = experiment_dir / f"Calibration_{ts}"
+    raw_folder = experiment_dir / exp_folder / "raw"
+    exp_folder.mkdir(parents = True, exist_ok = False)
+    raw_folder.mkdir(parents = True, exist_ok = False)
+    
     print("Starting SPSA calibration...")
+    
     t0 = time.time()
     for k in range(num_iters):
         print(f"Iter: {k+1}")
-        v_model, Lp, Lm, pattern, ak, ck, v_new = calibration_step(v_model, k, nsi, cal_folder)
+        v_model, Lp, Lm, pattern, ak, ck, v_new = calibration_step(v_model, k, nsi, raw_folder)
         lp_arr.append(Lp)
         pattern_point_arr.append(pattern[18])
         all_patterns.append(pattern)
@@ -416,18 +418,8 @@ def main():
             "guard_band_half_width": GUARD_BAND_HALF_WIDTH
         }
     
-    commit = subprocess.check_output(["git", "rev-parse", "HEAD"]).decode().strip()
-    params["git_commit"] = commit
-    
-    experiment_dir = Path(EXP_DIR)
-    exp_folder = experiment_dir / f"Calibration_{ts}"
-    exp_folder.mkdir(parents = True, exist_ok = True)
-    
     with open(exp_folder / "params.json", "w") as f:
         json.dump(params, f, indent=2)
-    
-    with open(exp_folder / "git_commit.txt", "w") as f:
-        f.write(commit)
         
     np.savez(
         exp_folder / "results.npz",
