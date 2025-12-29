@@ -1,10 +1,9 @@
 # -*- coding: utf-8 -*-
 """
 Created on Thu Dec  4 15:21:17 2025
-
+Sends 8x12 HB voltages at 27.2Ghz to 0-100V array
 @author: SchollJamesAC3CARILL
-192 element high band
-24x8
+
 """
 import pyvisa
 import numpy as np
@@ -17,35 +16,37 @@ import matplotlib.pyplot as plt
 
 PHASE_MAP_FILE_LB = rf"C:\Users\labuser\Documents\ReflecTekCalibrationScholl\phases_with_beam_steering_0theta_0phi_hex_12x8.txt" 
 
-PI_HOST = "raspberrypi.local" #IP of PI controlling DACs
-USERNAME = "carillon"         
-PASSWORD = "carillon"          
+PI_HOST = "192.168.6.100" #IP of PI controlling DACs
+USERNAME = "ldantes"         
+PASSWORD = "password"          
 KEY_FILE = None               # if using an SSH key, set path like "C:/Users/you/.ssh/id_rsa"
 
-LOCAL_FILE_HB = rf"C:\Users\labuser\Documents\ReflecTekCalibrationScholl\sshTest.txt"   #HB voltage file to send to PI
-LOCAL_FILE_LB = rf"C:\Users\labuser\Documents\ReflecTekCalibrationScholl\sshTest2.txt" #LB voltage file to send to PI
-REMOTE_FILE_HB = "/home/carillon/calibration/sshTest.txt"  # where to put it on the Pi
-REMOTE_FILE_LB = "/home/carillon/calibration/sshTest2.txt"  # where to put it on the Pi
-REMOTE_PROGRAM = "/home/carillon/calibration/test.py" #Location of program on PI that updates DACs
+PI_PORT = 22
+STOP_FILE = "/home/ldantes/ReflecTek_Pi/STOP.txt"
+LOCAL_FILE_HB = rf"C:\Users\labuser\Documents\ReflecTekCalibrationScholl\HB.txt"   #HB voltage file to send to PI
+LOCAL_FILE_LB = rf"C:\Users\labuser\Documents\ReflecTekCalibrationScholl\LB.txt" #LB voltage file to send to PI
+REMOTE_FILE_HB = "/home/ldantes/Desktop/data.csv"  # where to put it on the Pi
+REMOTE_FILE_LB = "/home/ldantes/Desktop/LB.txt"  # where to put it on the Pi
+REMOTE_PROGRAM = "/home/ldantes/ReflecTek_Pi/spi_scholl.py" #Location of program on PI that updates DACs
 # Command to run on the Pi once file is uploaded
 REMOTE_COMMAND = f"python3 {REMOTE_PROGRAM}"
 
 IP_ADDR_VNA = "TCPIP0::192.168.6.150::inst0::INSTR" #VNA IP addr
 #VNA sweep params
-START = 16e9
-STOP = 16.1e9
+START = 27.2e9
+STOP = 27.3e9
 POINTS = 2
 
-SIZE = (12,8)
+SIZE = (8,12)
 
-DAC_MIN_STEP_SIZE = 20/4096
+DAC_MIN_STEP_SIZE = 200/16384
 
 # SPSA hyperparameters
-a0 = 30   # learning-rate scale in dac steps
-c0 = 60  # perturbation scale in DAC steps should be 2-5x a0
+a0 = 3000  # learning-rate scale in dac steps
+c0 = 6000  # perturbation scale in DAC steps should be 2-5x a0
 alpha = 0.6 #.6-.8
 gamma = 0.1
-num_iters = 10
+num_iters = 200
 
 def read_phase_map_file(filename):
     phasemap = []
@@ -58,81 +59,125 @@ def read_phase_map_file(filename):
     phasemap = np.flipud((np.array(phasemap).T))#transpose then flip up/down
     return phasemap
 
-def update_lb_array_file(V):
-    V = np.round(V * DAC_MIN_STEP_SIZE, 3)
-    with open(LOCAL_FILE_LB, "w") as f:
+def update_hb_array_file(V):
+    V = np.clip(np.round(V * DAC_MIN_STEP_SIZE, 4), 0, 100)
+    with open(LOCAL_FILE_HB, "w") as f:
         for row in V:
             line = ",".join(str(x) for x in row)
             f.write(line + "\n")
-    #This program is for LB only, so create a 0V array for the high band which is 24x8 in Sam's code
-    with open(LOCAL_FILE_HB, "w") as f:
-        for row in np.zeros((24,8)):
-            line = ",".join(str(x) for x in row)
-            f.write(line + "\n")
+    #This program is for HB only
+    #with open(LOCAL_FILE_LB, "w") as f:
+    #   for row in np.zeros((24,8)):
+    #       line = ",".join(str(x) for x in row)
+    #       f.write(line + "\n")
 
-def ssh_and_update_dacs(
-    host: str,
-    username: str,
-    password: Optional[str],
-    local_file_hb: str,
-    local_file_lb: str,
-    remote_file_hb: str,
-    remote_file_lb: str,
-    remote_command: str,
-    port: int = 22,
-    key_filename: Optional[str] = None,
-):
+class PiController:
     """
-    1. Copies local_file -> remote_file on the Pi
-    2. Runs remote_command on the Pi
-    3. Waits for it to finish and returns stdout, stderr, exit_status
+    Connects to a raspberry pi via ssh with Paramiko. Copies a local low and high band file to the files on the PI. 
+    Runs the remote command that starts the python program on the PI which updates the DACs via SPI.
+    Creates a stop text file that is watched for by that program to stop it so that it can read another set of HB and LB voltages
     """
-
-    # --- Connect over SSH ---
-    client = paramiko.SSHClient()
-    client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+    def __init__(
+        self,
+        host: str,
+        username: str,
+        password: Optional[str],
+        local_file_hb: str,
+        local_file_lb: str,
+        remote_file_hb: str,
+        remote_file_lb: str,
+        remote_command: str,
+        port: int,
+        key_filename: Optional[str],
+        stop_file: str,
+    ):
+        self.host = host
+        self.username = username
+        self.password = password
+        self.local_file_hb = local_file_hb
+        self.local_file_lb = local_file_lb
+        self.remote_file_hb = remote_file_hb
+        self.remote_file_lb = remote_file_lb
+        self.remote_command = remote_command
+        self.port = port
+        self.key_filename = key_filename
+        self.stop_file = stop_file
+        self.client = None
+        
+    def connect(self):
+        client = paramiko.SSHClient()
+        client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+        
+        client.connect(
+            hostname=self.host,
+            port=self.port,
+            username=self.username,
+            password=self.password,
+            key_filename=self.key_filename,
+            look_for_keys=True,
+        )
+        self.client = client
+        return self
     
-    client.connect(
-        hostname=host,
-        port=port,
-        username=username,
-        password=password,
-        key_filename=key_filename,
-        look_for_keys=True,
-    )
+    def close(self):
+        if self.client is not None:
+            try:
+                self.client.close()
+            finally:
+                self.client = None
+                
+    def remove_stop_file(self):
+        sftp = self.client.open_sftp()
+        try:
+            sftp.remove(self.stop_file)
+            print("Stop File removed")
+        except FileNotFoundError:
+            pass
+        sftp.close()
+        
+    def stop_program(self):
+        sftp = self.client.open_sftp()
+        with sftp.open(self.stop_file, "w"):
+            pass
+        sftp.close()
+        
+    def upload_lb_and_hb_files(self):
+        sftp = self.client.open_sftp()
+        print(f"Uploading {self.local_file_hb} -> {self.remote_file_hb} ...")
+        sftp.put(self.local_file_hb, self.remote_file_hb)
+        print("Upload complete.")
+        
+        print(f"Uploading {self.local_file_lb} -> {self.remote_file_lb} ...")
+        sftp.put(self.local_file_lb, self.remote_file_lb)
+        print("Upload complete.")
+        sftp.close()
+        
+    def run_remote_command(self, wait: bool = False, get_pty: bool = True):
+        print(f"Running remote command: {self.remote_command}")
+        stdin, stdout, stderr = self.client.exec_command(self.remote_command, get_pty=get_pty)
+        if not wait:
+            return None
+        exit_status = stdout.channel.recv_exit_status()
+        out = stdout.read().decode("utf-8", errors="replace")
+        err = stderr.read().decode("utf-8", errors="replace")
+        return out, err, exit_status
+    def update_dacs(self):
+        self.stop_program()
+        time.sleep(1)
+        self.remove_stop_file()
+        self.upload_lb_and_hb_files()
+        self.run_remote_command()
+        
+    def __enter__(self):
+        return self.connect()
 
-    # --- Copy HB file using SFTP ---
-    sftp = client.open_sftp()
-    print(f"Uploading {local_file_hb} -> {remote_file_hb} ...")
-    sftp.put(local_file_lb, remote_file_lb)
-    print("Upload complete.")
-    sftp.close()
-    
-    # --- Copy LB file using SFTP ---
-    sftp = client.open_sftp()
-    print(f"Uploading {local_file_lb} -> {remote_file_lb} ...")
-    sftp.put(local_file_lb, remote_file_lb)
-    print("Upload complete.")
-    sftp.close()
-
-    # --- Run command on the Pi ---
-    print(f"Running remote command: {remote_command}")
-    
-    stddin, stdout, stderr = client.exec_command(remote_command)
-
-    # IMPORTANT: wait for completion first
-    exit_status = stdout.channel.recv_exit_status()
-
-    out = stdout.read().decode("utf-8", errors="replace")
-    err = stderr.read().decode("utf-8", errors="replace")
-
-    print("STDOUT:", out)
-    print("STDERR:", err)
-    print(f"Command finished with exit code {exit_status}\n")
-    
-    client.close()
+    def __exit__(self, exc_type, exc, tb):
+        self.close()
 
 class VnaInstance:
+    """
+    In NSI Max software on VNA, in system settings, make sure System Configuration Web Access is set to Local and Remote
+    """
     def __init__(self, ip_addr):
         self.ip_addr = ip_addr
         self.rm = None
@@ -168,7 +213,7 @@ def get_pattern(vna_instance):
     return pattern
 
 
-def compute_loss(v, vna_instance):
+def compute_loss(v, vna_instance, rpi):
     """
     This is what you'd do with real hardware:
       1. send V to array
@@ -177,25 +222,15 @@ def compute_loss(v, vna_instance):
 
     Here we simulate the pattern.
     """
-    #updates low band array file on local computer
-    update_lb_array_file(v)
+    #updates high band array file on local computer
+    update_hb_array_file(v)
     #sends low and high band array files to PI and runs remote command to update DACs
-    ssh_and_update_dacs(
-        host=PI_HOST,
-        username=USERNAME,
-        password=PASSWORD,
-        local_file_hb=LOCAL_FILE_HB,
-        local_file_lb=LOCAL_FILE_LB,
-        remote_file_hb=REMOTE_FILE_HB,
-        remote_file_lb=REMOTE_FILE_LB,
-        remote_command=REMOTE_COMMAND,
-        key_filename=KEY_FILE,
-    )
-    
+    rpi.update_dacs()
+    time.sleep(60)
     pattern = get_pattern(vna_instance)
     magnitude = abs(pattern[0])
     loss = 10-magnitude
-
+    print(magnitude)
     # normalize
     #pattern_norm = pattern / np.max(pattern)
 
@@ -206,7 +241,7 @@ def compute_loss(v, vna_instance):
     #loss = 1.0 - pattern_norm[idx_target]
     return loss, magnitude
     
-def calibration_step(v, k, vna_instance):
+def calibration_step(v, k, vna_instance, rpi):
     """
     Perform one SPSA iteration updating (a,b,c).
     Returns updated (a,b,c) and (L_plus, L_minus).
@@ -220,10 +255,13 @@ def calibration_step(v, k, vna_instance):
     # plus / minus parameter sets
     v_plus = v + ck * delta_v
     v_minus = v - ck * delta_v
+    
+    v_minus = np.clip(v_minus, 0, 8191)
+    v_plus = np.clip(v_plus, 0, 8191)
 
     # evaluate loss for each perturbed set
-    L_plus, magnitude_p = compute_loss(v_plus, vna_instance)
-    L_minus, magnitude_m = compute_loss(v_minus, vna_instance)
+    L_plus, magnitude_p = compute_loss(v_plus, vna_instance, rpi)
+    L_minus, magnitude_m = compute_loss(v_minus, vna_instance, rpi)
 
     # scalar difference
     diff = L_plus - L_minus
@@ -235,13 +273,14 @@ def calibration_step(v, k, vna_instance):
     # gradient descent update: param <- param - ak * g
     v_new = v - ak * g_v
 
-    v_new = np.clip(v_new, 0, 2095)
+    v_new = np.clip(v_new, 0, 8191)
     
-    return v_new, L_plus, L_minus, magnitude_p, ak, ck, v_new[0][0]
+    return v_new, L_plus, L_minus, magnitude_p, ak, ck, v_plus[0][0]
     
 
 def main():
-    v_model = np.random.randint(0,2095, SIZE)  #initially assume random voltages [0,10)
+    #v_model = np.random.randint(0,8191, SIZE)  #initially assume random voltages [0,100), half of (2^14)/2
+    v_model = np.full(SIZE, 2450)
     #x = np.linspace(0,10,100)
     #plot_sinc(x, a_model[0][0], b_model[0][0], c_model[0][0])
     #From UconnDataProcessing program phases are 8x12, this returns a 12x8 transposed then flipped up/down array for Sam's code that writes to the DACs
@@ -252,18 +291,34 @@ def main():
     ak_arr = []
     ck_arr = []
     v_arr = []
+    vp_arr = []
     vna_instance = VnaInstance(IP_ADDR_VNA)
     vna_instance.connect()
+    rpi = PiController(
+        host=PI_HOST,
+        username=USERNAME,
+        password=PASSWORD,
+        local_file_hb=LOCAL_FILE_HB,
+        local_file_lb=LOCAL_FILE_LB,
+        remote_file_hb=REMOTE_FILE_HB,
+        remote_file_lb=REMOTE_FILE_LB,
+        remote_command=REMOTE_COMMAND,
+        port = PI_PORT,
+        key_filename=KEY_FILE,
+        stop_file = STOP_FILE,
+    )
+    rpi.connect()
     print("Starting SPSA calibration...")
     t0 = time.time()
     for k in range(num_iters):
         print(f"Iter: {k+1}")
-        v_model, Lp, Lm, magnitude_p, ak, ck, v_new = calibration_step(v_model, k, vna_instance)
+        v_model, Lp, Lm, magnitude_p, ak, ck, vp = calibration_step(v_model, k, vna_instance, rpi)
         lp_arr.append(Lp)
         magn_arr.append(magnitude_p)
         ak_arr.append(ak)
         ck_arr.append(ck)
-        v_arr.append(v_new)
+        v_arr.append(v_model[0][0])
+        vp_arr.append(vp)
         t1 = time.time()
         if k+1 % 5 == 0 or k == num_iters - 1:
             # Also compute loss at current (unperturbed) parameters for logging
@@ -275,8 +330,9 @@ def main():
                 f"v[0][0]={v_model_print:.1f} dt={t1-t0:.3f}s"
                 )
 
+    print(v_model)
     vna_instance.disconnect()
-    
+    rpi.close()
     #Plot Loss
     plt.figure()
     x = np.arange(1,len(lp_arr)+1)
@@ -313,14 +369,24 @@ def main():
     plt.ylabel("Magnitude (dB)")
     plt.grid()
     
-    #Plot perturbed voltages
+    #Updated voltages
     plt.figure()
     v_arr = np.array(v_arr)
-    plt.plot(x, v_arr*10/2095)
+    plt.plot(x, v_arr*100/8191)
+    plt.title("Updated Voltage at element [0][0]")
+    plt.xlabel("Iteration (k)")
+    plt.ylabel("Voltage (V)")
+    plt.grid()
+    
+    #Plot perturbed voltages
+    plt.figure()
+    vp_arr = np.array(vp_arr)
+    plt.plot(x, vp_arr*100/8191)
     plt.title("Perturbed Voltage at element [0][0]")
     plt.xlabel("Iteration (k)")
     plt.ylabel("Voltage (V)")
     plt.grid()
+    
     
     plt.show()
     

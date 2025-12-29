@@ -31,6 +31,7 @@ PI_HOST = "192.168.6.30" #IP of PI controlling DACs
 USERNAME = "feix"         
 PASSWORD = "password"          
 KEY_FILE = None # if using an SSH key, set path like "C:/Users/you/.ssh/id_rsa"
+PI_PORT = 22
 
 STOP_FILE = r"/home/feix/STOP.txt"
 LOCAL_FILE_HB = r"C:\NSI2000\Data\Carillon\HB_voltages.txt"   #HB voltage file to send to PI
@@ -116,6 +117,7 @@ class PiController:
     def __init__(
         self,
         host: str,
+        username: str,
         password: Optional[str],
         local_file_hb: str,
         local_file_lb: str,
@@ -127,6 +129,7 @@ class PiController:
         stop_file: str,
     ):
         self.host = host
+        self.username = username
         self.password = password
         self.local_file_hb = local_file_hb
         self.local_file_lb = local_file_lb
@@ -169,13 +172,13 @@ class PiController:
             pass
         sftp.close()
         
-    def stop_program():
+    def stop_program(self):
         sftp = self.client.open_sftp()
         with sftp.open(self.stop_file, "w"):
             pass
         sftp.close()
         
-    def upload_lb_and_hb_files():
+    def upload_lb_and_hb_files(self):
         sftp = self.client.open_sftp()
         print(f"Uploading {self.local_file_hb} -> {self.remote_file_hb} ...")
         sftp.put(self.local_file_hb, self.remote_file_hb)
@@ -355,7 +358,7 @@ def compute_loss(v, vna_instance, rpi, k, is_loss_plus, cal_folder):
 
     return loss, pattern
     
-def calibration_step(v, k, vna_instance, cal_folder):
+def calibration_step(v, k, vna_instance, rpi, cal_folder):
     """
     Perform one SPSA iteration updating v.
     Returns updated v and (L_plus, L_minus).
@@ -371,6 +374,7 @@ def calibration_step(v, k, vna_instance, cal_folder):
     v_minus = v - ck * delta_v
     
     v_minus = np.clip(v_minus, 0, 2047)
+    v_plus = np.clip(v_plus, 0, 2047)
 
     # evaluate loss for each perturbed set
     L_plus, pattern_plus = compute_loss(v_plus, vna_instance, rpi, k, True, cal_folder)
@@ -410,7 +414,9 @@ def main():
         remote_file_hb=REMOTE_FILE_HB,
         remote_file_lb=REMOTE_FILE_LB,
         remote_command=REMOTE_COMMAND,
+        port = PI_PORT,
         key_filename=KEY_FILE,
+        stop_file = STOP_FILE,
     )
     rpi.connect()
     
