@@ -46,7 +46,7 @@ a0 = 3000  # learning-rate scale in dac steps
 c0 = 6000  # perturbation scale in DAC steps should be 2-5x a0
 alpha = 0.6 #.6-.8
 gamma = 0.1
-num_iters = 200
+num_iters = 1
 
 def read_phase_map_file(filename):
     phasemap = []
@@ -76,6 +76,7 @@ class PiController:
     Connects to a raspberry pi via ssh with Paramiko. Copies a local low and high band file to the files on the PI. 
     Runs the remote command that starts the python program on the PI which updates the DACs via SPI.
     Creates a stop text file that is watched for by that program to stop it so that it can read another set of HB and LB voltages
+    #Reopens VNA connection each time, closes resource manager at the very end
     """
     def __init__(
         self,
@@ -180,32 +181,48 @@ class VnaInstance:
     """
     def __init__(self, ip_addr):
         self.ip_addr = ip_addr
-        self.rm = None
+        self.rm = pyvisa.ResourceManager()
         self.instr = None
     def connect(self):
-        self.rm = pyvisa.ResourceManager()
         self.instr = self.rm.open_resource(self.ip_addr)
-        self.instr.timeout = 10000
+        self.instr.timeout = 60000 #60 seconds
+        print("VNA ID:", self.instr.query("*IDN?").strip())
     def disconnect(self):
-        self.instr.close()
-        self.rm.close()
+        if self.instr is not None:
+            try:
+                self.instr.close()
+            except:
+                pass
+            self.instr = None
     def sweep(self, start, stop, points):
-        print(self.instr.query("*IDN?").strip())
-        self.instr.write('LSB;FMB') 
-        self.instr.write('SENS1:FREQ:START ',str(START))
-        self.instr.write('SENS1:FREQ:STOP ',str(STOP))
-        self.instr.write(':SENS1:SWE:POIN ',str(POINTS))
-        self.instr.write(':CALC1:PAR1:DEF S21')
-        
+        """
+        Returns an array of size points containing complex data, the first value corresponds to first measured frequency
+        """
+        self.connect()
         #instr.write('INIT:IMM; *WAI')
-        self.instr.write(':SENS:HOLD:FUNC HOLD')
-        self.instr.write(':TRIG:SING')
-        # Query
-        print("Querying...")
-        sdata = self.instr.query_binary_values(':CALC1:DATA:SDAT?', datatype = 'd', container = np.array).reshape((-1,2))  # any data query
-        sdata = sdata[:,0] + sdata[:,1]*1j
-        print("Received response.\n")
-        return sdata
+        #self.instr.write(':SENS:HOLD:FUNC HOLD')
+        #self.instr.write(':TRIG:SING')
+        try: 
+            self.instr.write('LSB;FMB') 
+            self.instr.write(f'SENS1:FREQ:START {start}')
+            self.instr.write(f'SENS1:FREQ:STOP {stop}')
+            self.instr.write(f'SENS1:SWE:POIN {points}')
+            self.instr.write(':CALC1:PAR1:DEF S21')
+            #self.instr.write('INIT:IMM')
+            self.instr.write(':SENS:HOLD:FUNC HOLD')
+            self.instr.write(':TRIG:SING')
+            self.instr.query('*OPC?') #operation complete? -Waits for operation complete
+            print("Querying data...")
+            sdata = self.instr.query_binary_values(':CALC1:DATA:SDAT?', datatype = 'd', container = np.array).reshape((-1,2))  # any data query
+            sdata = sdata[:,0] + sdata[:,1]*1j
+            print("Received response.\n")
+            return sdata
+        except pyvisa.errors.VisaIOError as e:
+            print("VNA communication error:", e)
+            self.disconnect()
+            raise
+        finally:
+            self.disconnect()
 
 
 def get_pattern(vna_instance):
@@ -226,11 +243,12 @@ def compute_loss(v, vna_instance, rpi):
     update_hb_array_file(v)
     #sends low and high band array files to PI and runs remote command to update DACs
     rpi.update_dacs()
-    time.sleep(60)
+    time.sleep(1)
     pattern = get_pattern(vna_instance)
-    magnitude = abs(pattern[0])
-    loss = 10-magnitude
-    print(magnitude)
+    magnitude = abs(pattern[0]) #Gets first frequency point
+    mag_db = 20 * np.log10(magnitude)
+    loss = 0 - mag_db
+    print(mag_db)
     # normalize
     #pattern_norm = pattern / np.max(pattern)
 
@@ -239,7 +257,7 @@ def compute_loss(v, vna_instance, rpi):
 
     # simple loss = 1 - normalized gain at target angle
     #loss = 1.0 - pattern_norm[idx_target]
-    return loss, magnitude
+    return loss, mag_db
     
 def calibration_step(v, k, vna_instance, rpi):
     """
@@ -293,7 +311,6 @@ def main():
     v_arr = []
     vp_arr = []
     vna_instance = VnaInstance(IP_ADDR_VNA)
-    vna_instance.connect()
     rpi = PiController(
         host=PI_HOST,
         username=USERNAME,
@@ -331,7 +348,8 @@ def main():
                 )
 
     print(v_model)
-    vna_instance.disconnect()
+    vna_instance.rm.close()
+    rpi.stop_program()
     rpi.close()
     #Plot Loss
     plt.figure()

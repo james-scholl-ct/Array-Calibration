@@ -452,6 +452,7 @@ def main():
                 )
 
     nsi.disconnect()
+    rpi.stop_program()
     rpi.close()
     
     params = {
