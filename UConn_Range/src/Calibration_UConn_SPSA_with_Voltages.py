@@ -60,7 +60,7 @@ INIT_VOLTAGE_MAP = np.array([
 #Size of array representing elements on the board-12x8 for LB
 SIZE = (12,8)
 
-LC_DELAY_TIME = 1 #in secs
+LC_DELAY_TIME = 40 #in secs
 
 DAC_MIN_STEP_SIZE = float(21/4096) #DAC60096 12-bit +/-10.5
 
@@ -83,7 +83,7 @@ a0 = 9000000   # learning-rate scale in dac steps
 c0 = 600  # perturbation scale in DAC steps should be 2-5x a0
 alpha = 0.6 #.6-.8
 gamma = 0.1
-num_iters = 600
+num_iters = 10
 
 def read_phase_map_file(filename):
     phasemap = []
@@ -114,6 +114,7 @@ def loss_center_vs_sidelobes_db(
     center_idx: int,
     main_half_width: int = 2,
     guard_half_width: int = 10,
+    loss_equation: int =  0,
     alpha: float = 1.0,
     beta: float = 1.0,
     eps: float = 1e-15,
@@ -270,6 +271,7 @@ def main():
         ak_arr.append(ak)
         ck_arr.append(ck)
         v_arr.append(v_new)
+        diff_arr.append(abs(Lp-Lm))
         t1 = time.time()
 
         if k+1 % 5 == 0 or k == num_iters - 1:
@@ -301,7 +303,9 @@ def main():
             "frequency": FREQUENCY,
             "main_lobe_half_width": MAIN_LOBE_HALF_WIDTH,
             "center_index": CENTER_INDEX,
-            "guard_band_half_width": GUARD_BAND_HALF_WIDTH
+            "guard_band_half_width": GUARD_BAND_HALF_WIDTH,
+            "loss_equation": "1 - E_main / (E_main + E_side)",
+            "notes": "Ignores sidelobes close to transmitter, +x dir"  
         }
     
     with open(exp_folder / "params.json", "w") as f:
