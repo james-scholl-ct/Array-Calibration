@@ -1,0 +1,11 @@
+[project]
+name = "reflectek-tools"
+version = "0.1.0"
+description = "Shared utilities for reflectarray SPSA experiments"
+
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools]
+package-dir = {"" = "src"}

@@ -5,20 +5,20 @@ Created on Thu Dec  4 15:21:17 2025
 @author: SchollJamesAC3CARILL
 96 Element LB reflectarray calibration
 
+Get latest for first time with git clone https://github.com/james-scholl-ct/Array-Calibration.git then use git pull
+Install packages from Array-Calibration folder with pip install -e .
 """
 
 import numpy as np
 import math
 import time
-import paramiko
-from typing import Optional
 import matplotlib.pyplot as plt
 from datetime import datetime
 from pathlib import Path
-import gc
-import win32com.client
 import json
 import subprocess
+from shared.PiController import PiController
+from shared.NSI2000Client import NSI2000Client
 
 #Place to store experiment results
 EXP_DIR = r"C:\NSI2000\Data\Carillon\reflectarray_calibration\Experiments"
@@ -107,177 +107,7 @@ def update_lb_array_file(V):
         for row in np.zeros((24,8)):
             line = ",".join(str(x) for x in row)
             f.write(line + "\n")
-            
-class PiController:
-    """
-    Connects to a raspberry pi via ssh with Paramiko. Copies a local low and high band file to the files on the PI. 
-    Runs the remote command that starts the python program on the PI which updates the DACs via SPI.
-    Creates a stop text file that is watched for by that program to stop it so that it can read another set of HB and LB voltages
-    """
-    def __init__(
-        self,
-        host: str,
-        username: str,
-        password: Optional[str],
-        local_file_hb: str,
-        local_file_lb: str,
-        remote_file_hb: str,
-        remote_file_lb: str,
-        remote_command: str,
-        port: int,
-        key_filename: Optional[str],
-        stop_file: str,
-    ):
-        self.host = host
-        self.username = username
-        self.password = password
-        self.local_file_hb = local_file_hb
-        self.local_file_lb = local_file_lb
-        self.remote_file_hb = remote_file_hb
-        self.remote_file_lb = remote_file_lb
-        self.remote_command = remote_command
-        self.port = port
-        self.key_filename = key_filename
-        self.stop_file = stop_file
-        self.client = None
-        
-    def connect(self):
-        client = paramiko.SSHClient()
-        client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-        
-        client.connect(
-            hostname=self.host,
-            port=self.port,
-            username=self.username,
-            password=self.password,
-            key_filename=self.key_filename,
-            look_for_keys=True,
-        )
-        self.client = client
-        return self
     
-    def close(self):
-        if self.client is not None:
-            try:
-                self.client.close()
-            finally:
-                self.client = None
-                
-    def remove_stop_file(self):
-        sftp = self.client.open_sftp()
-        try:
-            sftp.remove(self.stop_file)
-            print("Stop File removed")
-        except FileNotFoundError:
-            pass
-        sftp.close()
-        
-    def stop_program(self):
-        sftp = self.client.open_sftp()
-        with sftp.open(self.stop_file, "w"):
-            pass
-        sftp.close()
-        
-    def upload_lb_and_hb_files(self):
-        sftp = self.client.open_sftp()
-        print(f"Uploading {self.local_file_hb} -> {self.remote_file_hb} ...")
-        sftp.put(self.local_file_hb, self.remote_file_hb)
-        print("Upload complete.")
-        
-        print(f"Uploading {self.local_file_lb} -> {self.remote_file_lb} ...")
-        sftp.put(self.local_file_lb, self.remote_file_lb)
-        print("Upload complete.")
-        sftp.close()
-        
-    def run_remote_command(self, wait: bool = False, get_pty: bool = True):
-        print(f"Running remote command: {self.remote_command}")
-        stdin, stdout, stderr = self.client.exec_command(self.remote_command, get_pty=get_pty)
-        if not wait:
-            return None
-        exit_status = stdout.channel.recv_exit_status()
-        out = stdout.read().decode("utf-8", errors="replace")
-        err = stderr.read().decode("utf-8", errors="replace")
-        return out, err, exit_status
-    def update_dacs(self):
-        self.stop_program()
-        time.sleep(1)
-        self.remove_stop_file()
-        self.upload_lb_and_hb_files()
-        self.run_remote_command()
-        
-    def __enter__(self):
-        return self.connect()
-
-    def __exit__(self, exc_type, exc, tb):
-        self.close()
-    
-
-class NSI2000Client:
-    def __init__(self, visible=True):
-        self.visible = visible
-        self.server = None
-        self.app = None
-        self.cmd = None
-
-    def connect(self):
-        # Create/attach COM server
-        self.server = win32com.client.Dispatch("NSI2000.server")
-        self.app = self.server.AppConnection
-        self.app.Visible = self.visible
-        
-        # Script interface
-        self.cmd = self.app.ScriptCommands
-        return self
-
-    def disconnect(self):
-        # Release COM refs
-        self.cmd = None
-        self.app = None
-        self.server = None
-
-        gc.collect()
-        
-    def run_scan_get_hor_amp(self, filename):
-        #Runs the scan specified in filename, gets the amplitude at all horizontal points
-        #for beam 1 at the first vertical point
-        #Also saves a listing of the data and test
-        start_time = time.time()
-        self.cmd.MEAS_CREATE_NEW_SCAN() #For some scans post-processing doesnt finish, this closes the previous scan
-        self.cmd.MEAS_ACQUIRE(filename, True)
-        #objNSI2000.FF_LISTING_TO_FILE(data_filename, False)
-        #objNSI2000.FF_VCUT
-        #print(objNSI2000.FFPOL1Array())
-        nf_hpts = int(self.cmd.NF_HPTS)
-        amp = np.zeros(nf_hpts)
-        self.cmd.SELECT_BEAM(BEAM)
-        for i in range(nf_hpts):
-            #print(nsi.cmd.NFPOL1_AMP(i, j))
-            amp[i] = self.cmd.NFPOL1_AMP(i, 0)[0]
-                
-        #while 1:
-        #    print(objNSI2000.STATUS_MESSAGE())
-        #    time.sleep(0.1)  # 100 ms polling
-
-        elapsed = time.time() - start_time
-        print(f"Acquisition completed in {elapsed:.1f} seconds")
-        return amp
-    
-    def save_scan(self, k, is_loss_plus:bool, cal_folder):
-        if (is_loss_plus):
-            cal_file = cal_folder / f"cal_iter_{k}_Lp.asc"
-        else:
-            cal_file = cal_folder / f"cal_iter_{k}_Lm.asc"
-        self.cmd.NF_LISTING_TO_FILE(cal_file)
-        cal_file = cal_folder / f"cal_iter_{k}.asc"
-        self.cmd.NF_LISTING_TO_FILE(cal_file)
-        #Add code to also perform an hcut and save the graph
-    # Context manager support: ensures cleanup 
-    def __enter__(self): 
-        return self.connect() 
-    
-    def __exit__(self, exc_type, exc, tb): 
-        self.disconnect() 
-        return False # don't suppress exceptions
 
 def loss_center_vs_sidelobes_db(
     amp_db,
@@ -351,7 +181,7 @@ def compute_loss(v, vna_instance, rpi, k, is_loss_plus, cal_folder):
     
     time.sleep(LC_DELAY_TIME)
     
-    pattern = vna_instance.run_scan_get_hor_amp(SCAN_FILENAME)
+    pattern = vna_instance.run_scan_get_hor_amp(SCAN_FILENAME, BEAM)
     vna_instance.save_scan(k, is_loss_plus, cal_folder)
     
     loss = loss_center_vs_sidelobes_db(pattern, CENTER_INDEX, MAIN_LOBE_HALF_WIDTH, GUARD_BAND_HALF_WIDTH)
