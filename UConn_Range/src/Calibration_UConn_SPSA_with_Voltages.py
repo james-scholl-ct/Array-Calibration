@@ -60,7 +60,7 @@ INIT_VOLTAGE_MAP = np.array([
 #Size of array representing elements on the board-12x8 for LB
 SIZE = (12,8)
 
-LC_DELAY_TIME = 40 #in secs
+LC_DELAY_TIME = 1 #in secs
 
 DAC_MIN_STEP_SIZE = float(21/4096) #DAC60096 12-bit +/-10.5
 
@@ -83,7 +83,7 @@ a0 = 9000000   # learning-rate scale in dac steps
 c0 = 600  # perturbation scale in DAC steps should be 2-5x a0
 alpha = 0.6 #.6-.8
 gamma = 0.1
-num_iters = 10
+num_iters = 2
 
 def read_phase_map_file(filename):
     phasemap = []
@@ -166,7 +166,7 @@ def loss_center_vs_sidelobes_db(
 
     loss = 1 - E_main / (E_main + E_side)
     
-    #lm = .1
+    #lm = .25
     #loss = -E_main - lm * E_side
     
     return loss
@@ -223,7 +223,7 @@ def calibration_step(v, k, vna_instance, rpi, cal_folder):
 
     v_new = np.clip(v_new, 0, 2047)
     
-    return v_new, L_plus, L_minus, pattern_plus, ak, ck, v_new[0][0]
+    return v_new, L_plus, L_minus, pattern_plus, pattern_minus, v_plus, v_minus, ak, ck
     
 
 def main():
@@ -231,11 +231,17 @@ def main():
     v_model = np.clip(np.round(INIT_VOLTAGE_MAP/DAC_MIN_STEP_SIZE), 0, 2047)
     lp_arr = []
     pattern_point_arr = []
-    all_patterns = []
+    all_patternsp = []
+    all_patternsm = []
+    all_voltages = [] #All model voltages
+    all_voltages_pp = []#all plus perterbed voltages 
+    all_voltages_pm = []#all minus perturbed voltages
     ak_arr = []
     ck_arr = []
     v_arr = []
+    v_diff_arr = []
     diff_arr = []
+    lavg_arr = []
     nsi = NSI2000Client().connect()
     rpi = PiController(
         host=PI_HOST,
@@ -260,18 +266,26 @@ def main():
     raw_folder.mkdir(parents = True, exist_ok = False)
     
     print("Starting SPSA calibration...")
-    
     t0 = time.time()
+    all_voltages.append(v_model)
     for k in range(num_iters):
         print(f"Iter: {k+1}")
-        v_model, Lp, Lm, pattern, ak, ck, v_new = calibration_step(v_model, k, nsi, rpi, raw_folder)
+        v_old = v_model[0][0]
+        all_voltages.append(v_model) #gets all input voltages except the last
+        v_model, Lp, Lm, patternp, patternm, vp, vm, ak, ck = calibration_step(v_model, k, nsi, rpi, raw_folder)
         lp_arr.append(Lp)
-        pattern_point_arr.append(pattern[18])
-        all_patterns.append(pattern)
+        pattern_point_arr.append(patternp[18])
+        all_patternsp.append(patternp)
+        all_patternsm.append(patternm)
+        all_voltages_pp.append(vp)
+        all_voltages_pm.append(vm)
         ak_arr.append(ak)
         ck_arr.append(ck)
-        v_arr.append(v_new)
+        v_arr.append(v_model[0][0])
+        v_diff_arr.append(abs(v_model[0][0]-v_old))
         diff_arr.append(abs(Lp-Lm))
+        lavg_arr.append(abs(Lp+Lm/2))
+        
         t1 = time.time()
 
         if k+1 % 5 == 0 or k == num_iters - 1:
@@ -304,7 +318,7 @@ def main():
             "main_lobe_half_width": MAIN_LOBE_HALF_WIDTH,
             "center_index": CENTER_INDEX,
             "guard_band_half_width": GUARD_BAND_HALF_WIDTH,
-            "loss_equation": "1 - E_main / (E_main + E_side)",
+            "loss_equation": "loss = 1 - E_main / (E_main + E_side)",
             "notes": "Ignores sidelobes close to transmitter, +x dir"  
         }
     
@@ -313,7 +327,12 @@ def main():
         
     np.savez(
         exp_folder / "results.npz",
-        final_voltages= v_new,
+        final_voltages= v_model,
+        all_voltages= all_voltages,
+        all_patternsp= all_patternsp,
+        all_patternsm= all_patternsm,
+        all_voltages_pp= all_voltages_pp,
+        all_voltages_pm= all_voltages_pm,
         init_voltage_map=INIT_VOLTAGE_MAP
     )
     
@@ -347,35 +366,52 @@ def main():
     ax3.set_xlabel("Iteration (k)")
     ax3.set_ylabel("a_k")
     ax3.grid()
-    fig3.savefig(plot_dir / "c_kVsIter.png", dpi=200)
+    fig3.savefig(plot_dir / "a_kVsIter.png", dpi=200)
     
     #Plot magnitude received in center
     fig4, ax4 = plt.subplots()
     ax4.plot(x,pattern_point_arr)
-    ax4.set_title("Magnitude at 19.4 GHz")
+    ax4.set_title(f"Magnitude at {FREQUENCY} in Center for Loss_plus")
     ax4.set_xlabel("Iteration (k)")
     ax4.set_ylabel("Magnitude (dB)")
     ax4.grid()
     fig4.savefig(plot_dir / "MagInCenterVsIter.png", dpi=200)
     
-    #Plot magnitude vs span for last iteration
+    #Plot magnitude vs span for every iteration step
     fig5, ax5 = plt.subplots()
-    ax5.plot(all_patterns[num_iters-1])
-    ax5.set_title("Magnitude vs span")
+    step = 1
+    run_idx = np.arange(0, num_iters, step)
+    cmap = plt.cm.viridis
+    norm = plt.Normalize(vmin=run_idx[0], vmax=run_idx[-1])
+    for i in run_idx:
+        if i == num_iters - 1:
+            continue
+        ax5.plot(all_patternsp[i], color=cmap(norm(i)), alpha=0.7)
+    ax5.plot(all_patternsp[-1], color="red", linewidth=2, label="Final run")
+    
+    sm = plt.cm.ScalarMappable(cmap=cmap, norm=norm)
+    sm.set_array([])
+    
+    cbar = fig5.colorbar(sm, ax=ax5)
+    cbar.set_label("Run index")
+    cbar.set_ticks(run_idx)
+    cbar.set_ticklabels(run_idx)
+    
+    ax5.set_title(f"Magnitude vs span every {step} run")
     ax5.set_xlabel("span: -2.5 to 2.5 in")
     ax5.set_ylabel("Magnitdue (dB)")
     ax5.grid()
-    fig5.savefig(plot_dir / "FinalMagVsSpan.png", dpi=200)
+    fig5.savefig(plot_dir / f"MagVsSpanevery{step}run.png", dpi=200)
     
-    #Plot perturbed voltages
+    #Plot voltage at at element 00
     fig6, ax6 = plt.subplots()
-    v_arr = np.array(v_arr)
-    ax6.plot(x, np.round(v_arr*10.5/2047,3))
-    ax6.set_title("Perturbed Voltage at element [0][0]")
+    v_arr = np.array(v_arr, dtype=float)
+    ax6.plot(x, np.round(v_arr*DAC_MIN_STEP_SIZE,3))
+    ax6.set_title("Voltage at element [0][0]")
     ax6.set_xlabel("Iteration (k)")
     ax6.set_ylabel("Voltage (V)")
     ax6.grid()
-    fig6.savefig(plot_dir / "PerturbedVoltageAt00VsIter.png", dpi=200)
+    fig6.savefig(plot_dir / "VoltageAt00VsIter.png", dpi=200)
     
     fig7, ax7 = plt.subplots()
     ax7.plot(x, diff_arr)
@@ -385,6 +421,23 @@ def main():
     ax7.grid()
     fig7.savefig(plot_dir / "LpminusLmVsIter.png", dpi=200)
     
+    fig8, ax8 = plt.subplots()
+    v_diff_arr = np.array(v_diff_arr, dtype=float)
+    ax8.plot(x, v_diff_arr*DAC_MIN_STEP_SIZE)
+    ax8.set_title("|Vnew-Vold| vs Iteration at element [0][0]")
+    ax8.set_xlabel("Iteration (k)")
+    ax8.set_ylabel("V")
+    ax8.grid()
+    fig8.savefig(plot_dir / "VoltageDiffAt00VsIter.png", dpi=200)
+    
+    fig9, ax9 = plt.subplots()
+    ax9.plot(x, lavg_arr)
+    ax9.set_title("Lp+Lm/2 vs Iteration")
+    ax9.set_xlabel("Iteration (k)")
+    ax9.set_ylabel("Loss")
+    ax9.grid()
+    fig9.savefig(plot_dir / "LossAvgVsIter.png", dpi=200)
+
     plt.show()
     
     plt.close(fig1)
@@ -394,6 +447,8 @@ def main():
     plt.close(fig5)
     plt.close(fig6)
     plt.close(fig7)
+    plt.close(fig8)
+    plt.close(fig9)
     print("Done.")
     
 if __name__ == "__main__":
