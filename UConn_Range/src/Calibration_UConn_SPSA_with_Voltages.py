@@ -6,7 +6,7 @@ Created on Thu Dec  4 15:21:17 2025
 96 Element LB reflectarray calibration
 
 Get latest for first time with git clone https://github.com/james-scholl-ct/Array-Calibration.git then use git pull
-Install packages from Array-Calibration folder with pip install -e .
+Install packages from Array-Calibration folder with pip install -e . (Use spyder console if not installed)
 """
 
 import numpy as np
@@ -17,8 +17,8 @@ from datetime import datetime
 from pathlib import Path
 import json
 import subprocess
-from shared.PiController import PiController
-from shared.NSI2000Client import NSI2000Client
+from Shared.PiController import PiController
+from Shared.NSI2000Client import NSI2000Client
 
 #Place to store experiment results
 EXP_DIR = r"C:\NSI2000\Data\Carillon\reflectarray_calibration\Experiments"
@@ -79,11 +79,11 @@ GUARD_BAND_HALF_WIDTH = 4 #Number of points in the scan for a guard band not con
  
 
 # SPSA hyperparameters
-a0 = 300   # learning-rate scale in dac steps
+a0 = 9000000   # learning-rate scale in dac steps
 c0 = 600  # perturbation scale in DAC steps should be 2-5x a0
 alpha = 0.6 #.6-.8
 gamma = 0.1
-num_iters = 1
+num_iters = 600
 
 def read_phase_map_file(filename):
     phasemap = []
@@ -123,7 +123,8 @@ def loss_center_vs_sidelobes_db(
 
     Goal: maximize energy near known center_idx, minimize energy elsewhere (sidelobes).
 
-    Loss = -alpha * log(E_main) + beta * log(E_side)
+    loss = 1 - E_main / (E_main + E_side) or
+    loss = -E_main - lm * E_side
 
     - E_main: sum of linear power in [center-main_half_width, center+main_half_width]
     - E_side: sum of linear power outside a guard band
@@ -162,11 +163,10 @@ def loss_center_vs_sidelobes_db(
     E_main = float(np.sum(pwr[main_mask]))
     E_side = float(np.sum(pwr[side_mask]))
 
-    # stabilize logs
-    E_main = max(E_main, eps)
-    E_side = max(E_side, eps)
-
-    loss = (-alpha * np.log(E_main)) + (beta * np.log(E_side))
+    loss = 1 - E_main / (E_main + E_side)
+    
+    #lm = .1
+    #loss = -E_main - lm * E_side
     
     return loss
 
@@ -234,6 +234,7 @@ def main():
     ak_arr = []
     ck_arr = []
     v_arr = []
+    diff_arr = []
     nsi = NSI2000Client().connect()
     rpi = PiController(
         host=PI_HOST,
@@ -280,7 +281,10 @@ def main():
                 f"Iter {k+1:03d} | L+={Lp_print:.4f} L-={Lm_print:.4f} "
                 f"v[0][0]={v_model_print:.1f} dt={t1-t0:.3f}s"
                 )
-
+    diff_arr_np = np.array(diff_arr)
+    mean = np.mean(diff_arr_np)
+    print(f"Loss difference mean: {mean}")
+    
     nsi.disconnect()
     rpi.stop_program()
     rpi.close()
@@ -369,6 +373,14 @@ def main():
     ax6.grid()
     fig6.savefig(plot_dir / "PerturbedVoltageAt00VsIter.png", dpi=200)
     
+    fig7, ax7 = plt.subplots()
+    ax7.plot(x, diff_arr)
+    ax7.set_title("|Lp-Lm| vs Iteration")
+    ax7.set_xlabel("Iteration (k)")
+    ax7.set_ylabel("|Lp-Lm|")
+    ax7.grid()
+    fig7.savefig(plot_dir / "LpminusLmVsIter.png", dpi=200)
+    
     plt.show()
     
     plt.close(fig1)
@@ -377,7 +389,7 @@ def main():
     plt.close(fig4)
     plt.close(fig5)
     plt.close(fig6)
-    
+    plt.close(fig7)
     print("Done.")
     
 if __name__ == "__main__":

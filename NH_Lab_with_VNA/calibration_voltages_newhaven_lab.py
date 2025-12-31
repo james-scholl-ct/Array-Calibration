@@ -4,15 +4,15 @@ Created on Thu Dec  4 15:21:17 2025
 Sends 8x12 HB voltages at 27.2Ghz to 0-100V array
 @author: SchollJamesAC3CARILL
 Get latest for first time with git clone https://github.com/james-scholl-ct/Array-Calibration.git then use git pull
-Install packages from Array-Calibration folder with pip install -e .
+Install packages from Array-Calibration folder with pip install -e (Use spyder console if not installed).
 """
 import numpy as np
 import math
 import time
 from typing import Optional
 import matplotlib.pyplot as plt
-from shared.PiController import PiController
-from shared.VnaInstance import VnaInstance
+from Shared.PiController import PiController
+from Shared.VnaInstance import VnaInstance
 
 
 PHASE_MAP_FILE_LB = rf"C:\Users\labuser\Documents\ReflecTekCalibrationScholl\phases_with_beam_steering_0theta_0phi_hex_12x8.txt" 
