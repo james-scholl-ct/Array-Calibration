@@ -60,7 +60,7 @@ INIT_VOLTAGE_MAP = np.array([
 #Size of array representing elements on the board-12x8 for LB
 SIZE = (12,8)
 
-LC_DELAY_TIME = 1 #in secs
+LC_DELAY_TIME = 40 #in secs
 
 DAC_MIN_STEP_SIZE = float(21/4096) #DAC60096 12-bit +/-10.5
 
@@ -83,7 +83,7 @@ a0 = 9000000   # learning-rate scale in dac steps
 c0 = 600  # perturbation scale in DAC steps should be 2-5x a0
 alpha = 0.6 #.6-.8
 gamma = 0.1
-num_iters = 2
+num_iters = 200
 
 def read_phase_map_file(filename):
     phasemap = []
