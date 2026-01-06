@@ -42,6 +42,7 @@ REMOTE_PROGRAM = "/home/feix/Gen3DAC60096EVM_SPI_RPi5_scholl.py" #Location of pr
 # Command to run on the Pi once file is uploaded
 REMOTE_COMMAND = f"python3 {REMOTE_PROGRAM}"
 
+'''
 INIT_VOLTAGE_MAP = np.array([
      [1.859, 1.859, 1.859, 1.928, 1.995, 1.995, 1.948, 1.889],
      [9.769, 9.769, 9.769, 1.859, 1.859, 1.859, 1.859, 1.859],
@@ -56,7 +57,9 @@ INIT_VOLTAGE_MAP = np.array([
      [1.976, 2.117, 2.188, 2.217, 2.243, 2.248, 2.226, 2.203],
      [9.769, 9.769, 1.859, 1.859, 1.859, 1.859, 1.859, 1.859],
 ], dtype=float)
+  '''
   
+INIT_VOLTAGE_MAP = np.zeros((12,8)) 
 #Size of array representing elements on the board-12x8 for LB
 SIZE = (12,8)
 
@@ -65,16 +68,16 @@ LC_DELAY_TIME = 40 #in secs
 DAC_MIN_STEP_SIZE = float(21/4096) #DAC60096 12-bit +/-10.5
 
 #Set the beam (corresponds to frequency measured) number that you put in NSI software. 19.3 Ghz is ideal for low band
-BEAM = 27
+BEAM = 1
 
 ELEVATION = 0
 AZIMUTH = 0
 
-FREQUENCY = "19.3 Ghz"
+FREQUENCY = "19.7 Ghz"
 
 #Loss function params
 MAIN_LOBE_HALF_WIDTH = 2 #Number of points in scan for the main lobe half width
-CENTER_INDEX = 15 #Index where the center lobe should be
+CENTER_INDEX = 80 #Index where the center lobe should be
 GUARD_BAND_HALF_WIDTH = 4 #Number of points in the scan for a guard band not considered in loss function
  
 
@@ -158,8 +161,8 @@ def loss_center_vs_sidelobes_db(
     main_mask[m0:m1] = True
 
     side_mask = np.ones(N, dtype=bool)
-    #side_mask[g0:g1] = False  # everything outside guard is "sidelobes"
-    side_mask[g0:] = False  # everything outside guard is including all positive indices which are closest to horn (from milad- it interferes)
+    side_mask[g0:g1] = False  # everything outside guard is "sidelobes"
+    #side_mask[g0:] = False  # everything outside guard is including all positive indices which are closest to horn (from milad- it interferes)
     
     E_main = float(np.sum(pwr[main_mask]))
     E_side = float(np.sum(pwr[side_mask]))
@@ -228,7 +231,8 @@ def calibration_step(v, k, vna_instance, rpi, cal_folder):
 
 def main():
     #v_model = np.random.randint(0,2095, SIZE)  #initially assume random voltages [0,10)
-    v_model = np.clip(np.round(INIT_VOLTAGE_MAP/DAC_MIN_STEP_SIZE), 0, 2047)
+    #v_model = np.clip(np.round(INIT_VOLTAGE_MAP/DAC_MIN_STEP_SIZE), 0, 2047)
+    v_model = np.zeros(SIZE)
     lp_arr = []
     pattern_point_arr = []
     all_patternsp = []
@@ -274,7 +278,7 @@ def main():
         all_voltages.append(v_model) #gets all input voltages except the last
         v_model, Lp, Lm, patternp, patternm, vp, vm, ak, ck = calibration_step(v_model, k, nsi, rpi, raw_folder)
         lp_arr.append(Lp)
-        pattern_point_arr.append(patternp[18])
+        pattern_point_arr.append(patternp[CENTER_INDEX])
         all_patternsp.append(patternp)
         all_patternsm.append(patternm)
         all_voltages_pp.append(vp)
@@ -319,7 +323,7 @@ def main():
             "center_index": CENTER_INDEX,
             "guard_band_half_width": GUARD_BAND_HALF_WIDTH,
             "loss_equation": "loss = 1 - E_main / (E_main + E_side)",
-            "notes": "Ignores sidelobes close to transmitter, +x dir"  
+            "notes": "Compares energy in main lobe to sidelobes with a small guardband around main lobe not considered in loss"  
         }
     
     with open(exp_folder / "params.json", "w") as f:
@@ -333,7 +337,8 @@ def main():
         all_patternsm= all_patternsm,
         all_voltages_pp= all_voltages_pp,
         all_voltages_pm= all_voltages_pm,
-        init_voltage_map=INIT_VOLTAGE_MAP
+        init_voltage_map=INIT_VOLTAGE_MAP,
+        iterations=num_iters
     )
     
     plot_dir = exp_folder / "plots"
@@ -379,7 +384,7 @@ def main():
     
     #Plot magnitude vs span for every iteration step
     fig5, ax5 = plt.subplots()
-    step = 1
+    step = 10
     run_idx = np.arange(0, num_iters, step)
     cmap = plt.cm.viridis
     norm = plt.Normalize(vmin=run_idx[0], vmax=run_idx[-1])

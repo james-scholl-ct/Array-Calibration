@@ -70,7 +70,7 @@ BEAM = 27
 ELEVATION = 0
 AZIMUTH = 0
 
-FREQUENCY = "19.3 Ghz"
+FREQUENCY = "19.7 Ghz"
 
 #Loss function params
 MAIN_LOBE_HALF_WIDTH = 2 #Number of points in scan for the main lobe half width
@@ -194,9 +194,8 @@ def compute_loss(v, vna_instance, rpi, k, is_loss_plus, cal_folder):
 def main():
     #v_model = np.random.randint(0,2095, SIZE)  #initially assume random voltages [0,10)
     #v_model = np.clip(np.round(INIT_VOLTAGE_MAP/DAC_MIN_STEP_SIZE), 0, 2047)
-    voltages = np.round(np.random.uniform(2.0, 5.0, size=(12, 8)),3)
-
-    print(voltages)
+    v_base = np.round(np.random.uniform(2.0, 5.0, 12),3)
+    voltages = np.tile(v_base[:,None], (1,8))
 
     nsi = NSI2000Client().connect()
     rpi = PiController(
@@ -214,16 +213,25 @@ def main():
     )
     rpi.connect()
     
-    update_lb_array_file(INIT_VOLTAGE_MAP)
+    update_lb_array_file(voltages)
     rpi.update_dacs()
     time.sleep(40)
-    print("Ready to run")
+    print("Ready to run scan")
+    
+    #Manually stop run when scan is finish
     while True:
         try:
             time.sleep(1)
         except KeyboardInterrupt:
             print("exiting")
             break
+    
+    #Set array elements to zero when done
+    v_close = np.round(np.zeros((12,8)),3)
+    update_lb_array_file(v_close)
+    rpi.update_dacs()
+    time.sleep(40)
+    
     nsi.disconnect()
     rpi.stop_program()
     rpi.close()
