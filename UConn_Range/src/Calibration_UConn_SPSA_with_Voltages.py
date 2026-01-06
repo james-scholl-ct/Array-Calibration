@@ -60,6 +60,8 @@ INIT_VOLTAGE_MAP = np.array([
   '''
   
 INIT_VOLTAGE_MAP = np.zeros((12,8)) 
+#INIT_VOLTAGE_MAP = np.random.randint(0,2095, SIZE)  #initially assume random voltages [0,10)
+#INIT_VOLTAGE_MAP = np.clip(np.round(INIT_VOLTAGE_MAP/DAC_MIN_STEP_SIZE), 0, 2047)
 #Size of array representing elements on the board-12x8 for LB
 SIZE = (12,8)
 
@@ -229,124 +231,36 @@ def calibration_step(v, k, vna_instance, rpi, cal_folder):
     return v_new, L_plus, L_minus, pattern_plus, pattern_minus, v_plus, v_minus, ak, ck
     
 
-def main():
-    #v_model = np.random.randint(0,2095, SIZE)  #initially assume random voltages [0,10)
-    #v_model = np.clip(np.round(INIT_VOLTAGE_MAP/DAC_MIN_STEP_SIZE), 0, 2047)
-    v_model = np.zeros(SIZE)
-    lp_arr = []
-    pattern_point_arr = []
-    all_patternsp = []
-    all_patternsm = []
-    all_voltages = [] #All model voltages
-    all_voltages_pp = []#all plus perterbed voltages 
-    all_voltages_pm = []#all minus perturbed voltages
-    ak_arr = []
-    ck_arr = []
-    v_arr = []
-    v_diff_arr = []
-    diff_arr = []
-    lavg_arr = []
-    nsi = NSI2000Client().connect()
-    rpi = PiController(
-        host=PI_HOST,
-        username=USERNAME,
-        password=PASSWORD,
-        local_file_hb=LOCAL_FILE_HB,
-        local_file_lb=LOCAL_FILE_LB,
-        remote_file_hb=REMOTE_FILE_HB,
-        remote_file_lb=REMOTE_FILE_LB,
-        remote_command=REMOTE_COMMAND,
-        port = PI_PORT,
-        key_filename=KEY_FILE,
-        stop_file = STOP_FILE,
-    )
-    rpi.connect()
-    
-    experiment_dir = Path(EXP_DIR)
-    ts = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
-    exp_folder = experiment_dir / f"Calibration_{ts}"
-    raw_folder = experiment_dir / exp_folder / "raw"
-    exp_folder.mkdir(parents = True, exist_ok = False)
-    raw_folder.mkdir(parents = True, exist_ok = False)
-    
-    print("Starting SPSA calibration...")
-    t0 = time.time()
-    all_voltages.append(v_model)
-    for k in range(num_iters):
-        print(f"Iter: {k+1}")
-        v_old = v_model[0][0]
-        all_voltages.append(v_model) #gets all input voltages except the last
-        v_model, Lp, Lm, patternp, patternm, vp, vm, ak, ck = calibration_step(v_model, k, nsi, rpi, raw_folder)
-        lp_arr.append(Lp)
-        pattern_point_arr.append(patternp[CENTER_INDEX])
-        all_patternsp.append(patternp)
-        all_patternsm.append(patternm)
-        all_voltages_pp.append(vp)
-        all_voltages_pm.append(vm)
-        ak_arr.append(ak)
-        ck_arr.append(ck)
-        v_arr.append(v_model[0][0])
-        v_diff_arr.append(abs(v_model[0][0]-v_old))
-        diff_arr.append(abs(Lp-Lm))
-        lavg_arr.append(abs(Lp+Lm/2))
-        
-        t1 = time.time()
-
-        if k+1 % 5 == 0 or k == num_iters - 1:
-            # Also compute loss at current (unperturbed) parameters for logging
-            Lp_print = float(Lp) #convert to python scalar for printing
-            Lm_print = float(Lm)
-            v_model_print=float(v_model[0][0])
-            print(
-                f"Iter {k+1:03d} | L+={Lp_print:.4f} L-={Lm_print:.4f} "
-                f"v[0][0]={v_model_print:.1f} dt={t1-t0:.3f}s"
-                )
-    diff_arr_np = np.array(diff_arr)
-    mean = np.mean(diff_arr_np)
-    print(f"Loss difference mean: {mean}")
-    
-    nsi.disconnect()
-    rpi.stop_program()
-    rpi.close()
-    
-    params = {
-            "algorithm": "SPSA perturbing voltages",
-            "a0": a0,
-            "c0": c0,
-            "alpha": alpha,
-            "gamma": gamma,
-            "num_iters": num_iters,
-            "pi_program_ran": REMOTE_PROGRAM,
-            "low_or_high_band": "Low Band",
-            "frequency": FREQUENCY,
-            "main_lobe_half_width": MAIN_LOBE_HALF_WIDTH,
-            "center_index": CENTER_INDEX,
-            "guard_band_half_width": GUARD_BAND_HALF_WIDTH,
-            "loss_equation": "loss = 1 - E_main / (E_main + E_side)",
-            "notes": "Compares energy in main lobe to sidelobes with a small guardband around main lobe not considered in loss"  
-        }
-    
-    with open(exp_folder / "params.json", "w") as f:
-        json.dump(params, f, indent=2)
-        
+def save_results(exp_folder, results):
+    for i in results:
+        results[i] = np.array(results[i])
     np.savez(
         exp_folder / "results.npz",
-        final_voltages= v_model,
-        all_voltages= all_voltages,
-        all_patternsp= all_patternsp,
-        all_patternsm= all_patternsm,
-        all_voltages_pp= all_voltages_pp,
-        all_voltages_pm= all_voltages_pm,
-        init_voltage_map=INIT_VOLTAGE_MAP,
-        iterations=num_iters
+        final_voltages= results["final_voltages"],
+        all_voltages= results["all_voltages"],
+        all_patternsp= results["patterns_plus"],
+        all_patternsm= results["patterns_minus"],
+        all_voltages_pp= results["voltages_plus"],
+        all_voltages_pm= results["voltages_minus"]
     )
-    
-    plot_dir = exp_folder / "plots"
-    plot_dir.mkdir()
+
+def make_plots(lp_arr,
+           ck_arr,
+           ak_arr,
+           pattern_point_arr,
+           patterns_plus,
+           v_arr,
+           diff_arr,
+           v_diff_arr,
+           lavg_arr,
+           plot_dir,
+           k,
+           plot_step
+):
     
     #Plot Loss
     fig1, ax1 = plt.subplots()
-    x = np.arange(1,len(lp_arr)+1)
+    x = np.arange(0,len(lp_arr))
     ax1.plot(x,lp_arr)
     ax1.set_title("Loss_plus")
     ax1.set_xlabel("Iteration")
@@ -382,17 +296,20 @@ def main():
     ax4.grid()
     fig4.savefig(plot_dir / "MagInCenterVsIter.png", dpi=200)
     
-    #Plot magnitude vs span for every iteration step
+    #Plot magnitude vs span for every iteration step up to 40 then step by user input
     fig5, ax5 = plt.subplots()
-    step = 10
-    run_idx = np.arange(0, num_iters, step)
     cmap = plt.cm.viridis
+    if (k == num_iters-1) or (k>=40):
+        step = plot_step
+    else:
+        step = 1
+    run_idx = np.arange(0, len(patterns_plus), step)
     norm = plt.Normalize(vmin=run_idx[0], vmax=run_idx[-1])
     for i in run_idx:
-        if i == num_iters - 1:
+        if i == len(patterns_plus) - 1:
             continue
-        ax5.plot(all_patternsp[i], color=cmap(norm(i)), alpha=0.7)
-    ax5.plot(all_patternsp[-1], color="red", linewidth=2, label="Final run")
+        ax5.plot(patterns_plus[i], color=cmap(norm(i)), alpha=0.7)
+    ax5.plot(patterns_plus[-1], color="red", linewidth=2, label="Last run")
     
     sm = plt.cm.ScalarMappable(cmap=cmap, norm=norm)
     sm.set_array([])
@@ -402,7 +319,7 @@ def main():
     cbar.set_ticks(run_idx)
     cbar.set_ticklabels(run_idx)
     
-    ax5.set_title(f"Magnitude vs span every {step} run")
+    ax5.set_title("Magnitude vs span every {step} run")
     ax5.set_xlabel("span: -2.5 to 2.5 in")
     ax5.set_ylabel("Magnitdue (dB)")
     ax5.grid()
@@ -454,6 +371,136 @@ def main():
     plt.close(fig7)
     plt.close(fig8)
     plt.close(fig9)
+    
+
+def main():
+    #Set experiment paramaters for logging
+    params = {
+            "algorithm": "SPSA perturbing voltages",
+            "a0": a0,
+            "c0": c0,
+            "alpha": alpha,
+            "gamma": gamma,
+            "num_iters": num_iters,
+            "pi_program_ran": REMOTE_PROGRAM,
+            "low_or_high_band": "Low Band",
+            "frequency": FREQUENCY,
+            "main_lobe_half_width": MAIN_LOBE_HALF_WIDTH,
+            "center_index": CENTER_INDEX,
+            "guard_band_half_width": GUARD_BAND_HALF_WIDTH,
+            "loss_equation": "loss = 1 - E_main / (E_main + E_side)",
+            "imitial_voltage_map": INIT_VOLTAGE_MAP,
+            "notes": "Compares energy in main lobe to sidelobes with a small guardband around main lobe not considered in loss"  
+        }
+    results = {
+        "final_voltages": [],
+        "all_voltages": [], #All model voltages
+        "voltages_plus": [], #all plus perterbed voltages
+        "voltages_minus": [], #all minus perturbed voltages
+        "patterns_plus": [],
+        "patterns_minus": []
+    }
+    
+    lp_arr = [] #For plotting Loss_plus
+    pattern_point_arr = [] #For plotting magnitude at center point
+    ak_arr = [] #For plotting the learning rate
+    ck_arr = [] #For plotting the perterbation rate
+    v_arr = [] #For plotting voltages at element [0,0]
+    v_diff_arr = [] #For plotting voltage change by iteration at element [0,0]
+    diff_arr = [] #For plotting Loss_plus-Loss_minus by iteration
+    lavg_arr = [] #For plotting average loss by iteration
+    
+    nsi = NSI2000Client().connect()
+    rpi = PiController(
+        host=PI_HOST,
+        username=USERNAME,
+        password=PASSWORD,
+        local_file_hb=LOCAL_FILE_HB,
+        local_file_lb=LOCAL_FILE_LB,
+        remote_file_hb=REMOTE_FILE_HB,
+        remote_file_lb=REMOTE_FILE_LB,
+        remote_command=REMOTE_COMMAND,
+        port = PI_PORT,
+        key_filename=KEY_FILE,
+        stop_file = STOP_FILE,
+    )
+    rpi.connect()
+    
+    experiment_dir = Path(EXP_DIR)
+    ts = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+    exp_folder = experiment_dir / f"Calibration_{ts}"
+    raw_folder = experiment_dir / exp_folder / "raw"
+    exp_folder.mkdir(parents = True, exist_ok = False)
+    raw_folder.mkdir(parents = True, exist_ok = False)
+    
+    plot_dir = exp_folder / "plots"
+    plot_dir.mkdir()
+    
+    print("Starting SPSA calibration...")
+    
+    #Save params
+    with open(exp_folder / "params.json", "w") as f:
+        json.dump(params, f, indent=2)
+        
+    #Set initial voltages
+    v_model=INIT_VOLTAGE_MAP
+    t0 = time.time()
+    for k in range(num_iters):
+        print(f"Iter: {k}")
+        v_old = v_model[0][0]
+        results["all_voltages"].append(v_model) #gets all input voltages except the last
+        
+        v_model, Lp, Lm, patternp, patternm, vp, vm, ak, ck = calibration_step(v_model, k, nsi, rpi, raw_folder)
+        
+        lp_arr.append(Lp)
+        pattern_point_arr.append(patternp[CENTER_INDEX])
+        results["patterns_plus"].append(patternp)
+        results["patterns_minus"].append(patternm)
+        results["voltages_plus"].append(vp)
+        results["voltages_minus"].append(vm)
+        results["final_voltages"] = v_model
+        ak_arr.append(ak)
+        ck_arr.append(ck)
+        v_arr.append(v_model[0][0])
+        v_diff_arr.append(abs(v_model[0][0]-v_old))
+        diff_arr.append(abs(Lp-Lm))
+        lavg_arr.append(abs(Lp+Lm/2))
+        
+        
+        
+        if (k+1) % 5 == 0 or k == num_iters - 1:
+            t1 = time.time()
+            # Also compute loss at current (unperturbed) parameters for logging
+            Lp_print = float(Lp) #convert to python scalar for printing
+            Lm_print = float(Lm)
+            v_model_print=float(v_model[0][0])
+            print(
+                f"Iter {k+1:03d} | L+={Lp_print:.4f} L-={Lm_print:.4f} "
+                f"v[0][0]={v_model_print:.1f} dt={t1-t0:.3f}s"
+                )
+            save_results(exp_folder, results)
+            make_plots(lp_arr,
+                       ck_arr,
+                       ak_arr,
+                       pattern_point_arr,
+                       results["patterns_plus"],
+                       v_arr,
+                       diff_arr,
+                       v_diff_arr,
+                       lavg_arr,
+                       plot_dir,
+                       k,
+                       10
+            )
+            
+    diff_arr_np = np.array(diff_arr)
+    mean = np.mean(diff_arr_np)
+    print(f"Loss difference mean: {mean}")
+    
+    nsi.disconnect()
+    rpi.stop_program()
+    rpi.close()
+    
     print("Done.")
     
 if __name__ == "__main__":

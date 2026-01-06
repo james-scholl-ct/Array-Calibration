@@ -66,8 +66,6 @@ class NSI2000Client:
         else:
             cal_file = cal_folder / f"cal_iter_{k}_Lm.asc"
         self.cmd.NF_LISTING_TO_FILE(cal_file)
-        cal_file = cal_folder / f"cal_iter_{k}.asc"
-        self.cmd.NF_LISTING_TO_FILE(cal_file)
         #Add code to also perform an hcut and save the graph
     # Context manager support: ensures cleanup 
     def __enter__(self): 
