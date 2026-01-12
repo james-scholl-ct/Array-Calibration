@@ -11,6 +11,7 @@ from scipy.optimize import curve_fit
 import matplotlib.pyplot as plt
 from Shared.PiController import PiController
 from Shared.NSI2000Client import NSI2000Client
+import time
 
 #Place to store experiment results
 EXP_DIR = r"C:\NSI2000\Data\Carillon\reflectarray_calibration\Experiments"
@@ -40,6 +41,7 @@ DAC_MIN_STEP_SIZE = float(21/4096) #DAC60096 12-bit +/-10.5
 
 #Set the beam (corresponds to frequency measured) number that you put in NSI software. 19.3 Ghz is ideal for low band
 BEAM = 1
+SIZE = (12, 8)
 
 horn_inverse = np.array([
     [ 178.73,  165.82,  152.71,  148.15,  141.09,  143.24,  143.35,  153.25],
@@ -55,6 +57,7 @@ horn_inverse = np.array([
     [ 105.33,   93.70,   82.47,   76.51,   71.33,   71.91,   73.82,   80.75],
     [-152.45, -170.08,  178.01,  166.62,  160.92,  156.48,  158.37,  164.85]
 ])
+#horn_inverse = np.clip(horn_inverse, -80, 80)
 
 def update_lb_array_file(V):
     #V = np.round(V * DAC_MIN_STEP_SIZE, 3)
@@ -117,7 +120,7 @@ def coord_map_inverse(p):
     return np.array([x_a, x_k, x_v0, x_y0])
 
 
-def phase_from_voltage(v, y0, A, k, v0):
+def phase_from_voltage(v, params):
     """
     V  : voltage in [0,10]
     y0 : offset
@@ -125,6 +128,7 @@ def phase_from_voltage(v, y0, A, k, v0):
     k  : slope
     v0 : midpoint
     """
+    A, k, v0, y0 = params
     phi = y0 + A / (1.0 + np.exp(-k*(v - v0)))
     return phi
 
@@ -139,17 +143,16 @@ def voltage_from_phase(phi, params, eps=1e-4):
     return np.clip(V, 0.0, 10.5)
 
 
-def objective(x):
+def objective(x, vna_instance, rpi):
     try:
         params = coord_map(x) 
-        voltages = voltage_from_phase(horn_inverse, params)
+        voltages = np.round(voltage_from_phase(horn_inverse, params), 3)
         update_lb_array_file(voltages)
         #sends low and high band array files to PI and runs remote command to update DACs
         rpi.update_dacs()
         time.sleep(LC_DELAY_TIME)
         pattern = vna_instance.run_scan_get_hor_amp(SCAN_FILENAME, BEAM)
-        print(pattern)
-        return pattern  # maximize magnitude
+        return -pattern[0]  # maximize magnitude
     except Exception:
         return -1e9
 
@@ -157,21 +160,114 @@ def objective(x):
 sigma0 = 2          # explore ~20% of full scale at first
 starting_sigmoid = np.array([227.32021921, -0.6683808, 1.77826861, -53.15161643])
 starting_params = coord_map_inverse(starting_sigmoid)
-
+history = []
 opts = {
-    "popsize": 20,
-    "maxfevals": 400,
+    "popsize": 16,
+    "maxfevals": 640,
     "verb_disp": 1,
 }
 
+nsi = NSI2000Client().connect()
+rpi = PiController(
+        host=PI_HOST,
+        username=USERNAME,
+        password=PASSWORD,
+        local_file_hb=LOCAL_FILE_HB,
+        local_file_lb=LOCAL_FILE_LB,
+        remote_file_hb=REMOTE_FILE_HB,
+        remote_file_lb=REMOTE_FILE_LB,
+        remote_command=REMOTE_COMMAND,
+        port = PI_PORT,
+        key_filename=KEY_FILE,
+        stop_file = STOP_FILE,
+    )
+rpi.connect()
+
 es = cma.CMAEvolutionStrategy(starting_params, sigma0, opts)
+voltages_best_00 = []
 
 while not es.stop():
     X = es.ask()
-    F = [objective(x) for x in X]
+    F = [objective(x, nsi, rpi) for x in X]
     es.tell(X, F)
     es.disp()
+    history.append({
+    "iter": es.countiter,
+    "best_f": es.result.fbest,
+    "best_x": np.array(es.result.xbest),
+    "sigma": es.sigma
+    })
+    voltages_best_00.append(voltage_from_phase(horn_inverse, coord_map(np.array(es.result.xbest)))[0,0])
+    
 
 best_x = np.array(es.result.xbest)        # internal variables
-best_p = coord_map(best_x)                # physical parameters
+best_params = coord_map(best_x)     
+print("Done")
+print(f"Best parameters: {best_params}")           # physical parameters
 best_f = es.result.fbest
+
+iters = [h["iter"] for h in history]
+best_f = [h["best_f"] for h in history]
+sigmas = [h["sigma"] for h in history]
+
+plt.figure()
+plt.plot(iters, best_f, marker="o")
+plt.xlabel("Iteration")
+plt.ylabel("Best objective value (fbest)")
+plt.title("CMA-ES Best Fitness Over Time")
+plt.grid(True)
+
+best_x = np.array([coord_map(h["best_x"]) for h in history])  # (iters, 4)
+labels = ["A (deg)", "k", "v0 (V)", "y0 (deg)"]
+
+fig, axes = plt.subplots(len(labels), 1, sharex=True, figsize=(7, 8))
+
+for i, ax in enumerate(axes):
+    ax.plot(iters, best_x[:, i], marker="o")
+    ax.set_ylabel(labels[i])
+    ax.grid(True)
+
+axes[-1].set_xlabel("Iteration")
+fig.suptitle("Best Physical Parameters Over Time")
+plt.tight_layout()
+plt.show()
+
+
+plt.figure()
+plt.plot(iters, voltages_best_00, marker="o")
+plt.xlabel("Iteration")
+plt.ylabel("Voltage at element (V)")
+plt.title("Voltage Assigned to Single Element (Best Params)")
+plt.grid(True)
+
+plt.figure()
+plt.plot(iters, sigmas, marker="o")
+plt.xlabel("Iteration")
+plt.ylabel("Sigma (step size)")
+plt.title("CMA-ES Step Size (σ) Over Time")
+plt.grid(True)
+plt.show()
+
+v_plot = np.linspace(0, 10.5, 500)
+sig = phase_from_voltage(v_plot, best_params)
+sig_start = phase_from_voltage(v_plot, starting_sigmoid)
+plt.figure()
+plt.plot(v_plot, sig)
+plt.plot(v_plot, sig_start)
+plt.xlabel("Voltage")
+plt.ylabel("Phase")
+plt.title("Best sigmoid")
+plt.grid(True)
+
+
+plt.show()
+
+
+zero_volts = np.zeros(SIZE)
+update_lb_array_file(zero_volts)
+rpi.update_dacs()
+time.sleep(LC_DELAY_TIME)
+    
+nsi.disconnect()
+rpi.stop_program()
+rpi.close()

@@ -42,6 +42,21 @@ REMOTE_PROGRAM = "/home/feix/Gen3DAC60096EVM_SPI_RPi5_scholl.py" #Location of pr
 # Command to run on the Pi once file is uploaded
 REMOTE_COMMAND = f"python3 {REMOTE_PROGRAM}"
 
+horn_inverse = np.array([
+    [ 178.73,  165.82,  152.71,  148.15,  141.09,  143.24,  143.35,  153.25],
+    [ -99.95, -120.14, -133.58, -145.87, -151.27, -155.93, -155.07, -146.10],
+    [ -56.33,  -69.64,  -81.78,  -87.22,  -93.13,  -92.01,  -91.18,  -82.45],
+    [  30.43,   10.03,   -2.08,  -14.96,  -19.72,  -24.70,  -24.63,  -15.12],
+    [  79.27,   67.36,   54.82,   49.71,   43.41,   45.04,   45.29,   54.20],
+    [ 170.96,  151.98,  139.70,  127.77,  121.86,  117.17,  118.39,  126.35],
+    [-133.98, -145.98, -157.99, -163.49, -169.20, -168.56, -167.07, -159.14],
+    [ -37.34,  -56.68,  -67.87,  -80.46,  -85.35,  -90.15,  -89.44,  -80.97],
+    [ -56.68,  -67.87,  -80.46,  -85.35,  -91.57,  -90.15,  -89.44,  -80.97],
+    [  41.68,   22.57,   11.85,   -0.71,   -5.68,  -10.27,   -9.52,   -0.96],
+    [ 105.33,   93.70,   82.47,   76.51,   71.33,   71.91,   73.82,   80.75],
+    [-152.45, -170.08,  178.01,  166.62,  160.92,  156.48,  158.37,  164.85]
+])
+
 INIT_VOLTAGE_MAP = np.array([
        [3.3, 3.52, 3.6, 3.69, 3.44, 3.28, 2.98, 2.79], 
        [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], 
@@ -189,14 +204,24 @@ def compute_loss(v, vna_instance, rpi, k, is_loss_plus, cal_folder):
 
     return loss, pattern
     
+def voltage_from_phase(phi, params, eps=1e-4):
+    A, k, v0, y0 = params
 
+    q = (phi - y0) / A
+    q = np.clip(q, eps, 1 - eps)
+
+    V = v0 + (1.0 / k) * np.log(q / (1 - q))
+    
+    return np.clip(V, 0.0, 10.5)
 
 def main():
     #v_model = np.random.randint(0,2095, SIZE)  #initially assume random voltages [0,10)
     #v_model = np.clip(np.round(INIT_VOLTAGE_MAP/DAC_MIN_STEP_SIZE), 0, 2047)
     v_base = np.round(np.random.uniform(2.0, 5.0, 12),3)
     voltages = np.tile(v_base[:,None], (1,8))
-
+    params = np.array([1.51268964e+0,-2.76195609e-02,9.49768775e-01,-6.45534204e+01])
+    voltages = voltage_from_phase(horn_inverse, params)
+    print(voltages)
     nsi = NSI2000Client().connect()
     rpi = PiController(
         host=PI_HOST,
