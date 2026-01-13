@@ -43,7 +43,7 @@ DAC_MIN_STEP_SIZE = float(21/4096) #DAC60096 12-bit +/-10.5
 BEAM = 1
 SIZE = (12, 8)
 
-horn_inverse = np.array([
+horn_inverse_old = np.array([
     [ 178.73,  165.82,  152.71,  148.15,  141.09,  143.24,  143.35,  153.25],
     [ -99.95, -120.14, -133.58, -145.87, -151.27, -155.93, -155.07, -146.10],
     [ -56.33,  -69.64,  -81.78,  -87.22,  -93.13,  -92.01,  -91.18,  -82.45],
@@ -56,6 +56,20 @@ horn_inverse = np.array([
     [  41.68,   22.57,   11.85,   -0.71,   -5.68,  -10.27,   -9.52,   -0.96],
     [ 105.33,   93.70,   82.47,   76.51,   71.33,   71.91,   73.82,   80.75],
     [-152.45, -170.08,  178.01,  166.62,  160.92,  156.48,  158.37,  164.85]
+])
+horn_inverse = np.array([
+    [-39.41, -57.38, -85.71, -92.21, -92.21, -92.21, -92.21, -92.21],
+    [-12.20, -39.41, -57.38, -69.26, -77.10, -77.10, -77.10, -57.38],
+    [ 80.98,  28.85,  28.85, -12.20, -12.20, -12.20, -12.20, -12.20],
+    [ 95.39,  80.98,  28.85,  28.85,  28.85,  28.85,  28.85,  28.85],
+    [-92.21,  95.76,  95.76,  95.76,  95.76,  95.76,  95.76,  95.76],
+    [-92.21, -92.21, -92.21,  95.76,  95.76,  95.76,  95.76,  95.76],
+    [-39.41, -77.10, -90.45, -92.21, -92.21, -92.21, -92.21, -92.21],
+    [-12.20, -12.20, -39.41, -39.41, -57.38, -57.38, -39.41, -39.41],
+    [ 95.76,  80.98,  80.98,  28.85,  28.85,  28.85,  28.85,  28.85],
+    [ 95.76,  95.76,  95.76,  95.76,  95.76,  95.76,  95.76,  95.76],
+    [-89.46, -92.21, -92.21, -92.21, -92.21, -92.21, -92.21, -92.21],
+    [-12.20, -39.41, -57.38, -69.26, -82.28, -82.28, -82.28, -69.26],
 ])
 # horn_inverse = np.clip(horn_inverse, -80, 80)
 
@@ -74,36 +88,34 @@ def update_lb_array_file(V):
 #unmap paramaters from ideally 0 to 10
 def coord_map(x):
     x_a, x_k, x_v0, x_y0 = x
-    y0max = 0
-    y0min = -150
+    y0max = -75
+    y0min = -180
     amax = 360
-    amin = 0
-    kmax = 10 #k must be negative, negate later
-    kmin = 0.1
-    vmax = 8
-    vmin = 3
+    amin = 180
+    kmax = 5 #k must be negative, negate later
+    kmin = 1
+    vmax = 4
+    vmin = 1.5
     y0 = y0min + (y0max-y0min)*(x_y0/10)
     a = amin + (amax-amin)*(x_a/10)
-    #k = -(kmin * (kmax/kmin)**(x_k/10))
-    k = kmin + (kmax-kmin)*(.5+.5*np.tanh(.8*(x_k-5)))
-    k = -k
-    v0 = vmin + (vmax-vmin)*(.5+.5*np.tanh(.8*(x_v0-5)))
+    k = -(kmin * (kmax/kmin)**(x_k/10))
+    #k = kmin + (kmax-kmin)*(.5+.5*np.tanh(.8*(x_k-5)))
+    
+    v0 = vmin + (vmax-vmin)*(x_v0/10)
+    #v0 = vmin + (vmax-vmin)*(.5+.5*np.tanh(.8*(x_v0-5)))
     return np.array([a, k, v0, y0])
 
 def coord_map_inverse(p):
     a, k, v0, y0 = p
 
-    y0max = 0
-    y0min = -150
-
+    y0max = -75
+    y0min = -180
     amax = 360
-    amin = 0
-
-    kmax = 10
-    kmin = 0.1
-
-    vmax = 8
-    vmin = 3
+    amin = 180
+    kmax = 5 #k must be negative, negate later
+    kmin = 1
+    vmax = 4
+    vmin = 1.5
 
     # invert a
     x_a = 10 * (a - amin) / (amax - amin)
@@ -112,17 +124,17 @@ def coord_map_inverse(p):
     x_y0 = 10 * (y0 - y0min) / (y0max - y0min)
 
     # invert k (log-mapped, negative)
-    #x_k = 10 * np.log(np.abs(k) / kmin) / np.log(kmax / kmin)
-    k=-k
-    yk = 2 * (k - kmin) / (kmax - kmin) - 1
-    yk = np.clip(yk, -0.999999, 0.999999)   # numerical safety
-    x_k = 5 + np.arctanh(yk) / 0.8
+    x_k = 10 * np.log(np.abs(k) / kmin) / np.log(kmax / kmin)
+    #k=-k
+    #yk = 2 * (k - kmin) / (kmax - kmin) - 1
+    #yk = np.clip(yk, -0.999999, 0.999999)   # numerical safety
+    #x_k = 5 + np.arctanh(yk) / 0.8
 
     # invert v0 (tanh)
-    z = 2 * (v0 - vmin) / (vmax - vmin) - 1
-    z = np.clip(z, -0.999999, 0.999999)   # numerical safety
-    x_v0 = 5 + np.arctanh(z) / 0.8
-
+    #z = 2 * (v0 - vmin) / (vmax - vmin) - 1
+    #z = np.clip(z, -0.999999, 0.999999)   # numerical safety
+    #x_v0 = 5 + np.arctanh(z) / 0.8
+    x_v0 = 10 * (v0 - vmin) / (vmax - vmin)
     return np.array([x_a, x_k, x_v0, x_y0])
 
 
@@ -219,14 +231,16 @@ def plotting(history, voltages_best_00, starting_sigmoid, best_params):
     plt.show()
     
 sigma0 = 2          # explore ~20% of full scale at first
-starting_sigmoid = np.array([227.32021921, -0.6683808, 1.77826861, -53.15161643])
+starting_sigmoid = np.array([196.81451351, -1.65093821, 2.31508991, -88.49050565])
 starting_params = coord_map_inverse(starting_sigmoid)
+print(starting_params)
 history = []
-#change back to 16, 640
+
 opts = {
     "popsize": 16,
     "maxfevals": 640,
     "verb_disp": 1,
+    "bounds": [[0,0,0,0], [10,10,10,10]]
 }
 
 nsi = NSI2000Client().connect()
