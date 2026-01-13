@@ -35,7 +35,7 @@ REMOTE_PROGRAM = "/home/feix/Gen3DAC60096EVM_SPI_RPi5_scholl.py" #Location of pr
 # Command to run on the Pi once file is uploaded
 REMOTE_COMMAND = f"python3 {REMOTE_PROGRAM}"
 
-LC_DELAY_TIME = 40 #in secs
+LC_DELAY_TIME =40 #in secs
 
 DAC_MIN_STEP_SIZE = float(21/4096) #DAC60096 12-bit +/-10.5
 
@@ -57,7 +57,7 @@ horn_inverse = np.array([
     [ 105.33,   93.70,   82.47,   76.51,   71.33,   71.91,   73.82,   80.75],
     [-152.45, -170.08,  178.01,  166.62,  160.92,  156.48,  158.37,  164.85]
 ])
-#horn_inverse = np.clip(horn_inverse, -80, 80)
+# horn_inverse = np.clip(horn_inverse, -80, 80)
 
 def update_lb_array_file(V):
     #V = np.round(V * DAC_MIN_STEP_SIZE, 3)
@@ -74,34 +74,36 @@ def update_lb_array_file(V):
 #unmap paramaters from ideally 0 to 10
 def coord_map(x):
     x_a, x_k, x_v0, x_y0 = x
-    y0max = -150
-    y0min = 0
+    y0max = 0
+    y0min = -150
     amax = 360
     amin = 0
-    kmax = 100 #k must be negative, negate later
-    kmin = 0.01
-    vmax = 10.5
-    vmin = 0
+    kmax = 10 #k must be negative, negate later
+    kmin = 0.1
+    vmax = 8
+    vmin = 3
     y0 = y0min + (y0max-y0min)*(x_y0/10)
     a = amin + (amax-amin)*(x_a/10)
-    k = -(kmin * (kmax/kmin)**(x_k/10))
+    #k = -(kmin * (kmax/kmin)**(x_k/10))
+    k = kmin + (kmax-kmin)*(.5+.5*np.tanh(.8*(x_k-5)))
+    k = -k
     v0 = vmin + (vmax-vmin)*(.5+.5*np.tanh(.8*(x_v0-5)))
     return np.array([a, k, v0, y0])
 
 def coord_map_inverse(p):
     a, k, v0, y0 = p
 
-    y0max = -150
-    y0min = 0
+    y0max = 0
+    y0min = -150
 
     amax = 360
     amin = 0
 
-    kmax = 100
-    kmin = 0.01
+    kmax = 10
+    kmin = 0.1
 
-    vmax = 10.5
-    vmin = 0
+    vmax = 8
+    vmin = 3
 
     # invert a
     x_a = 10 * (a - amin) / (amax - amin)
@@ -110,7 +112,11 @@ def coord_map_inverse(p):
     x_y0 = 10 * (y0 - y0min) / (y0max - y0min)
 
     # invert k (log-mapped, negative)
-    x_k = 10 * np.log(np.abs(k) / kmin) / np.log(kmax / kmin)
+    #x_k = 10 * np.log(np.abs(k) / kmin) / np.log(kmax / kmin)
+    k=-k
+    yk = 2 * (k - kmin) / (kmax - kmin) - 1
+    yk = np.clip(yk, -0.999999, 0.999999)   # numerical safety
+    x_k = 5 + np.arctanh(yk) / 0.8
 
     # invert v0 (tanh)
     z = 2 * (v0 - vmin) / (vmax - vmin) - 1
@@ -156,11 +162,67 @@ def objective(x, vna_instance, rpi):
     except Exception:
         return -1e9
 
+def plotting(history, voltages_best_00, starting_sigmoid, best_params):
+    iters = [h["iter"] for h in history]
+    best_f = [h["best_f"] for h in history]
+    sigmas = [h["sigma"] for h in history]
 
+    plt.figure()
+    plt.plot(iters, best_f, marker="o")
+    plt.xlabel("Iteration")
+    plt.ylabel("Best objective value (fbest)")
+    plt.title("CMA-ES Best Fitness Over Time")
+    plt.grid(True)
+
+    best_x = np.array([coord_map(h["best_x"]) for h in history])  # (iters, 4)
+    labels = ["A (deg)", "k", "v0 (V)", "y0 (deg)"]
+
+    fig, axes = plt.subplots(len(labels), 1, sharex=True, figsize=(7, 8))
+
+    for i, ax in enumerate(axes):
+        ax.plot(iters, best_x[:, i], marker="o")
+        ax.set_ylabel(labels[i])
+        ax.grid(True)
+
+    axes[-1].set_xlabel("Iteration")
+    fig.suptitle("Best Physical Parameters Over Time")
+    plt.tight_layout()
+
+
+    plt.figure()
+    plt.plot(iters, voltages_best_00, marker="o")
+    plt.xlabel("Iteration")
+    plt.ylabel("Voltage at element (V)")
+    plt.title("Voltage Assigned to Single Element (Best Params)")
+    plt.grid(True)
+
+    plt.figure()
+    plt.plot(iters, sigmas, marker="o")
+    plt.xlabel("Iteration")
+    plt.ylabel("Sigma (step size)")
+    plt.title("CMA-ES Step Size (σ) Over Time")
+    plt.grid(True)
+    plt.show()
+
+    v_plot = np.linspace(0, 10.5, 500)
+    sig = phase_from_voltage(v_plot, best_params)
+    sig_start = phase_from_voltage(v_plot, starting_sigmoid)
+    plt.figure()
+    plt.plot(v_plot, sig)
+    plt.plot(v_plot, sig_start)
+    plt.xlabel("Voltage")
+    plt.ylabel("Phase")
+    plt.title("Best sigmoid")
+    plt.grid(True)
+
+
+    plt.show()
+    
 sigma0 = 2          # explore ~20% of full scale at first
 starting_sigmoid = np.array([227.32021921, -0.6683808, 1.77826861, -53.15161643])
 starting_params = coord_map_inverse(starting_sigmoid)
 history = []
+#change back to 16, 640
 opts = {
     "popsize": 16,
     "maxfevals": 640,
@@ -198,6 +260,7 @@ while not es.stop():
     "sigma": es.sigma
     })
     voltages_best_00.append(voltage_from_phase(horn_inverse, coord_map(np.array(es.result.xbest)))[0,0])
+    plotting(history, voltages_best_00, starting_sigmoid, coord_map(np.array(es.result.xbest)) )
     
 
 best_x = np.array(es.result.xbest)        # internal variables
@@ -206,62 +269,9 @@ print("Done")
 print(f"Best parameters: {best_params}")           # physical parameters
 best_f = es.result.fbest
 
-iters = [h["iter"] for h in history]
-best_f = [h["best_f"] for h in history]
-sigmas = [h["sigma"] for h in history]
+np.savez("cma_history_1_12_26.npz", history=np.array(history, dtype=object))
 
-plt.figure()
-plt.plot(iters, best_f, marker="o")
-plt.xlabel("Iteration")
-plt.ylabel("Best objective value (fbest)")
-plt.title("CMA-ES Best Fitness Over Time")
-plt.grid(True)
-
-best_x = np.array([coord_map(h["best_x"]) for h in history])  # (iters, 4)
-labels = ["A (deg)", "k", "v0 (V)", "y0 (deg)"]
-
-fig, axes = plt.subplots(len(labels), 1, sharex=True, figsize=(7, 8))
-
-for i, ax in enumerate(axes):
-    ax.plot(iters, best_x[:, i], marker="o")
-    ax.set_ylabel(labels[i])
-    ax.grid(True)
-
-axes[-1].set_xlabel("Iteration")
-fig.suptitle("Best Physical Parameters Over Time")
-plt.tight_layout()
-plt.show()
-
-
-plt.figure()
-plt.plot(iters, voltages_best_00, marker="o")
-plt.xlabel("Iteration")
-plt.ylabel("Voltage at element (V)")
-plt.title("Voltage Assigned to Single Element (Best Params)")
-plt.grid(True)
-
-plt.figure()
-plt.plot(iters, sigmas, marker="o")
-plt.xlabel("Iteration")
-plt.ylabel("Sigma (step size)")
-plt.title("CMA-ES Step Size (σ) Over Time")
-plt.grid(True)
-plt.show()
-
-v_plot = np.linspace(0, 10.5, 500)
-sig = phase_from_voltage(v_plot, best_params)
-sig_start = phase_from_voltage(v_plot, starting_sigmoid)
-plt.figure()
-plt.plot(v_plot, sig)
-plt.plot(v_plot, sig_start)
-plt.xlabel("Voltage")
-plt.ylabel("Phase")
-plt.title("Best sigmoid")
-plt.grid(True)
-
-
-plt.show()
-
+plt.close('all')
 
 zero_volts = np.zeros(SIZE)
 update_lb_array_file(zero_volts)

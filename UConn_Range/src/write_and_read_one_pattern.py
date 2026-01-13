@@ -219,9 +219,9 @@ def main():
     #v_model = np.clip(np.round(INIT_VOLTAGE_MAP/DAC_MIN_STEP_SIZE), 0, 2047)
     v_base = np.round(np.random.uniform(2.0, 5.0, 12),3)
     voltages = np.tile(v_base[:,None], (1,8))
-    params = np.array([1.51268964e+0,-2.76195609e-02,9.49768775e-01,-6.45534204e+01])
-    voltages = voltage_from_phase(horn_inverse, params)
-    print(voltages)
+    #params = np.array([1.51268964e+0,-2.76195609e-02,9.49768775e-01,-6.45534204e+01])
+    #voltages = voltage_from_phase(horn_inverse, params)
+    voltages = np.zeros((12,8))
     nsi = NSI2000Client().connect()
     rpi = PiController(
         host=PI_HOST,
