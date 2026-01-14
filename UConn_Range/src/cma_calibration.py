@@ -12,6 +12,8 @@ import matplotlib.pyplot as plt
 from Shared.PiController import PiController
 from Shared.NSI2000Client import NSI2000Client
 import time
+from datetime import datetime
+from pathlib import Path
 
 #Place to store experiment results
 EXP_DIR = r"C:\NSI2000\Data\Carillon\reflectarray_calibration\Experiments"
@@ -174,7 +176,7 @@ def objective(x, vna_instance, rpi):
     except Exception:
         return -1e9
 
-def plotting(history, voltages_best_00, starting_sigmoid, best_params):
+def plotting(history, voltages_best_00, starting_sigmoid, best_params, restart_folder):
     iters = [h["iter"] for h in history]
     best_f = [h["best_f"] for h in history]
     sigmas = [h["sigma"] for h in history]
@@ -185,10 +187,10 @@ def plotting(history, voltages_best_00, starting_sigmoid, best_params):
     plt.ylabel("Best objective value (fbest)")
     plt.title("CMA-ES Best Fitness Over Time")
     plt.grid(True)
-
+    plt.savefig(restart_folder/ "FitnessVsiter.png", dpi=200)
+    
     best_x = np.array([coord_map(h["best_x"]) for h in history])  # (iters, 4)
     labels = ["A (deg)", "k", "v0 (V)", "y0 (deg)"]
-
     fig, axes = plt.subplots(len(labels), 1, sharex=True, figsize=(7, 8))
 
     for i, ax in enumerate(axes):
@@ -199,7 +201,7 @@ def plotting(history, voltages_best_00, starting_sigmoid, best_params):
     axes[-1].set_xlabel("Iteration")
     fig.suptitle("Best Physical Parameters Over Time")
     plt.tight_layout()
-
+    plt.savefig(restart_folder/ "ParamsVsTime.png", dpi=200)
 
     plt.figure()
     plt.plot(iters, voltages_best_00, marker="o")
@@ -207,6 +209,7 @@ def plotting(history, voltages_best_00, starting_sigmoid, best_params):
     plt.ylabel("Voltage at element (V)")
     plt.title("Voltage Assigned to Single Element (Best Params)")
     plt.grid(True)
+    plt.savefig(restart_folder/ "Voltageat00.png", dpi=200)
 
     plt.figure()
     plt.plot(iters, sigmas, marker="o")
@@ -214,31 +217,32 @@ def plotting(history, voltages_best_00, starting_sigmoid, best_params):
     plt.ylabel("Sigma (step size)")
     plt.title("CMA-ES Step Size (σ) Over Time")
     plt.grid(True)
-    plt.show()
+    plt.savefig(restart_folder/ "SigmaVsIter.png", dpi=200)
 
     v_plot = np.linspace(0, 10.5, 500)
     sig = phase_from_voltage(v_plot, best_params)
     sig_start = phase_from_voltage(v_plot, starting_sigmoid)
     plt.figure()
-    plt.plot(v_plot, sig)
-    plt.plot(v_plot, sig_start)
+    plt.plot(v_plot, sig, label="Best Sigmoid")
+    plt.plot(v_plot, sig_start, label="Starting Sigmoid")
     plt.xlabel("Voltage")
     plt.ylabel("Phase")
     plt.title("Best sigmoid")
+    plt.legend()
     plt.grid(True)
-
-
-    plt.show()
+    plt.savefig(restart_folder/ "BestVsStartingSigmoid.png", dpi=200)
     
-sigma0 = 1          # explore ~10% of full scale at first
+    plt.close('all')
+
+    
+sigma0 = 2         # explore ~20% of full scale at first
 starting_sigmoid = np.array([196.81451351, -1.65093821, 2.31508954, -88.49050565])
 starting_params = coord_map_inverse(starting_sigmoid)
 print(starting_params)
-history = []
 
 opts = {
-    "popsize": 16,
-    "maxfevals": 640,
+    "popsize": 12,
+    "maxfevals": 288,
     "verb_disp": 1,
     "bounds": [[0,0,0,0], [10,10,10,10]]
 }
@@ -259,33 +263,75 @@ rpi = PiController(
     )
 rpi.connect()
 
-es = cma.CMAEvolutionStrategy(starting_params, sigma0, opts)
-voltages_best_00 = []
 
-while not es.stop():
-    X = es.ask()
-    F = [objective(x, nsi, rpi) for x in X]
-    es.tell(X, F)
-    es.disp()
-    history.append({
-    "iter": es.countiter,
-    "best_f": es.result.fbest,
-    "best_x": np.array(es.result.xbest),
-    "sigma": es.sigma
-    })
-    voltages_best_00.append(voltage_from_phase(horn_inverse, coord_map(np.array(es.result.xbest)))[0,0])
-    plotting(history, voltages_best_00, starting_sigmoid, coord_map(np.array(es.result.xbest)) )
+
+experiment_dir = Path(r"C:\NSI2000\Data\Carillon\reflectarray_calibration\Experiments\CMA-ES")
+ts = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+exp_folder = experiment_dir / f"Calibration_{ts}"
+exp_folder.mkdir(parents = True, exist_ok = False)
+
+
+
+best_overall = None
+restart_num = 0
+best_f = float("inf")
+num_iters = 3
+
+for restart in range(num_iters):
+    voltages_best_00 = []
+    history = []
+    restart_folder = exp_folder / f"Restart {restart}"
+    restart_folder.mkdir(parents = True, exist_ok = False)
+    es = cma.CMAEvolutionStrategy(starting_params, sigma0, opts)
+    while not es.stop():
+        X = es.ask()
+        F = [objective(x, nsi, rpi) for x in X]
+        es.tell(X, F)
+        es.disp()
+        history.append({
+            "iter": es.countiter,
+            "best_f": es.result.fbest,
+            "best_x": np.array(es.result.xbest),
+            "sigma": es.sigma
+            })
+        voltages_best_00.append(voltage_from_phase(horn_inverse, coord_map(np.array(es.result.xbest)))[0,0])
+        plotting(history, voltages_best_00, starting_sigmoid, coord_map(np.array(es.result.xbest)), restart_folder)
+        
+    np.savez(restart_folder / f"cma_history_1_14_26_Restart{restart}.npz", history=np.array(history, dtype=object))
     
-
-best_x = np.array(es.result.xbest)        # internal variables
-best_params = coord_map(best_x)     
+    if es.result.fbest < best_f:
+        best_f = es.result.fbest
+        restart_num = restart
+        best_overall = np.array(es.result.xbest)
+        
+    starting_params = np.random.uniform(0, 10, size=4)
+    starting_sigmoid = coord_map(starting_params)
+    
+best_params = coord_map(best_overall)     
 print("Done")
-print(f"Best parameters: {best_params}")           # physical parameters
-best_f = es.result.fbest
+print(f"Best parameters: {best_params}, Best fitness: {best_f}, During iter {restart_num+1} of {num_iters}")           # physical parameters
 
-np.savez("cma_history_1_13_26.npz", history=np.array(history, dtype=object))
+with open(exp_folder / f"Best Iteration was {restart_num+1} of {num_iters}.txt", "w") as f:
+    f.write(f"Best Iteration was {restart_num+1} of {num_iters}.txt")
 
-plt.close('all')
+data = np.load(exp_folder / rf"Restart {restart_num}/cma_history_1_14_26_Restart{restart_num}.npz", allow_pickle=True)
+history = data["history"].tolist()
+best_x = np.array([h["best_x"] for h in history])
+best_params = np.array([coord_map(x) for x in best_x])
+v = np.linspace(0,10.5,500)
+plt.figure()
+for i, param in enumerate(best_params):
+    if(i%2 == 0):
+        continue
+    plt.plot(v, phase_from_voltage(v, param), label=f"iter {i}")
+plt.plot(v, phase_from_voltage(v, best_params[-1]), label="final", color="red", linewidth=2)
+plt.xlabel("Voltage")
+plt.ylabel("Phase")
+plt.title("Phase vs voltage every sigmoid for best results")
+plt.savefig(exp_folder/ f"EverysigmoidIter{restart_num}.png", dpi=200)
+plt.legend()
+plt.show()
+plt.close()
 
 zero_volts = np.zeros(SIZE)
 update_lb_array_file(zero_volts)
