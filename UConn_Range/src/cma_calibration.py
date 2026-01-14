@@ -283,7 +283,7 @@ print("Done")
 print(f"Best parameters: {best_params}")           # physical parameters
 best_f = es.result.fbest
 
-np.savez("cma_history_1_12_26.npz", history=np.array(history, dtype=object))
+np.savez("cma_history_1_13_26.npz", history=np.array(history, dtype=object))
 
 plt.close('all')
 
