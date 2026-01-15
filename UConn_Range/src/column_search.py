@@ -10,6 +10,8 @@ import matplotlib.pyplot as plt
 from Shared.PiController import PiController
 from Shared.NSI2000Client import NSI2000Client
 import time
+from datetime import datetime
+from pathlib import Path
 
 #Place to store experiment results
 EXP_DIR = r"C:\NSI2000\Data\Carillon\reflectarray_calibration\Experiments"
@@ -43,7 +45,7 @@ SIZE = (12, 8)
 
 #Loss function params
 MAIN_LOBE_HALF_WIDTH = 2 #Number of points in scan for the main lobe half width
-CENTER_INDEX = 80 #Index where the center lobe should be
+CENTER_INDEX = 35 #Index where the center lobe should be
 GUARD_BAND_HALF_WIDTH = 4 #Number of points in the scan for a guard band not considered in loss function
 
 def update_lb_array_file(V):
@@ -121,21 +123,18 @@ def loss_center_vs_sidelobes_db(
     return loss
 
 def compute_loss(v, vna_instance, rpi):
-"""
-"""
-#updates low band array file on local computer
-update_lb_array_file(v)
-
-#sends low and high band array files to PI and runs remote command to update DACs
-rpi.update_dacs()
-
-time.sleep(LC_DELAY_TIME)
-
-pattern = vna_instance.run_scan_get_hor_amp(SCAN_FILENAME, BEAM)
-
-#loss = loss_center_vs_sidelobes_db(pattern, CENTER_INDEX, MAIN_LOBE_HALF_WIDTH, GUARD_BAND_HALF_WIDTH)
-loss = -pattern[0]
-return loss, pattern        
+    #updates low band array file on local computer
+    update_lb_array_file(v)
+    
+    #sends low and high band array files to PI and runs remote command to update DACs
+    rpi.update_dacs()
+    
+    time.sleep(LC_DELAY_TIME)
+    
+    pattern = vna_instance.run_scan_get_hor_amp(SCAN_FILENAME, BEAM)
+    
+    loss = loss_center_vs_sidelobes_db(pattern, CENTER_INDEX, MAIN_LOBE_HALF_WIDTH, GUARD_BAND_HALF_WIDTH)
+    return loss, pattern        
             
         
 possible_voltages = np.arange(0, 10.5, DAC_MIN_STEP_SIZE)
@@ -169,25 +168,77 @@ rpi = PiController(
     )
 rpi.connect()
 
+experiment_dir = Path(r"C:\NSI2000\Data\Carillon\reflectarray_calibration\Experiments\column_search")
+ts = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+exp_folder = experiment_dir / f"Calibration_{ts}"
+exp_folder.mkdir(parents = True, exist_ok = False)
+
 final_voltages = np.zeros((12,8))
 final_losses = []
+final_patterns = []
 v_arr = np.zeros((12,8))
 for i in range(12):
     loss_arr = []
+    pattern_arr = []
     for val in voltages:
         v_arr[i, :] = val
         loss, pattern = compute_loss(v_arr, nsi, rpi)
         loss_arr.append(loss)
-        loss_arr = np.array(loss_arr)
+        pattern_arr.append(pattern)
+    loss_arr = np.array(loss_arr)
     min_val = loss_arr.min()
     min_index = loss_arr.argmin()
     final_voltages[i, :] = voltages[min_index]
     final_losses.append(min_val)
+    final_patterns.append(pattern_arr[min_index])
     v_arr[i, :] = voltages[min_index]
     print(f"Min loss for row {i}: {min_val} at voltage {voltages[min_index]}V")
+    plt.figure()
+    plt.plot(voltages, loss_arr)
+    plt.xlabel("Voltages")
+    plt.ylabel("Loss")
+    plt.title(f"Loss vs applied voltage row {i}")
+    plt.grid(True)
+    plt.savefig(exp_folder/ f"LossvsAppliedVoltageRow{i}.png", dpi=200)
+    
+    plt.figure()
+    for i, pattern in enumerate(pattern_arr):
+        if i%2 != 0: #plot only even
+            continue
+        plt.plot(pattern, label=f"voltage {i}")
+    plt.xlabel("Span -5 to +5in")
+    plt.ylabel("Mag (dB)")
+    plt.title("Mag vs Span each voltage")
+    plt.grid(True)
+    plt.legend()
+    plt.savefig(exp_folder/ f"MagVsSpanIter{i}.png", dpi=200)
+    
+    plt.show()
+    plt.close("all")
 
 print(final_voltages)
 print(final_losses)
+
+plt.figure()
+for i, pattern in enumerate(final_patterns):
+    if i%2 != 0: #plot only even
+        continue
+    plt.plot(pattern, label=f"Iter {i}")
+plt.xlabel("Span -2.5 to +2.5in")
+plt.ylabel("Mag (dB)")
+plt.title("Mag vs Span after every row")
+plt.grid(True)
+plt.legend()
+plt.savefig(exp_folder/ "MagVsSpanAfterEveryRow.png", dpi=200)
+
+plt.show()
+plt.close("all")
+
+np.savez(exp_folder / "finalvoltagesandlosses.npz", 
+         final_voltages=np.array(final_voltages),
+         final_losses=np.array(final_losses),
+         final_patterns=np.array(final_patterns)
+         )
 
 zero_volts = np.zeros(SIZE)
 update_lb_array_file(zero_volts)
