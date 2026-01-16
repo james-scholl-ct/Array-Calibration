@@ -45,7 +45,7 @@ SIZE = (12, 8)
 
 #Loss function params
 MAIN_LOBE_HALF_WIDTH = 2 #Number of points in scan for the main lobe half width
-CENTER_INDEX = 35 #Index where the center lobe should be
+CENTER_INDEX = 71 #Index where the center lobe should be
 GUARD_BAND_HALF_WIDTH = 4 #Number of points in the scan for a guard band not considered in loss function
 
 def update_lb_array_file(V):
@@ -206,7 +206,7 @@ for i in range(12):
         if i%2 != 0: #plot only even
             continue
         plt.plot(pattern, label=f"voltage {i}")
-    plt.xlabel("Span -5 to +5in")
+    plt.xlabel("Span -10 to +10in")
     plt.ylabel("Mag (dB)")
     plt.title("Mag vs Span each voltage")
     plt.grid(True)
@@ -224,7 +224,7 @@ for i, pattern in enumerate(final_patterns):
     if i%2 != 0: #plot only even
         continue
     plt.plot(pattern, label=f"Iter {i}")
-plt.xlabel("Span -2.5 to +2.5in")
+plt.xlabel("Span -10 to +10in")
 plt.ylabel("Mag (dB)")
 plt.title("Mag vs Span after every row")
 plt.grid(True)

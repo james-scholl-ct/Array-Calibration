@@ -59,7 +59,20 @@ phasemap = np.array([
 ], dtype=float)
   '''
   
-INIT_VOLTAGE_MAP = np.zeros((12,8)) 
+INIT_VOLTAGE_MAP = np.array([
+    [ 1.34326172,  1.34326172,  1.34326172,  1.34326172,  1.34326172,  1.34326172,  1.34326172,  1.34326172],
+    [ 0.0,         0.0,         0.0,         0.0,         0.0,         0.0,         0.0,         0.0       ],
+    [10.49487305, 10.49487305, 10.49487305, 10.49487305, 10.49487305, 10.49487305, 10.49487305, 10.49487305],
+    [10.49487305, 10.49487305, 10.49487305, 10.49487305, 10.49487305, 10.49487305, 10.49487305, 10.49487305],
+    [10.49487305, 10.49487305, 10.49487305, 10.49487305, 10.49487305, 10.49487305, 10.49487305, 10.49487305],
+    [ 6.09594727,  6.09594727,  6.09594727,  6.09594727,  6.09594727,  6.09594727,  6.09594727,  6.09594727],
+    [ 0.0,         0.0,         0.0,         0.0,         0.0,         0.0,         0.0,         0.0       ],
+    [ 0.57421875,  0.57421875,  0.57421875,  0.57421875,  0.57421875,  0.57421875,  0.57421875,  0.57421875],
+    [10.49487305, 10.49487305, 10.49487305, 10.49487305, 10.49487305, 10.49487305, 10.49487305, 10.49487305],
+    [10.49487305, 10.49487305, 10.49487305, 10.49487305, 10.49487305, 10.49487305, 10.49487305, 10.49487305],
+    [ 1.53808594,  1.53808594,  1.53808594,  1.53808594,  1.53808594,  1.53808594,  1.53808594,  1.53808594],
+    [ 0.57421875,  0.57421875,  0.57421875,  0.57421875,  0.57421875,  0.57421875,  0.57421875,  0.57421875],
+])
 #INIT_VOLTAGE_MAP = np.random.randint(0,2095, SIZE)  #initially assume random voltages [0,10)
 #INIT_VOLTAGE_MAP = np.clip(np.round(INIT_VOLTAGE_MAP/DAC_MIN_STEP_SIZE), 0, 2047)
 #Size of array representing elements on the board-12x8 for LB
@@ -75,11 +88,11 @@ BEAM = 1
 ELEVATION = 0
 AZIMUTH = 0
 
-FREQUENCY = "19.7 Ghz"
+FREQUENCY = "19.45 Ghz"
 
 #Loss function params
 MAIN_LOBE_HALF_WIDTH = 2 #Number of points in scan for the main lobe half width
-CENTER_INDEX = 80 #Index where the center lobe should be
+CENTER_INDEX = 71 #Index where the center lobe should be
 GUARD_BAND_HALF_WIDTH = 4 #Number of points in the scan for a guard band not considered in loss function
  
 
@@ -88,7 +101,7 @@ a0 = 9000000   # learning-rate scale in dac steps
 c0 = 600  # perturbation scale in DAC steps should be 2-5x a0
 alpha = 0.6 #.6-.8
 gamma = 0.1
-num_iters = 200
+num_iters = 10
 
 def read_phase_map_file(filename):
     phasemap = []
@@ -102,7 +115,7 @@ def read_phase_map_file(filename):
     return phasemap
 
 def update_lb_array_file(V):
-    V = np.round(V * DAC_MIN_STEP_SIZE, 3)
+    V = np.round(V * DAC_MIN_STEP_SIZE, 4)
     with open(LOCAL_FILE_LB, "w") as f:
         for row in V:
             line = ",".join(str(x) for x in row)
@@ -320,7 +333,7 @@ def make_plots(lp_arr,
     cbar.set_ticklabels(run_idx)
     
     ax5.set_title("Magnitude vs span every {step} run")
-    ax5.set_xlabel("span: -2.5 to 2.5 in")
+    ax5.set_xlabel("span: -10 to 10 in")
     ax5.set_ylabel("Magnitdue (dB)")
     ax5.grid()
     fig5.savefig(plot_dir / f"MagVsSpanevery{step}run.png", dpi=200)
@@ -389,7 +402,7 @@ def main():
             "center_index": CENTER_INDEX,
             "guard_band_half_width": GUARD_BAND_HALF_WIDTH,
             "loss_equation": "loss = 1 - E_main / (E_main + E_side)",
-            "imitial_voltage_map": INIT_VOLTAGE_MAP,
+#            "imitial_voltage_map": INIT_VOLTAGE_MAP,
             "notes": "Compares energy in main lobe to sidelobes with a small guardband around main lobe not considered in loss"  
         }
     results = {
@@ -443,7 +456,8 @@ def main():
         json.dump(params, f, indent=2)
         
     #Set initial voltages
-    v_model=INIT_VOLTAGE_MAP
+    v_model=np.clip(np.round(INIT_VOLTAGE_MAP/DAC_MIN_STEP_SIZE), 0, 2047)
+    print(v_model)
     t0 = time.time()
     for k in range(num_iters):
         print(f"Iter: {k}")
