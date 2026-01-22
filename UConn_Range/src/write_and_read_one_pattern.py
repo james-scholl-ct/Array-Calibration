@@ -73,18 +73,18 @@ INIT_VOLTAGE_MAP = np.array([
 ])
 '''
 INIT_VOLTAGE_MAP = np.array([
-    [1.4978, 2.00049, 2.00049, 2.49805, 2.49805, 2.49805, 3.00073, 2.49805],
-    [1.4978, 1.4978, 2.00049, 2.00049, 2.00049, 2.00049, 2.00049, 2.00049],
-    [2.49805, 4.00098, 4.00098, 1.4978, 9.0022, 1.4978, 1.4978, 7.00171],
-    [2.49805, 2.49805, 3.49829, 3.00073, 3.00073, 3.00073, 4.00098, 3.00073],
-    [7.00171, 2.00049, 2.00049, 2.00049, 2.00049, 2.00049, 2.49805, 2.00049],
-    [5.00122, 4.49853, 1.4978, 1.00024, 1.4978, 1.4978, 1.4978, 10.0024],
-    [2.00049, 2.49805, 2.49805, 3.00073, 3.00073, 3.00073, 3.49829, 2.49805],
-    [1.4978, 1.4978, 2.00049, 2.00049, 2.00049, 2.00049, 2.00049, 2.00049],
-    [2.49805, 3.00073, 3.00073, 6.00147, 4.00098, 5.00122, 1.00024, 4.00098],
-    [2.00049, 2.00049, 2.49805, 2.00049, 2.49805, 2.49805, 2.49805, 2.00049],
-    [2.49805, 4.49853, 4.00098, 1.4978, 9.49976, 1.00024, 1.4978, 7.49927],
-    [2.00049, 2.00049, 2.49805, 2.49805, 2.49805, 2.49805, 3.00073, 2.49805]
+    [ 6.067 ,  0.6278,  0.8823,  0.2486,  2.006 ,  5.4271,  0.321 ,  0.0469],
+    [ 0.7559,  7.3297,  2.6697,  0.0045,  2.0867,  0.2098,  0.2118,  0.773 ],
+    [ 9.6589, 10.3589, 10.4359,  8.4674, 10.4822,  9.487 ,  9.8624, 10.47  ],
+    [10.3727,  8.2664,  7.6164,  9.3685, 10.3965, 10.0805,  9.1316,  8.2544],
+    [ 9.386 , 10.1932, 10.4655,  6.3775,  7.0003,  7.9004,  9.0392, 10.0604],
+    [ 8.66  ,  5.7372,  7.4983,  7.3074,  9.4803,  0.3977,  5.7029,  4.7777],
+    [ 1.5046,  0.0268,  0.0906,  0.0985,  5.0471,  0.5312,  1.1052,  0.3222],
+    [ 1.3236,  0.5411,  3.0841,  4.029 ,  0.3869,  0.8865,  0.24  ,  0.794 ],
+    [ 9.1537,  7.6093,  8.6891,  9.2877, 10.0263, 10.4867,  8.5141,  8.6959],
+    [ 7.5481, 10.4933,  7.3484,  9.8683, 10.4946,  9.9176,  9.488 ,  8.4838],
+    [ 1.2169,  1.6436,  1.8677,  0.9525,  3.1095,  1.9384,  0.5165,  1.9519],
+    [ 0.7467,  1.9374,  1.2276,  1.7579,  0.8989,  1.1013,  0.5472,  0.1683],
 ])
   
 #Size of array representing elements on the board-12x8 for LB
@@ -95,7 +95,7 @@ LC_DELAY_TIME = 40 #in secs
 DAC_MIN_STEP_SIZE = float(21/4096) #DAC60096 12-bit +/-10.5
 
 #Set the beam (corresponds to frequency measured) number that you put in NSI software. 19.3 Ghz is ideal for low band
-BEAM = 27
+BEAM = 1
 
 ELEVATION = 0
 AZIMUTH = 0
@@ -213,6 +213,7 @@ def compute_loss(v, vna_instance, rpi, k, is_loss_plus, cal_folder):
     time.sleep(LC_DELAY_TIME)
     
     pattern = vna_instance.run_scan_get_hor_amp(SCAN_FILENAME, BEAM)
+
     vna_instance.save_scan(k, is_loss_plus, cal_folder)
     
     loss = loss_center_vs_sidelobes_db(pattern, CENTER_INDEX, MAIN_LOBE_HALF_WIDTH, GUARD_BAND_HALF_WIDTH)
@@ -237,7 +238,11 @@ def main():
     #params = np.array([1.51268964e+0,-2.76195609e-02,9.49768775e-01,-6.45534204e+01])
     #voltages = voltage_from_phase(horn_inverse, params)
     #voltages = INIT_VOLTAGE_MAP
-    voltages = np.random.uniform(0.0, 10.5, size=(12, 8))
+    #data = np.load(r"C:\Users\NSI-MI\Downloads\grid.npz")
+    #voltages = data["voltages"]
+    #index = data["index_arr"]
+    voltages = np.zeros((12,8))
+    voltages[11,7] = 10
     nsi = NSI2000Client().connect()
     rpi = PiController(
         host=PI_HOST,
@@ -253,11 +258,15 @@ def main():
         stop_file = STOP_FILE,
     )
     rpi.connect()
-    
 
-    update_lb_array_file(INIT_VOLTAGE_MAP)
+    
+    update_lb_array_file(voltages)
     rpi.update_dacs()
-    time.sleep(40)
+    pattern = nsi.run_scan_get_hor_amp(SCAN_FILENAME, BEAM)
+    print(pattern)
+   
+        
+    
     print("Ready to run scan")
     
     #Manually stop run when scan is finish

@@ -37,7 +37,7 @@ REMOTE_PROGRAM = "/home/feix/Gen3DAC60096EVM_SPI_RPi5_scholl.py" #Location of pr
 # Command to run on the Pi once file is uploaded
 REMOTE_COMMAND = f"python3 {REMOTE_PROGRAM}"
 
-LC_DELAY_TIME =1 #in secs
+LC_DELAY_TIME =40 #in secs
 
 DAC_MIN_STEP_SIZE = float(21/4096) #DAC60096 12-bit +/-10.5
 
@@ -65,14 +65,14 @@ def update_lb_array_file(V):
 
 def objective(x, vna_instance, rpi):
     try:
-        voltages = x.reshape(12,8)
+        voltages = np.tile(x[:,None], (1,8))
         update_lb_array_file(voltages)
         #sends low and high band array files to PI and runs remote command to update DACs
         rpi.update_dacs()
         time.sleep(LC_DELAY_TIME)
         pattern = vna_instance.run_scan_get_hor_amp(SCAN_FILENAME, BEAM)
         loss = loss_center_vs_sidelobes_db(pattern, CENTER_INDEX, MAIN_LOBE_HALF_WIDTH, GUARD_BAND_HALF_WIDTH)
-        return loss  # maximize magnitude
+        return loss, pattern  # maximize magnitude
     except Exception:
         return 1e9
     
@@ -171,30 +171,16 @@ def plotting(history, voltages_best_00, exp_folder):
     plt.close('all')
 
     
-sigma0 = 2         # explore ~20% of full scale at first
+sigma0 = 2    # explore ~20% of full scale at first
 
-starting_params = np.array([
-    [ 1.34326172,  1.34326172,  1.34326172,  1.34326172,  1.34326172,  1.34326172,  1.34326172,  1.34326172],
-    [ 0.0,         0.0,         0.0,         0.0,         0.0,         0.0,         0.0,         0.0       ],
-    [10.49487305, 10.49487305, 10.49487305, 10.49487305, 10.49487305, 10.49487305, 10.49487305, 10.49487305],
-    [10.49487305, 10.49487305, 10.49487305, 10.49487305, 10.49487305, 10.49487305, 10.49487305, 10.49487305],
-    [10.49487305, 10.49487305, 10.49487305, 10.49487305, 10.49487305, 10.49487305, 10.49487305, 10.49487305],
-    [ 6.09594727,  6.09594727,  6.09594727,  6.09594727,  6.09594727,  6.09594727,  6.09594727,  6.09594727],
-    [ 0.0,         0.0,         0.0,         0.0,         0.0,         0.0,         0.0,         0.0       ],
-    [ 0.57421875,  0.57421875,  0.57421875,  0.57421875,  0.57421875,  0.57421875,  0.57421875,  0.57421875],
-    [10.49487305, 10.49487305, 10.49487305, 10.49487305, 10.49487305, 10.49487305, 10.49487305, 10.49487305],
-    [10.49487305, 10.49487305, 10.49487305, 10.49487305, 10.49487305, 10.49487305, 10.49487305, 10.49487305],
-    [ 1.53808594,  1.53808594,  1.53808594,  1.53808594,  1.53808594,  1.53808594,  1.53808594,  1.53808594],
-    [ 0.57421875,  0.57421875,  0.57421875,  0.57421875,  0.57421875,  0.57421875,  0.57421875,  0.57421875],
-])
-starting_params = starting_params.flatten()
-print(starting_params)
+#starting_params = starting_params.flatten()
+starting_params = np.round(np.random.uniform(0, 10.49487305, 12),3)
 
 opts = {
-    "popsize": 2,
-    "maxfevals": 3,
+    "popsize": 20,
+    "maxfevals": 400,
     "verb_disp": 1,
-    "bounds": [[0]*96, [10.49487305]*96]
+    "bounds": [[0]*12, [10.49487305]*12]
 }
 
 nsi = NSI2000Client().connect()
@@ -219,14 +205,34 @@ ts = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
 exp_folder = experiment_dir / f"Calibration_{ts}"
 exp_folder.mkdir(parents = True, exist_ok = False)
 
+curr_best = 1
 voltages_best_00 = []
 history = []
+pattern_arr = []
 es = cma.CMAEvolutionStrategy(starting_params, sigma0, opts)
 while not es.stop():
+    patterns = []
     X = es.ask()
-    F = [objective(x, nsi, rpi) for x in X]
+    F, patterns = zip(*(objective(x, nsi, rpi) for x in X))
     es.tell(X, F)
     es.disp()
+    
+    if curr_best != es.result.fbest:
+        F = np.array(F)
+        curr_best = es.result.fbest
+        idx = np.argmax(F==es.result.fbest)
+        pattern_arr.append(patterns[idx])
+        plt.figure()
+        for i, p in enumerate(pattern_arr):
+            plt.plot(p, label=f"Pattern {i}")
+        plt.xlabel("Span -10 to +10in")
+        plt.ylabel("Mag (dB)")
+        plt.title(f"Mag vs Span best")
+        plt.grid(True)
+        plt.legend()
+        plt.savefig(exp_folder/ f"MagVsSpanBest.png", dpi=200)
+        plt.show()
+        
     history.append({
         "iter": es.countiter,
         "best_f": es.result.fbest,
@@ -236,25 +242,14 @@ while not es.stop():
     voltages_best_00.append(es.result.xbest[0])
     plotting(history, voltages_best_00, exp_folder)
     
-np.savez(exp_folder / "cma_history_1_16_26.npz", history=np.array(history, dtype=object))
+history.append({"best_patterns": np.array(pattern_arr)})
+np.savez(exp_folder / "cma_history_1_21_26.npz", history=np.array(history, dtype=object))
     
        
 print("Done")
-best_params = np.array(es.result.xbest).reshape(12,8)
-print(f"Best parameters: {best_params}, Best fitness: {es.result.fbest}")
+print(f"Best parameters: {es.result.xbest}, Best fitness: {es.result.fbest}")
 
-update_lb_array_file(best_params)
-rpi.update_dacs()
-time.sleep(LC_DELAY_TIME)
-pattern = nsi.run_scan_get_hor_amp(SCAN_FILENAME, BEAM)
-plt.figure()
-plt.plot(pattern)
-plt.xlabel("Span -10 to +10in")
-plt.ylabel("Mag (dB)")
-plt.title("Mag vs Span final")
-plt.grid(True)
-plt.savefig(exp_folder/ "MagVsSpanFinal.png", dpi=200)
-plt.show()
+
 
 zero_volts = np.zeros(SIZE)
 update_lb_array_file(zero_volts)
