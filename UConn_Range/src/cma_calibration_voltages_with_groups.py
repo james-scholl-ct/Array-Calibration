@@ -224,7 +224,7 @@ while not es.stop():
         pattern_arr.append(patterns[idx])
         plt.figure()
         for i, p in enumerate(pattern_arr):
-            plt.plot(p, label=f"Pattern {i}")
+            plt.plot(p, label=f"Pattern {i}") 
         plt.xlabel("Span -10 to +10in")
         plt.ylabel("Mag (dB)")
         plt.title(f"Mag vs Span best")

@@ -115,12 +115,12 @@ def loss_center_vs_sidelobes_db(
     E_main = float(np.sum(pwr[main_mask]))
     E_side = float(np.sum(pwr[side_mask]))
 
-    loss = 1 - E_main / (E_main + E_side)
+    #loss = 1 - E_main / (E_main + E_side)
     
     #lm = .25
     #loss = -E_main - lm * E_side
     
-    return loss
+    return -E_main
 
 def compute_loss(v, vna_instance, rpi):
     #updates low band array file on local computer
