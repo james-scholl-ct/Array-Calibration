@@ -115,8 +115,8 @@ def loss_center_vs_sidelobes_db(
     E_main = float(np.sum(pwr[main_mask]))
     E_side = float(np.sum(pwr[side_mask]))
 
-    #fitness = E_main / (E_main + E_side)
-    fitness = E_main
+    fitness = E_main / (E_main + E_side)
+    #fitness = E_main
     
     #lm = .25
     #loss = -E_main - lm * E_side
@@ -147,11 +147,11 @@ def make_fitness(vna_instance, rpi):
     
     def fitness_func(ga_instance, solution, solution_idx):
         global pattern_cache, fitness_cache
+        solution = param_map(solution)
+        #voltages = np.tile(solution[:,None], (1,8))
         voltages = old_volt
-        voltage_1 = solution[0:12]
-        voltage_2 = solution[12:24]
-        voltages[:, [1,6]] = voltage_1[:, None]
-        voltages[:, [2,5]] = voltage_2[:, None]
+        voltages[:,2] = solution
+        voltages[:, 5] = solution
         update_lb_array_file(voltages)
         #sends low and high band array files to PI and runs remote command to update DACs
         rpi.update_dacs()
@@ -243,11 +243,11 @@ def diversity_stats(pop, fit):
 def on_gen(ga_instance):
     global last_fitness, best_fitness, best_patterns, best_fitnesses, best_voltages
     global pattern_cache, fitness_cache
-    ga_instance.plot_fitness()
     pop = ga_instance.population
     fit = ga_instance.last_generation_fitness
     diversity_stats(pop, fit)
     solution, solution_fitness, solution_idx = ga_instance.best_solution(ga_instance.last_generation_fitness)
+    solution = param_map(solution)
     print("Generation : ", ga_instance.generations_completed)
     print("Fitness of the best solution :", solution_fitness)
     print(f"Change = {solution_fitness - last_fitness}")
@@ -255,11 +255,7 @@ def on_gen(ga_instance):
     pattern = pattern_cache.get(k, None)
     fitness = fitness_cache.get(k, None)
     if solution_fitness > best_fitness:
-        best_voltages = old_volt
-        voltage_1 = solution[0:12]
-        voltage_2 = solution[12:24]
-        best_voltages[:, [1,6]] = voltage_1[:, None]
-        best_voltages[:, [2,5]] = voltage_2[:, None]
+        best_voltages = np.tile(solution[:,None], (1,8))
         best_fitness = solution_fitness
         best_patterns.append(pattern)
         best_fitnesses.append(fitness)
@@ -278,6 +274,36 @@ def on_gen(ga_instance):
     last_fitness = solution_fitness
 
 
+def param_map(p):
+    p = np.array(p)
+    buff = .1
+    for i, param in enumerate(p):
+        if (param >=  10.49487305) and (param<=10.49487305+buff):
+            p[i] = 10.49487305
+        elif (param <= 0) and (param >= -buff):
+            p[i] = 0
+            
+    voltages = np.mod(p, 10.49487305)
+    
+    return voltages
+
+def blx_alpha_crossover(parents, offspring_size, ga_instance, alpha=0.2):
+    n_off, n_genes = offspring_size
+    offspring = np.empty((n_off, n_genes), dtype=float)
+
+    for k in range(n_off):
+        p1 = parents[k % parents.shape[0], :].astype(float)
+        p2 = parents[(k + 1) % parents.shape[0], :].astype(float)
+
+        lo = np.minimum(p1, p2)
+        hi = np.maximum(p1, p2)
+        d  = hi - lo
+
+        child = np.random.uniform(lo - alpha*d, hi + alpha*d)
+
+        offspring[k, :] = child
+
+    return offspring
 
 nsi = NSI2000Client().connect()
 rpi = PiController(
@@ -296,23 +322,26 @@ rpi = PiController(
 rpi.connect()
 
 num_generations = 20
-num_parents_mating = 20 #number of parent params chosen for breeding
+num_parents_mating = 12 #number of parent params chosen for breeding
 
 fitness_func = make_fitness(nsi, rpi)
 
-sol_per_pop = 50 #population size
-num_genes = 24
+sol_per_pop = 30 #population size
+num_genes = 12 
 
-gene_space = [{"low": 0.0, "high": 10.49487305}] * 24
-
+#gene_space = [{"low": 0.0, "high": 10.49487305}] * 12
+gene_space = None
+init_range_low = 0
+init_range_high = 10.49487305
 
 parent_selection_type = "tournament"
-K_tournament = 5
+K_tournament = 3
 
 keep_parents = 2
 keep_elitism = 1
 
-crossover_type = "single_point"
+#crossover_type = "single_point"
+crossover_type = blx_alpha_crossover
 crossover_probability = None
 
 mutation_type = "random"
@@ -333,6 +362,8 @@ ga = pygad.GA(
 
     num_genes=num_genes,
     gene_space=gene_space,
+    init_range_high=init_range_high,
+    init_range_low=init_range_low,
 
     fitness_func=fitness_func,
     on_generation=on_gen,
@@ -360,13 +391,9 @@ ga = pygad.GA(
 
 ga.run()
 
-
+ga.plot_fitness()
 solution, solution_fitness, solution_idx = ga.best_solution(ga.last_generation_fitness)
-voltages = old_volt
-voltage_1 = solution[0:12]
-voltage_2 = solution[12:24]
-voltages[:, [1,6]] = voltage_1[:, None]
-voltages[:, [2,5]] = voltage_2[:, None]
+voltages = np.tile(solution[:,None], (1,8))
 print(f"Voltages from the last solution : {voltages}")
 print(f"Fitness value of the last best solution = {solution_fitness}")
 print(f"Index of the last best solution : {solution_idx}")

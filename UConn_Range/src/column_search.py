@@ -174,21 +174,21 @@ exp_folder = experiment_dir / f"Calibration_{ts}"
 exp_folder.mkdir(parents = True, exist_ok = False)
 
 old_volt = np.array([
-    [0., 0., 0., 0., 0., 0., 0., 0.],
-    [0., 0., 0., 0., 0., 0., 0., 0.],
+    [0.0, 0.0, 0.76904297, 0.0, 0.0, 0.76904297, 0.0, 0.0],
+    [0.0, 0.0, 0.57421875, 0.0, 0.0, 0.57421875, 0.0, 0.0],
     [10.49487305, 10.49487305, 10.49487305, 10.49487305, 10.49487305, 10.49487305, 10.49487305, 10.49487305],
+    [10.49487305, 10.49487305, 9.39770508, 10.49487305, 10.49487305, 9.39770508, 10.49487305, 10.49487305],
     [10.49487305, 10.49487305, 10.49487305, 10.49487305, 10.49487305, 10.49487305, 10.49487305, 10.49487305],
+    [2.40454102, 2.40454102, 2.61987305, 2.40454102, 2.40454102, 2.61987305, 2.40454102, 2.40454102],
+    [0.0, 0.0, 0.19482422, 0.0, 0.0, 0.19482422, 0.0, 0.0],
+    [0.38452148, 0.38452148, 0.96386719, 0.38452148, 0.38452148, 0.96386719, 0.38452148, 0.38452148],
     [10.49487305, 10.49487305, 10.49487305, 10.49487305, 10.49487305, 10.49487305, 10.49487305, 10.49487305],
-    [2.40454102, 2.40454102, 2.40454102, 2.40454102, 2.40454102, 2.40454102, 2.40454102, 2.40454102],
-    [0., 0., 0., 0., 0., 0., 0., 0.],
-    [0.38452148, 0.38452148, 0.38452148, 0.38452148, 0.38452148, 0.38452148, 0.38452148, 0.38452148],
-    [10.49487305, 10.49487305, 10.49487305, 10.49487305, 10.49487305, 10.49487305, 10.49487305, 10.49487305],
-    [2.40454102, 2.40454102, 2.40454102, 2.40454102, 2.40454102, 2.40454102, 2.40454102, 2.40454102],
+    [2.40454102, 2.40454102, 10.49487305, 2.40454102, 2.40454102, 10.49487305, 2.40454102, 2.40454102],
     [1.75341797, 1.75341797, 1.75341797, 1.75341797, 1.75341797, 1.75341797, 1.75341797, 1.75341797],
-    [0.57421875, 0.57421875, 0.57421875, 0.57421875, 0.57421875, 0.57421875, 0.57421875, 0.57421875],
+    [0.57421875, 0.57421875, 0.57421875, 0.57421875, 0.57421875, 0.57421875, 0.57421875, 0.57421875]
 ])
 
-final_voltages = np.zeros((12,8))
+final_voltages = old_volt
 final_losses = []
 final_patterns = []
 v_arr = old_volt
@@ -197,40 +197,40 @@ for i in range(12):
     loss_arr = []
     pattern_arr = []
     for val in voltages:
-        v_arr[i, 2] = val
-        v_arr[i, 5] = val
+        v_arr[i, 1] = val
+        v_arr[i, 6] = val
         loss, pattern = compute_loss(v_arr, nsi, rpi)
         loss_arr.append(loss)
         pattern_arr.append(pattern)
     loss_arr = np.array(loss_arr)
     min_val = loss_arr.min()
     min_index = loss_arr.argmin()
-    final_voltages[i, 2] = voltages[min_index]
-    final_voltages[i, 5] = voltages[min_index]
+    final_voltages[i, 1] = voltages[min_index]
+    final_voltages[i, 6] = voltages[min_index]
     final_losses.append(min_val)
     final_patterns.append(pattern_arr[min_index])
-    v_arr[i, 2] = voltages[min_index]
-    v_arr[i, 5] = voltages[min_index]
-    print(f"Min loss for row {i} col 2,5: {min_val} at voltage {voltages[min_index]}V")
+    v_arr[i, 1] = voltages[min_index]
+    v_arr[i, 6] = voltages[min_index]
+    print(f"Min loss for row {i} col 1,6: {min_val} at voltage {voltages[min_index]}V")
     plt.figure()
     plt.plot(voltages, loss_arr)
     plt.xlabel("Voltages")
     plt.ylabel("Loss")
-    plt.title(f"Loss vs applied voltage row {i} col 2,5")
+    plt.title(f"Loss vs applied voltage row {i} col 1,6")
     plt.grid(True)
-    plt.savefig(exp_folder/ f"LossvsAppliedVoltageRow{i}col2_5.png", dpi=200)
+    plt.savefig(exp_folder/ f"LossvsAppliedVoltageRow{i}col1_6.png", dpi=200)
     
     plt.figure()
-    for i, pattern in enumerate(pattern_arr):
-        if i%2 != 0: #plot only even
+    for j, pattern in enumerate(pattern_arr):
+        if j%2 != 0: #plot only even
             continue
-        plt.plot(pattern, label=f"voltage {i}")
+        plt.plot(pattern, label=f"voltage {j}")
     plt.xlabel("Span -10 to +10in")
     plt.ylabel("Mag (dB)")
     plt.title("Mag vs Span each voltage")
     plt.grid(True)
     plt.legend()
-    plt.savefig(exp_folder/ f"MagVsSpanIter{i}.png", dpi=200)
+    plt.savefig(exp_folder/ f"MagVsSpanIter{j}.png", dpi=200)
     
     plt.show()
     plt.close("all")
