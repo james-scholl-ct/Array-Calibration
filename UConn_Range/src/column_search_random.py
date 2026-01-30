@@ -177,11 +177,12 @@ exp_folder.mkdir(parents = True, exist_ok = False)
 final_voltages = np.zeros((12,8))
 v_arr = np.zeros((12,8))
 for run in range(3):
+    rand_rows = np.random.permutation(12)
     final_losses = []
     final_patterns = []
     run_folder = exp_folder / f"run_{run}"
     run_folder.mkdir(parents = True, exist_ok = False)
-    for i in range(12):
+    for i in rand_rows:
         loss_arr = []
         pattern_arr = []
         for val in voltages:
@@ -201,9 +202,9 @@ for run in range(3):
         plt.plot(voltages, loss_arr)
         plt.xlabel("Voltages")
         plt.ylabel("Loss")
-        plt.title(f"Loss vs applied voltage row {i} run {run}")
+        plt.title(f"Loss vs applied voltage row {i}")
         plt.grid(True)
-        plt.savefig(run_folder/ f"LossvsAppliedVoltageRow{i}run{run}.png", dpi=200)
+        plt.savefig(run_folder/ f"LossvsAppliedVoltageRow{i}.png", dpi=200)
         
         plt.figure()
         for j, pattern in enumerate(pattern_arr):
@@ -215,7 +216,7 @@ for run in range(3):
         plt.title("Mag vs Span each voltage")
         plt.grid(True)
         plt.legend()
-        plt.savefig(run_folder/ f"MagVsSpanIter{i}run{run}.png", dpi=200)
+        plt.savefig(run_folder/ f"MagVsSpanIter{i}.png", dpi=200)
         
         plt.show()
         plt.close("all")
@@ -229,15 +230,15 @@ for run in range(3):
         plt.plot(pattern, label=f"Iter {i}")
     plt.xlabel("Span -10 to +10in")
     plt.ylabel("Mag (dB)")
-    plt.title(f"Mag vs Span after every row run{run}")
+    plt.title("Mag vs Span after every row")
     plt.grid(True)
     plt.legend()
-    plt.savefig(run_folder/ f"MagVsSpanAfterEveryRowRun{run}.png", dpi=200)
+    plt.savefig(run_folder/ "MagVsSpanAfterEveryRow.png", dpi=200)
 
     plt.show()
     plt.close("all")
 
-    np.savez(run_folder / f"finalvoltagesandlossesrun{run}.npz", 
+    np.savez(run_folder / "finalvoltagesandlosses.npz", 
              final_voltages=np.array(final_voltages),
              final_losses=np.array(final_losses),
              final_patterns=np.array(final_patterns)
