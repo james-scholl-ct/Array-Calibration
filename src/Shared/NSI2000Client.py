@@ -37,7 +37,7 @@ class NSI2000Client:
         
     def run_scan_get_hor_amp(self, filename, beam):
         #Runs the scan specified in filename, gets the amplitude at all horizontal points
-        #for beam 1 at the first vertical point
+        #for beam 1 at for every vertical point
         #Also saves a listing of the data and test
         start_time = time.time()
         self.cmd.MEAS_CREATE_NEW_SCAN() #For some scans post-processing doesnt finish, this closes the previous scan
@@ -46,11 +46,13 @@ class NSI2000Client:
         #objNSI2000.FF_VCUT
         #print(objNSI2000.FFPOL1Array())
         nf_hpts = int(self.cmd.NF_HPTS)
-        amp = np.zeros(nf_hpts)
+        nf_vpts = int(self.cmd.NF_VPTS)
+        amp = np.zeros((nf_vpts, nf_hpts))
         self.cmd.SELECT_BEAM(beam)
-        for i in range(nf_hpts):
-            #print(nsi.cmd.NFPOL1_AMP(i, j))
-            amp[i] = self.cmd.NFPOL1_AMP(i, 0)[0]
+        for i in range(nf_vpts):
+            for j in range(nf_hpts):
+                #print(nsi.cmd.NFPOL1_AMP(i, j))
+                amp[i, j] = self.cmd.NFPOL1_AMP(j, i)[0]
                 
         #while 1:
         #    print(objNSI2000.STATUS_MESSAGE())
