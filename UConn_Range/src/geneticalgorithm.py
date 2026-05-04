@@ -20,7 +20,9 @@ SCAN_FILENAME = r"C:\NSI2000\Data\Carillon\calibration_scan_real.nsi"
 
 #PHASE_MAP_FILE_LB = r"C:\Users\labuser\Documents\ReflecTekCalibrationScholl\phases_with_beam_steering_0theta_0phi_hex_12x8.txt" 
 
-PI_HOST = "192.168.6.30" #IP of PI controlling DACs
+#PI_HOST = "192.168.6.30" #IP of PI controlling DACs
+PI_HOST = "RasPI5.local"
+PI_HOST = "10.194.115.111"
 USERNAME = "feix"         
 PASSWORD = "password"          
 KEY_FILE = None # if using an SSH key, set path like "C:/Users/you/.ssh/id_rsa"
@@ -31,9 +33,9 @@ LOCAL_FILE_HB = r"C:\NSI2000\Data\Carillon\HB_voltages.txt"   #HB voltage file t
 LOCAL_FILE_LB = r"C:\NSI2000\Data\Carillon\LB_voltages.txt" #LB voltage file to send to PI
 REMOTE_FILE_HB = r"/home/feix/Desktop/dataHB.csv"  # where to put it on the Pi
 REMOTE_FILE_LB = r"/home/feix/Downloads/2025-12-18 VoltageMap_HornCorrection.csv"  # where to put it on the Pi
-REMOTE_PROGRAM = "/home/feix/Gen3DAC60096EVM_SPI_RPi5_scholl.py" #Location of program on PI that updates DACs
+REMOTE_PROGRAM = "/home/feix/Gen3DAC60096EVM_SPI_RPi5_schollV2.py" #Location of program on PI that updates DACs
 # Command to run on the Pi once file is uploaded
-REMOTE_COMMAND = f"python3 {REMOTE_PROGRAM}"
+REMOTE_COMMAND = f"nohup python3 {REMOTE_PROGRAM} >/dev/null 2>&1 &"
 
 LC_DELAY_TIME =  40 #in secs
 
@@ -45,7 +47,7 @@ SIZE = (12, 8)
 
 #Loss function params
 MAIN_LOBE_HALF_WIDTH = 2 #Number of points in scan for the main lobe half width
-CENTER_INDEX = 71 #Index where the center lobe should be
+CENTER_INDEX = 50 #Index where the center lobe should be
 GUARD_BAND_HALF_WIDTH = 4 #Number of points in the scan for a guard band not considered in loss function
 
 def update_lb_array_file(V):
@@ -115,8 +117,8 @@ def loss_center_vs_sidelobes_db(
     E_main = float(np.sum(pwr[main_mask]))
     E_side = float(np.sum(pwr[side_mask]))
 
-    #fitness = E_main / (E_main + E_side)
-    fitness = E_main
+    fitness = E_main / (E_main + E_side)
+    #fitness = E_main
     
     #lm = .25
     #loss = -E_main - lm * E_side
@@ -128,36 +130,20 @@ def sol_key(solution):
 
 pattern_cache = {}
 fitness_cache = {}
-old_volt = np.array([
-    [0., 0., 0., 0., 0., 0., 0., 0.],
-    [0., 0., 0., 0., 0., 0., 0., 0.],
-    [10.49487305, 10.49487305, 10.49487305, 10.49487305, 10.49487305, 10.49487305, 10.49487305, 10.49487305],
-    [10.49487305, 10.49487305, 10.49487305, 10.49487305, 10.49487305, 10.49487305, 10.49487305, 10.49487305],
-    [10.49487305, 10.49487305, 10.49487305, 10.49487305, 10.49487305, 10.49487305, 10.49487305, 10.49487305],
-    [2.40454102, 2.40454102, 2.40454102, 2.40454102, 2.40454102, 2.40454102, 2.40454102, 2.40454102],
-    [0., 0., 0., 0., 0., 0., 0., 0.],
-    [0.38452148, 0.38452148, 0.38452148, 0.38452148, 0.38452148, 0.38452148, 0.38452148, 0.38452148],
-    [10.49487305, 10.49487305, 10.49487305, 10.49487305, 10.49487305, 10.49487305, 10.49487305, 10.49487305],
-    [2.40454102, 2.40454102, 2.40454102, 2.40454102, 2.40454102, 2.40454102, 2.40454102, 2.40454102],
-    [1.75341797, 1.75341797, 1.75341797, 1.75341797, 1.75341797, 1.75341797, 1.75341797, 1.75341797],
-    [0.57421875, 0.57421875, 0.57421875, 0.57421875, 0.57421875, 0.57421875, 0.57421875, 0.57421875],
-])
 
 def make_fitness(vna_instance, rpi):
     
     def fitness_func(ga_instance, solution, solution_idx):
         global pattern_cache, fitness_cache
-        voltages = old_volt
-        voltage_1 = solution[0:12]
-        voltage_2 = solution[12:24]
-        voltages[:, [1,6]] = voltage_1[:, None]
-        voltages[:, [2,5]] = voltage_2[:, None]
+        top_half = solution.reshape(6,8)
+        bottom_half = np.flipud(top_half)
+        voltages = np.vstack((top_half, bottom_half))
+        
         update_lb_array_file(voltages)
         #sends low and high band array files to PI and runs remote command to update DACs
         rpi.update_dacs()
         time.sleep(LC_DELAY_TIME)
-        pattern = vna_instance.run_scan_get_hor_amp(SCAN_FILENAME, BEAM)
-        
+        pattern = vna_instance.run_scan_get_hor_amp(SCAN_FILENAME, BEAM)[0, :]
         fitness = loss_center_vs_sidelobes_db(pattern, CENTER_INDEX, MAIN_LOBE_HALF_WIDTH, GUARD_BAND_HALF_WIDTH)
         
         k = sol_key(solution)
@@ -255,11 +241,10 @@ def on_gen(ga_instance):
     pattern = pattern_cache.get(k, None)
     fitness = fitness_cache.get(k, None)
     if solution_fitness > best_fitness:
-        best_voltages = old_volt
-        voltage_1 = solution[0:12]
-        voltage_2 = solution[12:24]
-        best_voltages[:, [1,6]] = voltage_1[:, None]
-        best_voltages[:, [2,5]] = voltage_2[:, None]
+        top_half = solution.reshape(6,8)
+        bottom_half = np.flipud(top_half)
+        best_voltages = np.vstack((top_half, bottom_half))
+        print(best_voltages)
         best_fitness = solution_fitness
         best_patterns.append(pattern)
         best_fitnesses.append(fitness)
@@ -268,7 +253,7 @@ def on_gen(ga_instance):
         plt.figure()
         for i, p in enumerate(best_patterns):
             plt.plot(p, label=f"Fitness: {np.round(best_fitnesses[i], 4)}")
-        plt.xlabel("Span -10 to +10in")
+        plt.xlabel("Span -50 to +50 Deg")
         plt.ylabel("Mag (dB)")
         plt.title("Mag vs Span best")
         plt.grid(True)
@@ -278,7 +263,24 @@ def on_gen(ga_instance):
     last_fitness = solution_fitness
 
 
-
+init = np.array([
+    [7.16632648, 1.40225182, 0.52255433, 9.80566219, 4.55549761, 1.17902949, 1.60657237, 8.52700428],
+    [0.98461356, 1.07840313, 0.00709581, 6.34536230, 0.01505323, 0.30802929, 1.73472426, 9.47118206],
+    [8.75371717, 0.01917238, 6.89494569, 5.50262202, 0.11468081, 0.52827583, 1.76535917, 7.60306206],
+    [5.06025948, 1.99034717, 7.96443552, 2.49324405, 5.61960198, 1.55343217, 4.04412824, 7.03406372],
+    [6.21501433, 0.68856494, 2.34103129, 6.49821401, 1.05292961, 1.40057762, 1.03044921, 3.28496453],
+    [8.11281286, 1.04946571, 1.37568752, 1.74290315, 8.03541736, 0.03354295, 8.56124450, 3.63949732],
+    [8.11281286, 1.04946571, 1.37568752, 1.74290315, 8.03541736, 0.03354295, 8.56124450, 3.63949732],
+    [6.21501433, 0.68856494, 2.34103129, 6.49821401, 1.05292961, 1.40057762, 1.03044921, 3.28496453],
+    [5.06025948, 1.99034717, 7.96443552, 2.49324405, 5.61960198, 1.55343217, 4.04412824, 7.03406372],
+    [8.75371717, 0.01917238, 6.89494569, 5.50262202, 0.11468081, 0.52827583, 1.76535917, 7.60306206],
+    [0.98461356, 1.07840313, 0.00709581, 6.34536230, 0.01505323, 0.30802929, 1.73472426, 9.47118206],
+    [7.16632648, 1.40225182, 0.52255433, 9.80566219, 4.55549761, 1.17902949, 1.60657237, 8.52700428]
+], dtype=np.float64)
+top_half=init[:6,:]
+init_pop = top_half.reshape(-1)
+initial_population = np.random.uniform(0, 10.4, size=(64, 48))
+initial_population[0] = init_pop
 nsi = NSI2000Client().connect()
 rpi = PiController(
         host=PI_HOST,
@@ -295,19 +297,19 @@ rpi = PiController(
     )
 rpi.connect()
 
-num_generations = 20
+num_generations = 30
 num_parents_mating = 20 #number of parent params chosen for breeding
 
 fitness_func = make_fitness(nsi, rpi)
 
-sol_per_pop = 50 #population size
-num_genes = 24
+sol_per_pop = 64 #population size
+num_genes = 48
 
-gene_space = [{"low": 0.0, "high": 10.49487305}] * 24
+gene_space = [{"low": 0.0, "high": 10.49487305}] * 48
 
 
 parent_selection_type = "tournament"
-K_tournament = 5
+K_tournament = 3
 
 keep_parents = 2
 keep_elitism = 1
@@ -319,7 +321,7 @@ mutation_type = "random"
 mutation_probability = None
 mutation_percent_genes = 10
 
-initial_population = None
+#initial_population = None
 
 experiment_dir = Path(r"C:\NSI2000\Data\Carillon\reflectarray_calibration\Experiments\genetic algorithm")
 ts = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
@@ -362,11 +364,9 @@ ga.run()
 
 
 solution, solution_fitness, solution_idx = ga.best_solution(ga.last_generation_fitness)
-voltages = old_volt
-voltage_1 = solution[0:12]
-voltage_2 = solution[12:24]
-voltages[:, [1,6]] = voltage_1[:, None]
-voltages[:, [2,5]] = voltage_2[:, None]
+top_half = solution.reshape(6,8)
+bottom_half = np.flipud(top_half)
+voltages = np.vstack((top_half, bottom_half))
 print(f"Voltages from the last solution : {voltages}")
 print(f"Fitness value of the last best solution = {solution_fitness}")
 print(f"Index of the last best solution : {solution_idx}")

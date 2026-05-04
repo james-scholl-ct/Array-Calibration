@@ -5,6 +5,7 @@ Created on Wed Dec 31 11:22:50 2025
 @author: SchollJamesAC3CARILL
 """
 import pyvisa
+import numpy as np
 
 class VnaInstance:
     """
@@ -26,31 +27,49 @@ class VnaInstance:
                 pass
             self.instr = None
     def sweep(self, start, stop, points):
-        """
-        Returns an array of size points containing complex data, the first value corresponds to first measured frequency
-        """
-        self.connect()
-        #instr.write('INIT:IMM; *WAI')
-        #self.instr.write(':SENS:HOLD:FUNC HOLD')
-        #self.instr.write(':TRIG:SING')
-        try: 
-            self.instr.write('LSB;FMB') 
-            self.instr.write(f'SENS1:FREQ:START {start}')
-            self.instr.write(f'SENS1:FREQ:STOP {stop}')
-            self.instr.write(f'SENS1:SWE:POIN {points}')
-            self.instr.write(':CALC1:PAR1:DEF S21')
-            #self.instr.write('INIT:IMM')
-            self.instr.write(':SENS:HOLD:FUNC HOLD')
-            self.instr.write(':TRIG:SING')
-            self.instr.query('*OPC?') #operation complete? -Waits for operation complete
-            print("Querying data...")
-            sdata = self.instr.query_binary_values(':CALC1:DATA:SDAT?', datatype = 'd', container = np.array).reshape((-1,2))  # any data query
-            sdata = sdata[:,0] + sdata[:,1]*1j
-            print("Received response.\n")
-            return sdata
-        except pyvisa.errors.VisaIOError as e:
-            print("VNA communication error:", e)
-            self.disconnect()
-            raise
-        finally:
-            self.disconnect()
+        meas = "S21"
+    
+        self.instr.write("SYST:PRES")
+        self.instr.write("*CLS")
+    
+        #self.instr.write("DISP:WIND1:STAT ON")
+        self.instr.write(f"CALC1:PAR:DEF:EXT 'Meas1',{meas}")
+        #self.instr.write("DISP:WIND1:TRAC1:FEED 'Meas1'")
+        self.instr.write("CALC1:PAR:SEL 'Meas1'")
+    
+        self.instr.write("SENS1:SWE:TYPE LIN")
+        self.instr.write(f"SENS1:FREQ:STAR {start}")
+        self.instr.write(f"SENS1:FREQ:STOP {stop}")
+        self.instr.write(f"SENS1:SWE:POIN {points}")
+    
+        self.instr.write("INIT1:CONT OFF")
+        self.instr.write("SENS1:SWE:MODE SING")
+    
+        self.instr.write("FORM:DATA REAL,64")
+        self.instr.write("FORM:BORD SWAP")
+    
+        print("Sweep type:", self.instr.query("SENS1:SWE:TYPE?").strip())
+        print("Start Hz  :", self.instr.query("SENS1:FREQ:STAR?").strip())
+        print("Stop Hz   :", self.instr.query("SENS1:FREQ:STOP?").strip())
+        print("Points    :", self.instr.query("SENS1:SWE:POIN?").strip())
+        print("Selected  :", self.instr.query("CALC1:PAR:SEL?").strip())
+        print("Error     :", self.instr.query("SYST:ERR?").strip())
+    
+        # actually trigger a measurement
+        self.instr.write("INIT1:IMM")
+        self.instr.query("*OPC?")
+    
+        raw = self.instr.query_binary_values(
+            "CALC1:DATA? SDATA",
+            datatype="d",
+            is_big_endian=False,
+            container=np.array,
+        )
+    
+        print("raw size:", raw.size)
+    
+        if raw.size % 2 != 0:
+            raise RuntimeError(f"Unexpected raw data length: {raw.size}")
+    
+        sdata = raw.reshape((-1, 2))
+        return sdata[:, 0] + 1j * sdata[:, 1]

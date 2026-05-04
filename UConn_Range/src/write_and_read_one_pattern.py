@@ -28,6 +28,8 @@ SCAN_FILENAME = r"C:\NSI2000\Data\Carillon\calibration_scan_real.nsi"
 #PHASE_MAP_FILE_LB = r"C:\Users\labuser\Documents\ReflecTekCalibrationScholl\phases_with_beam_steering_0theta_0phi_hex_12x8.txt" 
 
 PI_HOST = "192.168.6.30" #IP of PI controlling DACs
+PI_HOST = "RasPI5.local"
+PI_HOST = "10.194.115.111"
 USERNAME = "feix"         
 PASSWORD = "password"          
 KEY_FILE = None # if using an SSH key, set path like "C:/Users/you/.ssh/id_rsa"
@@ -38,24 +40,24 @@ LOCAL_FILE_HB = r"C:\NSI2000\Data\Carillon\HB_voltages.txt"   #HB voltage file t
 LOCAL_FILE_LB = r"C:\NSI2000\Data\Carillon\LB_voltages.txt" #LB voltage file to send to PI
 REMOTE_FILE_HB = r"/home/feix/Desktop/dataHB.csv"  # where to put it on the Pi
 REMOTE_FILE_LB = r"/home/feix/Downloads/2025-12-18 VoltageMap_HornCorrection.csv"  # where to put it on the Pi
-REMOTE_PROGRAM = "/home/feix/Gen3DAC60096EVM_SPI_RPi5_scholl.py" #Location of program on PI that updates DACs
+REMOTE_PROGRAM = "/home/feix/Gen3DAC60096EVM_SPI_RPi5_schollV2.py" #Location of program on PI that updates DACs
 # Command to run on the Pi once file is uploaded
-REMOTE_COMMAND = f"python3 {REMOTE_PROGRAM}"
+REMOTE_COMMAND = f"nohup python3 {REMOTE_PROGRAM} >/dev/null 2>&1 &"
 
 
 INIT_VOLTAGE_MAP = np.array([
-    [0.0, 0.0, 0.76904297, 0.0, 0.0, 0.76904297, 0.0, 0.0],
-    [0.0, 0.0, 0.57421875, 0.0, 0.0, 0.57421875, 0.0, 0.0],
-    [10.49487305, 10.49487305, 10.49487305, 10.49487305, 10.49487305, 10.49487305, 10.49487305, 10.49487305],
-    [10.49487305, 10.49487305, 9.39770508, 10.49487305, 10.49487305, 9.39770508, 10.49487305, 10.49487305],
-    [10.49487305, 10.49487305, 10.49487305, 10.49487305, 10.49487305, 10.49487305, 10.49487305, 10.49487305],
-    [2.40454102, 2.40454102, 2.61987305, 2.40454102, 2.40454102, 2.61987305, 2.40454102, 2.40454102],
-    [0.0, 0.0, 0.19482422, 0.0, 0.0, 0.19482422, 0.0, 0.0],
-    [0.38452148, 0.38452148, 0.96386719, 0.38452148, 0.38452148, 0.96386719, 0.38452148, 0.38452148],
-    [10.49487305, 10.49487305, 10.49487305, 10.49487305, 10.49487305, 10.49487305, 10.49487305, 10.49487305],
-    [2.40454102, 2.40454102, 10.49487305, 2.40454102, 2.40454102, 10.49487305, 2.40454102, 2.40454102],
-    [1.75341797, 1.75341797, 1.75341797, 1.75341797, 1.75341797, 1.75341797, 1.75341797, 1.75341797],
-    [0.57421875, 0.57421875, 0.57421875, 0.57421875, 0.57421875, 0.57421875, 0.57421875, 0.57421875]
+    [0.0, 0.43082805, 0.36113632, 0.0, 0.0, 0.36113632, 0.43082805, 0.0],
+    [0.0, 0.40098652, 1.01827158, 0.0, 0.0, 1.01827158, 0.40098652, 0.0],
+    [10.49487305, 7.50081875, 3.33448287, 10.49487305, 10.49487305, 3.33448287, 7.50081875, 10.49487305],
+    [10.49487305, 9.12302114, 8.7452768, 10.49487305, 10.49487305, 8.7452768, 9.12302114, 10.49487305],
+    [10.49487305, 6.06508177, 9.73930833, 10.49487305, 10.49487305, 9.73930833, 6.06508177, 10.49487305],
+    [2.40454102, 1.6955036, 4.43498863, 2.40454102, 2.40454102, 4.43498863, 1.6955036, 2.40454102],
+    [0.0, 0.89978374, 0.61801542, 0.0, 0.0, 0.61801542, 0.89978374, 0.0],
+    [0.38452148, 0.50618363, 0.29721435, 0.38452148, 0.38452148, 0.29721435, 0.50618363, 0.38452148],
+    [10.49487305, 8.2179479, 10.44846116, 10.49487305, 10.49487305, 10.44846116, 8.2179479, 10.49487305],
+    [2.40454102, 6.96661354, 10.24318273, 2.40454102, 2.40454102, 10.24318273, 6.96661354, 2.40454102],
+    [1.75341797, 5.3269361, 1.50438538, 1.75341797, 1.75341797, 1.50438538, 5.3269361, 1.75341797],
+    [0.57421875, 0.75419425, 0.8595833, 0.57421875, 0.57421875, 0.8595833, 0.75419425, 0.57421875]
 ])
 #Size of array representing elements on the board-12x8 for LB
 SIZE = (12,8)
@@ -96,15 +98,29 @@ def read_phase_map_file(filename):
     phasemap = np.flipud((np.array(phasemap).T))#transpose then flip up/down sams spi code takes 12x8 but current phasemap code gives 8x12
     return phasemap
 
-def update_lb_array_file(V):
+def update_lb_array_file(V, dual_band = False):
     #V = np.round(V * DAC_MIN_STEP_SIZE, 3)
     with open(LOCAL_FILE_LB, "w") as f:
         for row in V:
             line = ",".join(str(x) for x in row)
             f.write(line + "\n")
-    #This program is for LB only, so create a 0V array for the high band which is 24x8 in Sam's code
+    if dual_band == False:
+        #This program is for LB only, so create a 0V array for the high band which is 24x8 in Sam's code
+        with open(LOCAL_FILE_HB, "w") as f:
+            for row in np.zeros((24,8)):
+                line = ",".join(str(x) for x in row)
+                f.write(line + "\n")
+            
+def update_hb_array_file(V, dual_band = False):
+    #V = np.round(V * DAC_MIN_STEP_SIZE, 3)
+    if dual_band == False:
+        #This program is for HB only, so create a 0V array for the low band
+        with open(LOCAL_FILE_LB, "w") as f:
+            for row in np.zeros((12,8)):
+                line = ",".join(str(x) for x in row)
+                f.write(line + "\n")
     with open(LOCAL_FILE_HB, "w") as f:
-        for row in np.zeros((24,8)):
+        for row in V:
             line = ",".join(str(x) for x in row)
             f.write(line + "\n")
     
@@ -211,7 +227,10 @@ def main():
     #data = np.load(r"C:\Users\NSI-MI\Downloads\grid.npz")
     #voltages = data["voltages"]
     #index = data["index_arr"]
-    voltages = np.zeros((12,8))
+    data2=np.load(r"C:\NSI2000\Data\Carillon\reflectarray_calibration\Experiments\column_search\Calibration_2026-02-19_14-02-25\run_2\finalvoltagesandlosses.npz")
+
+    
+
     
     nsi = NSI2000Client().connect()
     rpi = PiController(
@@ -230,11 +249,51 @@ def main():
     rpi.connect()
 
     
-    
-    update_lb_array_file(INIT_VOLTAGE_MAP)
+    voltages = np.array([
+    [1.11103, 2.07747, 4.44963, 10.5, 0, 1.52362, 3.55497, 10.5],
+    [1.41815, 3.20992, 10.5, 0, 1.30698, 2.75038, 10.5, 0],
+    [0.31626, 2.24564, 8.40103, 0, 1.02212, 2.23965, 6.38328, 0],
+    [1.4577, 4.81089, 10.5, 0.59264, 1.81207, 3.88447, 10.5, 0.42402],
+    [0.36301, 2.6917, 10.5, 0, 1.37982, 2.62605, 8.24972, 0],
+    [1.71069, 6.67968, 0, 0.84195, 1.93361, 4.19646, 10.5, 0.74523],
+    [0.77203, 3.12103, 10.5, 0, 1.3459, 2.50597, 7.58607, 0],
+    [1.87234, 6.59449, 0, 0.59199, 1.70732, 3.37595, 10.5, 0.47303],
+    [0.96714, 2.81839, 10.5, 0, 0.95532, 2.04683, 5.10142, 10.5],
+    [1.61929, 3.78821, 10.5, 0, 1.22133, 2.43451, 7.43496, 0],
+    [0.55848, 1.83685, 4.19987, 10.5, 0, 1.47013, 2.8581, 8.53369],
+    [0.55096, 1.74073, 4.0709, 10.5, 0.34624, 1.69141, 2.94388, 5.32943]
+])
+    voltages_hb_00  = np.array([
+    [2.10903, 6.30077, 0, 2.22169, 10.4, 0, 2.14208, 2.52367],
+    [2.2028, 10.4, 0, 2.37654, 10.4, 0.19684, 2.29267, 4.19474],
+    [1.85079, 2.86224, 0, 2.07013, 10.4, 0, 2.11234, 2.86025],
+    [1.93102, 4.4346, 0, 2.1999, 10.4, 0, 2.22623, 5.61829],
+    [2.35168, 10.4, 1.72448, 3.28527, 0, 1.96068, 2.67997, 10.4],
+    [2.4161, 10.4, 1.9557, 5.52256, 0, 2.06712, 3.50495, 10.4],
+    [2.0034, 10.4, 0, 2.40702, 10.4, 0.83411, 2.40399, 10.4],
+    [2.01447, 10.4, 0, 2.50952, 10.4, 1.53378, 2.4772, 10.4],
+    [2.52036, 0, 2.1311, 10.4, 0, 2.17344, 7.64909, 0],
+    [2.54954, 0, 2.17395, 10.4, 0, 2.19295, 10.4, 0],
+    [1.99914, 10.4, 1.0043, 2.70702, 10.4, 1.75036, 2.5523, 10.4],
+    [1.97302, 10.4, 1.21845, 2.7433, 10.4, 1.71742, 2.53189, 10.4],
+    [2.53621, 0, 2.19788, 10.4, 0, 2.17128, 10.4, 0],
+    [2.49757, 0, 2.17907, 10.4, 0, 2.12898, 5.93706, 0],
+    [1.87092, 10.4, 0.62969, 2.59695, 10.4, 0.95202, 2.40442, 10.4],
+    [1.77341, 10.4, 0, 2.48791, 10.4, 0, 2.3202, 10.4],
+    [2.38786, 0, 2.07103, 6.95936, 0, 1.94901, 2.84508, 10.4],
+    [2.3247, 10.4, 1.95973, 3.83344, 0, 1.69226, 2.51211, 10.4],
+    [1.04303, 6.70909, 0, 2.27286, 10.4, 0, 2.10984, 5.5035],
+    [0.01587, 3.84296, 0, 2.15123, 10.4, 0, 1.93431, 2.78341],
+    [2.18136, 10.4, 0, 2.40318, 10.4, 0, 2.18707, 10.4],
+    [2.09191, 10.4, 0, 2.23194, 10.4, 0, 1.99334, 2.89095],
+    [0, 2.44075, 10.4, 1.35563, 2.47518, 10.4, 0, 2.19363],
+    [0, 2.28412, 10.4, 0, 2.25074, 10.4, 0, 1.92702]
+])
+    #voltages=np.full((24,8), 10)
+    update_lb_array_file(voltages, dual_band = False)
+    #update_hb_array_file(voltages_hb_00, dual_band = True)
     rpi.update_dacs()
     time.sleep(40)
-    
     print("Ready to run scan")
     #Manually stop run when scan is finish
     while True:
@@ -245,11 +304,11 @@ def main():
             break
     
     #Set array elements to zero when done
-    v_close = np.round(np.zeros((12,8)),3)
-    update_lb_array_file(v_close)
+    v_close = np.round(np.zeros((24,8)),3)
+    update_hb_array_file(v_close)
     rpi.update_dacs()
-    time.sleep(40)
-    
+    #time.sleep(40)
+    #nsi.save_scan(r"C:\NSI2000\Data\Carillon\temp.asc")
     nsi.disconnect()
     rpi.stop_program()
     rpi.close()

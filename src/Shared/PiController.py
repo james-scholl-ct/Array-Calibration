@@ -41,7 +41,16 @@ class PiController:
         self.key_filename = key_filename
         self.stop_file = stop_file
         self.client = None
-        
+    def _transport_ok(self):
+        try:
+            t = self.client.get_transport() if self.client else None
+            return (t is not None) and t.is_active()
+        except Exception:
+            return False
+    def ensure_connected(self):
+        if not self._transport_ok():
+            self.close()
+            self.connect()
     def connect(self):
         client = paramiko.SSHClient()
         client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
@@ -55,6 +64,10 @@ class PiController:
             look_for_keys=True,
         )
         self.client = client
+        t = self.client.get_transport()
+        if t:
+            t.set_keepalive(30)
+            
         return self
     
     def close(self):
@@ -65,32 +78,23 @@ class PiController:
                 self.client = None
                 
     def remove_stop_file(self):
-        sftp = self.client.open_sftp()
-        try:
-            sftp.remove(self.stop_file)
-            print("Stop File removed")
-        except FileNotFoundError:
-            pass
-        sftp.close()
+        self.client.exec_command(f"rm -f {self.stop_file}")
         
     def stop_program(self):
-        sftp = self.client.open_sftp()
-        with sftp.open(self.stop_file, "w"):
-            pass
-        sftp.close()
+        self.client.exec_command(f"touch {self.stop_file}")
         
     def upload_lb_and_hb_files(self):
         sftp = self.client.open_sftp()
         print(f"Uploading {self.local_file_hb} -> {self.remote_file_hb} ...")
         sftp.put(self.local_file_hb, self.remote_file_hb)
-        print("Upload complete.")
+        print("Upload complete")
         
         print(f"Uploading {self.local_file_lb} -> {self.remote_file_lb} ...")
         sftp.put(self.local_file_lb, self.remote_file_lb)
-        print("Upload complete.")
+        print("Upload complete")
         sftp.close()
         
-    def run_remote_command(self, wait: bool = False, get_pty: bool = True):
+    def run_remote_command(self, wait: bool = False, get_pty: bool =False):
         print(f"Running remote command: {self.remote_command}")
         stdin, stdout, stderr = self.client.exec_command(self.remote_command, get_pty=get_pty)
         if not wait:
@@ -100,11 +104,21 @@ class PiController:
         err = stderr.read().decode("utf-8", errors="replace")
         return out, err, exit_status
     def update_dacs(self):
-        self.stop_program()
-        time.sleep(1)
-        self.remove_stop_file()
-        self.upload_lb_and_hb_files()
-        self.run_remote_command()
+        for attempt in range(2):
+            try: 
+                self.ensure_connected()
+                self.stop_program()
+                time.sleep(1)
+                self.remove_stop_file()
+                self.upload_lb_and_hb_files()
+                self.run_remote_command()
+                return
+            except (paramiko.SSHException, ConnectionResetError, OSError) as e:
+                if attempt == 0:
+                    self.close()
+                    time.sleep(.5)
+                    continue
+                raise
         
     def __enter__(self):
         return self.connect()

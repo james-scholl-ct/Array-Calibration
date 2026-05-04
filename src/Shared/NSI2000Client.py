@@ -5,6 +5,8 @@ Created on Wed Dec 31 11:17:10 2025
 @author: SchollJamesAC3CARILL
 """
 import win32com.client
+from win32com.client import VARIANT
+import pythoncom
 import gc
 import numpy as np
 from pathlib import Path
@@ -61,14 +63,21 @@ class NSI2000Client:
         elapsed = time.time() - start_time
         print(f"Acquisition completed in {elapsed:.1f} seconds")
         return amp
-    
-    def save_scan(self, k, is_loss_plus:bool, cal_folder):
-        if (is_loss_plus):
-            cal_file = cal_folder / f"cal_iter_{k}_Lp.asc"
-        else:
-            cal_file = cal_folder / f"cal_iter_{k}_Lm.asc"
+    def save_scan(self, cal_file):
         self.cmd.NF_LISTING_TO_FILE(cal_file)
         #Add code to also perform an hcut and save the graph
+    def move_x(self, distance):
+        self.cmd.MOVE_HAXIS(distance)
+    def move_y(self, distance):
+        self.cmd.MOVE_VAXIS(distance)
+    def read_receiver(self):
+        self.cmd.READ_RECEIVER_ONCE()
+        time.sleep(.4)
+        return self.cmd.LAST_AMP_READ(0)[0]
+    def get_haxis_pos(self):
+        return self.cmd.CONTROLLER_HAXIS_POSITION
+    def get_vaxis_pos(self):
+        return self.cmd.CONTROLLER_VAXIS_POSITION
     # Context manager support: ensures cleanup 
     def __enter__(self): 
         return self.connect() 
