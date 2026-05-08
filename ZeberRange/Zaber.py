@@ -11,6 +11,7 @@ from zaber_motion.ascii import Connection
 import pyvisa
 import time
 import matplotlib.pyplot as plt
+from gpiozero import OutputDevice
 
 class VnaInstance:
     """
@@ -23,11 +24,12 @@ class VnaInstance:
     def connect(self):
         self.instr = self.rm.open_resource(self.ip_addr)
         self.instr.timeout = 60000 #60 seconds
-        print("VNA ID:", self.instr.query("*IDN?").strip())
+        #print("VNA ID:", self.instr.query("*IDN?").strip())
     def disconnect(self):
         if self.instr is not None:
             try:
                 self.instr.control_ren(6) # go to local mode
+                #self.instr.write("\x1B")
                 self.instr.close()
             except:
                 pass
@@ -37,6 +39,8 @@ class VnaInstance:
     
         self.instr.write("SYST:PRES")
         self.instr.write("*CLS")
+        self.instr.write("*RST")
+        self.instr.write("*OPC")
     
         #self.instr.write("DISP:WIND1:STAT ON")
         self.instr.write(f"CALC1:PAR:DEF:EXT 'Meas1',{meas}")
@@ -50,10 +54,13 @@ class VnaInstance:
     
         self.instr.write("INIT1:CONT OFF")
         self.instr.write("SENS1:SWE:MODE SING")
-    
+        
         self.instr.write("FORM:DATA REAL,64")
         self.instr.write("FORM:BORD SWAP")
-    
+        
+        self.instr.write(":TRIG:SOUR EXT")                 # external trigger
+        self.instr.query("*OPC?")
+        
         print("Sweep type:", self.instr.query("SENS1:SWE:TYPE?").strip())
         print("Start Hz  :", self.instr.query("SENS1:FREQ:STAR?").strip())
         print("Stop Hz   :", self.instr.query("SENS1:FREQ:STOP?").strip())
@@ -73,7 +80,7 @@ class VnaInstance:
             container=np.array,
         )
     
-        print("raw size:", raw.size)
+        #print("raw size:", raw.size)
     
         if raw.size % 2 != 0:
             raise RuntimeError(f"Unexpected raw data length: {raw.size}")
@@ -82,48 +89,41 @@ class VnaInstance:
         
         t1 = time.perf_counter()
         return t1 - t0, 20*np.log10(np.abs(sdata[:, 0] + 1j * sdata[:, 1]))
-    
-    def setup_cw_time_sweep(self,FREQ_HZ):
-        self.POINTS = 1000
-        self.IFBW_HZ =100
-        self.SAMPLE_OVERHEAD = .1111111e-3 #ms
-        self.instr.write("*CLS")
-        self.instr.write(":SENS1:SWE:CW 1") #Turn on CW mode for CH1
-        self.instr.write(":SENS1:SWE:TIM:STAT 1") #Sets sweep time state for CH1 on
-        self.instr.write(f":SENS1:FREQ:CW {FREQ_HZ}")
-        self.instr.write(f":SENS1:BAND {self.IFBW_HZ}")
-        self.instr.write(f":SENS1:SWE:CW:POIN {self.POINTS}")
-        self.instr.write(":SENS1:HOLD:FUNC HOLD") #Sweep on CH1 is stopped
-        self.instr.write(":SENS1:SWE:TIM:DISP 1")
-        #self.instr.write(":INIT1:CONT OFF") 
-        #Choose measurement, example S21
-        self.instr.write(":CALC1:PAR1:DEF S21")
-        #Selects trace 1 as active trace
-        self.instr.write(":CALC1:PAR1:SEL")
-    
-        #Binary data is faster than ASCII
-        self.instr.write(":FORM:DATA REAL,64")
-        self.instr.write(":FORM:BORD SWAP")
         
-        self.machine_sweep_time = float(self.instr.query(":SENS1:SWE:TIM?"))
-        #print(self.instr.query(":SENS1:SWE:TIM:TYP?"))
-        
-        self.sample_interval = (1 / self.IFBW_HZ) + self.SAMPLE_OVERHEAD
-        self.sweep_time = self.sample_interval * self.POINTS
-        self.sample_rate = 1.0 / self.sample_interval      # Hz
-        
-        
-        self.time_axis = np.linspace(0, self.sweep_time, self.POINTS)  # seconds
+    def setup_cw_time_sweep(self, FREQ_HZ, POINTS, IFBW_HZ):
+            self.POINTS = POINTS
+            self.IFBW_HZ = IFBW_HZ
+            self.SAMPLE_OVERHEAD = .1111111e-3  # seconds
 
-        print(f"Machine sweep time:      {self.machine_sweep_time:.3f} s")
-        print(f"Sweep time:      {self.sweep_time:.3f} s")
-        print(f"Sample interval: {self.sample_interval*1000:.4f} ms")
-        print(f"Sample rate:     {self.sample_rate:.1f} Hz")
+            self.sample_interval = (1 / self.IFBW_HZ) + self.SAMPLE_OVERHEAD
+            self.sweep_time = self.sample_interval * self.POINTS
+            self.sample_rate = 1.0 / self.sample_interval
+            self.time_axis = np.linspace(0, self.sweep_time, self.POINTS)
 
-    def start_running(self):
-        #self.instr.write(":INIT1:CONT ON")
-        #self.instr.write(":INIT:IMM")
-        self.instr.write(":TRIG:SEQ:IMM:REM") #Triggers a single sweep, allows command execution during the sweep
+            self.instr.write("*CLS")
+
+            self.instr.write(":SENS1:SWE:CW 1") #Turn on CW mode for CH1
+            self.instr.query("*OPC?")
+            self.instr.write(f":SENS1:FREQ:CW {FREQ_HZ}")      # CW frequency
+            self.instr.write(f":SENS1:BAND {self.IFBW_HZ}")    # IFBW
+            self.instr.write(f":SENS1:SWE:CW:POIN {self.POINTS}") # number of points
+
+            self.instr.write(":CALC1:PAR1:DEF S21")            # S21 measurement
+            self.instr.write(":CALC1:PAR1:SEL")                # select trace 1
+
+            #print(f"Calculated sweep time: {self.sweep_time:.3f} s")
+            #print(f"Sample interval: {self.sample_interval * 1000:.4f} ms")
+            #print(f"Sample rate: {self.sample_rate:.1f} Hz")
+            #print("Error:", self.instr.query("SYST:ERR?").strip())
+            
+    def set_hold_single(self):
+            self.instr.write(":SENS1:HOLD:FUNC SING")          # single sweep on trigger
+            self.instr.query("*OPC?")
+        
+    def start_running(self, pin):
+        pin.on()
+        time.sleep(.1)
+        pin.off()
         
 
     def stop_and_read_complex_data(self):
@@ -131,7 +131,7 @@ class VnaInstance:
        
         #Hold sweep on channel 1 
         self.instr.write(":SENS1:HOLD:FUNC HOLD")
-        time.sleep(0.2)
+        time.sleep(0.1)
     
         # Read complex real/imaginary data
         raw = self.instr.query_binary_values(
@@ -144,7 +144,7 @@ class VnaInstance:
         data = np.array(raw).reshape(-1, 2)
         complex_s = data[:, 0] + 1j * data[:, 1]
         
-        return 20*np.log10(np.abs(complex_s)), self.sample_interval
+        return 20*np.log10(np.abs(complex_s))
     
 
 
@@ -153,7 +153,7 @@ class Zaber:
         self.port = port
         self.max_angle_deg = 70 #placeholder 
         self.min_step_size_deg = .1 #placeholder
-        self.speed = 20 #deg/s
+        self.speed = 15 #deg/s
         self.accel = 200 #deg/s/s
         self._connect()
         self._init_zaber()
@@ -175,7 +175,7 @@ class Zaber:
         
         self.axis.settings.set("accel", self.accel, Units.ANGULAR_ACCELERATION_DEGREES_PER_SECOND_SQUARED)
         self.axis.settings.set("maxspeed", self.speed, Units.ANGULAR_VELOCITY_DEGREES_PER_SECOND)
-        self.axis.settings.set("limit.approach.maxspeed", self.speed/2, Units.ANGULAR_VELOCITY_DEGREES_PER_SECOND)
+        self.axis.settings.set("limit.approach.maxspeed", self.speed, Units.ANGULAR_VELOCITY_DEGREES_PER_SECOND)
         self.axis.home()
         #self.move_abs(90)
     
@@ -193,95 +193,115 @@ class Zaber:
         start_angle_deg = (-span_deg/2)+center_deg
         stop_angle_deg = (span_deg/2)+center_deg
         return start_angle_deg, stop_angle_deg
-
-    def run_scan(self, vna, span_deg, center_deg, num_angle_points, start_freq_ghz, stop_freq_ghz, num_freq_points): 
+        
+def run_scan(zaber, vna, pin, span_deg, center_deg, num_angle_points, start_freq_ghz, stop_freq_ghz, num_freq_points): 
         magnitude = []
-        start_angle_deg, stop_angle_deg = self.get_angles(span_deg, center_deg, num_angle_points)
+        position_axis = []
+        speed = zaber.speed
+        accel = zaber.accel
+        
+        start_angle_deg, stop_angle_deg = zaber.get_angles(span_deg, center_deg, num_angle_points)
         half_span = span_deg/2
-        offset_angle_deg = (self.speed ** 2) / (2*self.accel) #angle offset to start and stop scan at so that the scan is at constant velocity over the span
+        offset_angle_deg = (speed ** 2) / (2*accel) #angle offset to start and stop scan at so that the scan is at constant velocity over the span
         start_angle_real_deg = start_angle_deg - offset_angle_deg -1 #add 1 degree buffer
         stop_angle_real_deg = stop_angle_deg + offset_angle_deg +1 #add 1 degree buffer
         
-        start_time_s = self.speed/self.accel 
-        scan_time_s = span_deg/self.speed
+        start_time_s = speed/accel 
+        scan_time_s = span_deg/speed
         
-        vna.setup_cw_time_sweep(start_freq_ghz)
+        if (vna.sweep_time < scan_time_s):
+                raise ValueError(f"Change IFBW or CW points so that VNA sweep time (curr: {vna.sweep_time}s) is greater than rotary scan time (curr: {scan_time_s}s)")
+        
+        vna.set_hold_single() #tells vna to wait for trigger
         
         #move to start point and wait
-        self.move_abs(start_angle_real_deg, wait_until_idle = True)
+        zaber.move_abs(start_angle_real_deg, wait_until_idle = True)
         
+        
+        #start_vna = time.perf_counter()
         #start moving to stop point
-        self.move_abs(stop_angle_real_deg, wait_until_idle = False)
+        zaber.move_abs(stop_angle_real_deg, wait_until_idle = False)
 
         #Wait until scanner reaches start of scan position
         while True:
-            start_position = self.axis.get_position(Units.ANGLE_DEGREES)
+            start_position = zaber.axis.get_position(Units.ANGLE_DEGREES)
             if start_position >= start_angle_deg:
                 start = time.perf_counter()
                 break
     
         #start the vna measurment
-        vna.start_running()
-        #print(start_position)
+        vna.start_running(pin)
         
         #wait until scan is complete
         while True:
-            stop_position = self.axis.get_position(Units.ANGLE_DEGREES)
+            stop_position = zaber.axis.get_position(Units.ANGLE_DEGREES)
             if stop_position >= stop_angle_deg:
-                print(stop_position)
                 stop = time.perf_counter()
                 break
+      
         python_time = stop-start
-        print(f"Scan time={python_time}s")
-        magnitude, sample_interval = vna.stop_and_read_complex_data()
-        #magnitude =1
-        #time.sleep(10)
+        #print(f"Scan time={python_time}s")
+        magnitude = vna.stop_and_read_complex_data()
         
-        time_axis =  np.linspace(0, len(magnitude) * sample_interval, len(magnitude))
-        position_axis = time_axis*self.speed + start_position
-        position_axis = position_axis[position_axis < stop_position]
+        time_axis =  np.linspace(0, len(magnitude) * (vna.sample_interval), len(magnitude))
+        time_axis = time_axis[(time_axis <= python_time)]
+
+        position_axis = time_axis*speed + start_position
+
+        position_axis = position_axis[position_axis <= stop_position]
+
         magnitude = magnitude[0:len(position_axis)]
-        #magnitude = np.flip(magnitude)
-        self.axis.home()
+        
+        zaber.axis.home()
+
         return magnitude, position_axis
         
 
-       
-        
-
 def main():
-    port = "COM4"
+    #port = "COM4"
+    port="/dev/ttyUSB0"
     vna_ip_addr = "TCPIP0::192.168.6.150::inst0::INSTR"
+    
     span_deg = 120
     num_angle_points = 20
     center_deg = 0
-    start_freq_ghz = 19.3e9
-    stop_freq_ghz = 20e9
+    start_freq_ghz = 24e9
+    stop_freq_ghz = 25e9
     num_freq_points = 1
     
-
+    cw_points = 4000
+    ifbw_hz = 200
+    
+    peak_loc = []
     zaber = None
     vna = None
+    
+    pin = OutputDevice(16)
+    pin.off()
+    
     try:
         vna = VnaInstance(vna_ip_addr)
         #vna=1
-        vna.connect()  
+        vna.connect()
+        vna.setup_cw_time_sweep(start_freq_ghz, cw_points, ifbw_hz)
         zaber = Zaber(port)
-        magnitude, position_axis = zaber.run_scan(vna, span_deg, center_deg, num_angle_points, start_freq_ghz, stop_freq_ghz, num_freq_points)
-        print(magnitude)
-        print(len(magnitude))
+        for i in range(1):
+                magnitude, position_axis = run_scan(zaber, vna, pin, span_deg, center_deg, num_angle_points, start_freq_ghz, stop_freq_ghz, num_freq_points)
+                peak_loc.append(position_axis[np.argmax(magnitude)])
+                #time.sleep(3)
         plt.figure()
-        plt.plot(position_axis, magnitude)
+        plt.plot(position_axis, magnitude, 'o')
         plt.xlabel("Azimuth (°)")
         plt.ylabel("Magnitude (dB)")
         plt.title(f"Magnitude Vs Azimuth at {start_freq_ghz/1e9} Ghz")
-        plt.ylim(-80, -20)
+        plt.ylim(-80, 10)
         plt.show()
     finally:
         if vna is not None:
              vna.disconnect()
         if zaber is not None:
             zaber.disconnect()
+        pin.close()
     
 if __name__ == "__main__":
     main()
