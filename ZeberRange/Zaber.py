@@ -28,7 +28,7 @@ class VnaInstance:
     def disconnect(self):
         if self.instr is not None:
             try:
-                self.instr.control_ren(6) # go to local mode
+                #self.instr.control_ren(6) # go to local mode
                 #self.instr.write("\x1B")
                 self.instr.close()
             except:
@@ -103,21 +103,23 @@ class VnaInstance:
             self.instr.write("*CLS")
 
             self.instr.write(":SENS1:SWE:CW 1") #Turn on CW mode for CH1
-            self.instr.query("*OPC?")
             self.instr.write(f":SENS1:FREQ:CW {FREQ_HZ}")      # CW frequency
             self.instr.write(f":SENS1:BAND {self.IFBW_HZ}")    # IFBW
             self.instr.write(f":SENS1:SWE:CW:POIN {self.POINTS}") # number of points
+            
+            self.instr.write(":FORM:DATA REAL")
 
             self.instr.write(":CALC1:PAR1:DEF S21")            # S21 measurement
             self.instr.write(":CALC1:PAR1:SEL")                # select trace 1
-
+            self.instr.query("*OPC?")
             #print(f"Calculated sweep time: {self.sweep_time:.3f} s")
             #print(f"Sample interval: {self.sample_interval * 1000:.4f} ms")
             #print(f"Sample rate: {self.sample_rate:.1f} Hz")
             #print("Error:", self.instr.query("SYST:ERR?").strip())
             
     def set_hold_single(self):
-            self.instr.write(":SENS1:HOLD:FUNC SING")          # single sweep on trigger
+            self.instr.write(":SENS1:HOLD:FUNC SING")   
+            self.instr.write(":TRIG:SOUR EXT")       # single sweep on trigger
             self.instr.query("*OPC?")
         
     def start_running(self, pin):
@@ -128,7 +130,7 @@ class VnaInstance:
 
     def stop_and_read_complex_data(self):
         # Stop continuous sweeping / hold current trace
-       
+        
         #Hold sweep on channel 1 
         self.instr.write(":SENS1:HOLD:FUNC HOLD")
         time.sleep(0.1)
@@ -265,7 +267,7 @@ def main():
     span_deg = 120
     num_angle_points = 20
     center_deg = 0
-    start_freq_ghz = 24e9
+    start_freq_ghz = 19.3e9
     stop_freq_ghz = 25e9
     num_freq_points = 1
     
@@ -290,7 +292,7 @@ def main():
                 peak_loc.append(position_axis[np.argmax(magnitude)])
                 #time.sleep(3)
         plt.figure()
-        plt.plot(position_axis, magnitude, 'o')
+        plt.plot(position_axis, magnitude)
         plt.xlabel("Azimuth (°)")
         plt.ylabel("Magnitude (dB)")
         plt.title(f"Magnitude Vs Azimuth at {start_freq_ghz/1e9} Ghz")
