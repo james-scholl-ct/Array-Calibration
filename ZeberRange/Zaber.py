@@ -296,7 +296,7 @@ def main():
         plt.xlabel("Azimuth (°)")
         plt.ylabel("Magnitude (dB)")
         plt.title(f"Magnitude Vs Azimuth at {start_freq_ghz/1e9} Ghz")
-        plt.ylim(-80, 10)
+        plt.ylim(-90, -50)
         plt.show()
     finally:
         if vna is not None:

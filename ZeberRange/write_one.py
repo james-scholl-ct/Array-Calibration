@@ -82,7 +82,7 @@ def main():
     [0.55096, 1.74073, 4.07090, 10.50000, 0.34624, 1.69141, 2.94388, 5.32943],
 ])
 '''
-    voltages = np.loadtxt("/home/carillon/Documents/raopt-config/output/voltages_theta20_phi0.csv", delimiter=",")   
+    voltages = np.loadtxt("/home/carillon/Downloads/optimize/theta_+20_opt_voltages.csv", delimiter=",")   
     update_lb_array_file(voltages, dual_band = False)
     
     rpi.update_dacs()
