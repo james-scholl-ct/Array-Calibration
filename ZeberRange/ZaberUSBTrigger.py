@@ -18,19 +18,18 @@ class UsbTrigger:
     def __init__(self, port, pulse_duration=0.002):
         self.port = port
         self.pulse_duration = pulse_duration
-        self.ser = serial.Serial(port, baudrate=9600)
-        self.ser.setRTS(False)  # ensure low at start
-
-    def on(self):
-        self.ser.setRTS(True)
-
-    def off(self):
+        self.ser = serial.Serial(port, baudrate=921600)
         self.ser.setRTS(False)
-
+        self.ser.setDTR(False)  # ensure low at start
+    
+    def pulse(self):
+        # Drive TXD high by sending a break-free byte
+        self.ser.write(b'\x00')  # TXD pulses with data
+    
+        
     def close(self):
-        self.ser.setRTS(False)
+        # self.ser.setRTS(False)
         self.ser.close()
-    import serial.tools.list_ports
 
 class VnaInstance:
     """
@@ -38,7 +37,7 @@ class VnaInstance:
     """
     def __init__(self, ip_addr):
         self.ip_addr = ip_addr
-        self.rm = pyvisa.ResourceManager()
+        self.rm = pyvisa.ResourceManager('@py')
         self.instr = None
     def connect(self):
         self.instr = self.rm.open_resource(self.ip_addr)
@@ -142,9 +141,7 @@ class VnaInstance:
             self.instr.query("*OPC?")
         
     def start_running(self, pin):
-        pin.on()
-        time.sleep(0.003)
-        pin.off()
+        pin.pulse()
         
 
     def stop_and_read_complex_data(self):
@@ -297,8 +294,7 @@ def main():
     zaber = None
     vna = None
     
-    pin = UsbTrigger(port="COM5")#OutputDevice(16)
-    pin.off()
+    pin = UsbTrigger(port="COM3")#OutputDevice(16)
     
     try:
         vna = VnaInstance(vna_ip_addr)
