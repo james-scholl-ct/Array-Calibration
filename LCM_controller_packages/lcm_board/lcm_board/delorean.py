@@ -48,7 +48,7 @@ class DeloreanBoard:
         self.v_min = 0
         self.v_max = 18
         self.v_gnd = 9
-        self.delv_max = 9
+        self.delv_max = 18
         self.channel_count = 1021
         self.outlier_list_tx = None
         self.outlier_list_rx = None
@@ -971,6 +971,7 @@ class DeloreanBoard:
         high_vec = [h for r, d, t, h in self.iter_lcm_map(sort_pos=0)]
         applied_v = np.asarray(self.h.get_voltages(codes=codes,
                                                    high_vec=high_vec))
+        print(applied_v)
         applied_delv = self.vpt.vtodelv(applied_v)
 
         table = [self.h.MIN_CODE] * self.BYTES_PER_TABLE

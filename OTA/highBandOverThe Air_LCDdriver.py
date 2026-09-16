@@ -9,7 +9,7 @@ Created on Wed Feb  4 09:40:55 2026
 
 
 import numpy as np
-import lcm_control
+from Shared import lcm_control
 from pathlib import Path
 import VNATest
 import time

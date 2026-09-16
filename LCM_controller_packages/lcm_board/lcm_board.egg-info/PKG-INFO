@@ -1,7 +1,18 @@
-Metadata-Version: 2.1
-Name: lcm-board
+Metadata-Version: 2.4
+Name: lcm_board
 Version: 0.6.2
 Summary: Classes and methods for interfacing with the Lotus board
 Home-page: https://bitbucket.org/lumotive/lcm_board
 Author: 
 Author-email: 
+Requires-Dist: scipy
+Requires-Dist: matplotlib
+Requires-Dist: paramiko
+Requires-Dist: scp
+Requires-Dist: pyyaml
+Requires-Dist: numpy
+Requires-Dist: jinja2
+Requires-Dist: pandas
+Dynamic: home-page
+Dynamic: requires-dist
+Dynamic: summary

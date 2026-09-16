@@ -1,7 +1,14 @@
-Metadata-Version: 2.1
-Name: himax-model
+Metadata-Version: 2.4
+Name: himax_model
 Version: 0.0.1
 Summary: Python libraries to model HX8175 driver chip output
 Home-page: bitbucket.org/lumotive/himax_model
 Author: Tyler Williamson
 Author-email: tyler.williamson@lumotive.com
+Requires-Dist: pyyaml
+Requires-Dist: numpy
+Dynamic: author
+Dynamic: author-email
+Dynamic: home-page
+Dynamic: requires-dist
+Dynamic: summary

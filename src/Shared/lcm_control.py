@@ -17,7 +17,7 @@ class InvalidTypeError(Exception):
     pass
 
 def make_steering_array(voltages, band='lb'):
-    steering_arr = np.zeros(1021)
+    steering_arr = np.full(1021, 9)
     voltages = np.array(voltages)
     if band == 'lb':
         if voltages.shape != (12,8):
@@ -36,7 +36,7 @@ def make_steering_array(voltages, band='lb'):
     return steering_arr
 
 def make_steering_array_dualband(hb_voltages, lb_voltages):
-    steering_arr = np.zeros(1021)
+    steering_arr = np.full(1021, 9)
     hb_voltages = np.array(hb_voltages)
     lb_voltages = np.array(lb_voltages)
     
@@ -51,9 +51,10 @@ def make_steering_array_dualband(hb_voltages, lb_voltages):
             
 #uses interposer map to crate an array that drives a specifc DATA pin on chip on flex interposer board
 def make_element_driving_array(voltages):
-    if (len(voltages)>511):
-        raise InvalidTypeError("There are only 511 voltage outputs on interposer baord")
-    driving_arr = np.zeros(1021)
+    voltages = np.array(voltages)
+    if len(voltages)>511 or voltages.ndim != 1:
+        raise InvalidTypeError("There are only 511 voltage outputs on interposer baord, array should be 1D")
+    driving_arr = np.full(1021, 9)
     for index, v in enumerate(voltages):
         driving_arr[interposer_map[index]-1] = v
     return driving_arr
