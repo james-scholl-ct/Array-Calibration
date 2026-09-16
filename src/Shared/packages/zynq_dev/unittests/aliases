@@ -1,0 +1,11 @@
+#!/usr/bin/bash
+
+echo "design = ${design}"
+echo "ip = $ip"
+
+module=test_${design}_${ip}.py
+alias list="nosetests --collect-only --verbose --nocapture $module"
+alias run0="nosetests $module --tc=build_clean:0 -m "
+alias run="run0"
+alias run1="nosetests $module --tc=build_clean:1 -m "
+alias wave='cd $design ; xsim -gui -view ../../sim_src/tb_${design}_${ip}_behav.wcfg tb_${design} ; cd ..'

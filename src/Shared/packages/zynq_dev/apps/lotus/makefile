@@ -1,0 +1,42 @@
+# Help: Automatic Variables
+# (https://www.gnu.org/software/make/manual/html_node/Automatic-Variables.html)
+#
+# $@ - The file name of the target of the rule.
+# $^ - The names of all the prerequisites, with spaces between them.
+# $< - The name of the first prerequisite.
+
+# -----------------------------------------------------------------------------
+# Variables
+# -----------------------------------------------------------------------------
+CC = gcc
+CC_FLAGS = -Wall -lm -std=c99 -lpthread -D_POSIX_C_SOURCE=199309L
+
+DESIGN = lotus
+PROG = $(DESIGN)_app
+SOURCES = $(DESIGN)_driver.c \
+          $(DESIGN)_driver_bsc.c \
+          $(DESIGN)_driver_spi.c
+MAINS = $(PROG).c \
+        verify_lotus_himax_board.c
+OBJECTS = $(SOURCES:.c=.o)
+MOBJECTS = $(MAINS:.c=.o)
+ELFS = $(MAINS:.c=.elf)
+
+# -----------------------------------------------------------------------------
+# Targets
+# -----------------------------------------------------------------------------
+all: $(ELFS)
+
+$(PROG).elf: $(PROG).o $(OBJECTS)
+	$(CC) $(CC_FLAGS) -o $@ $^
+	mkdir -p /root/$(DESIGN)
+	cp $(PROG).elf /root/$(DESIGN)/$(PROG).elf
+
+%.elf: %.o $(OBJECTS)
+	$(CC) $(CC_FLAGS) -o $@ $^
+
+%.o: %.c
+	$(CC) $(CC_FLAGS) -c $<
+
+clean:
+	rm -f $(ELFS) $(MOBJECTS) $(OBJECTS)

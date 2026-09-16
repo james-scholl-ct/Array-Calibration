@@ -1,0 +1,853 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wave_config>
+   <wave_state>
+   </wave_state>
+   <db_ref_list>
+      <db_ref path="tb_delorean.wdb" id="1">
+         <top_modules>
+            <top_module name="axi_bram_ctrl_funcs" />
+            <top_module name="axi_cdma_pkg" />
+            <top_module name="axi_vip_pkg" />
+            <top_module name="glbl" />
+            <top_module name="lib_pkg" />
+            <top_module name="std" />
+            <top_module name="tb_delorean" />
+            <top_module name="vcomponents" />
+            <top_module name="xil_common_vip_pkg" />
+         </top_modules>
+      </db_ref>
+   </db_ref_list>
+   <zoom_setting>
+      <ZoomStartTime time="0fs"></ZoomStartTime>
+      <ZoomEndTime time="500000000000fs"></ZoomEndTime>
+      <Cursor1Time time="1000000000fs"></Cursor1Time>
+   </zoom_setting>
+   <column_width_setting>
+      <NameColumnWidth column_width="250"></NameColumnWidth>
+      <ValueColumnWidth column_width="120"></ValueColumnWidth>
+   </column_width_setting>
+   <WVObjectSize size="10" />
+   <wvobject fp_name="/tb_delorean/comment" type="array">
+      <obj_property name="ElementShortName">comment[1599:0]</obj_property>
+      <obj_property name="ObjectShortName">comment[1599:0]</obj_property>
+      <obj_property name="Radix">ASCIIRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="group76" type="group">
+      <obj_property name="label">AXI WRITE - LCM</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <wvobject fp_name="/tb_delorean/DUT/delorean_i/delorean_lcm_0/inst/U_delorean_axi_interface/S_AXI_AWVALID" type="logic">
+         <obj_property name="ElementShortName">S_AXI_AWVALID</obj_property>
+         <obj_property name="ObjectShortName">S_AXI_AWVALID</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_delorean/DUT/delorean_i/delorean_lcm_0/inst/U_delorean_axi_interface/S_AXI_AWREADY" type="logic">
+         <obj_property name="ElementShortName">S_AXI_AWREADY</obj_property>
+         <obj_property name="ObjectShortName">S_AXI_AWREADY</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_delorean/DUT/delorean_i/delorean_lcm_0/inst/U_delorean_axi_interface/S_AXI_AWADDR" type="array">
+         <obj_property name="ElementShortName">S_AXI_AWADDR[11:0]</obj_property>
+         <obj_property name="ObjectShortName">S_AXI_AWADDR[11:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_delorean/DUT/delorean_i/delorean_lcm_0/inst/U_delorean_axi_interface/S_AXI_WVALID" type="logic">
+         <obj_property name="ElementShortName">S_AXI_WVALID</obj_property>
+         <obj_property name="ObjectShortName">S_AXI_WVALID</obj_property>
+         <obj_property name="CustomSignalColor">#FFA500</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_delorean/DUT/delorean_i/delorean_lcm_0/inst/U_delorean_axi_interface/S_AXI_WREADY" type="logic">
+         <obj_property name="ElementShortName">S_AXI_WREADY</obj_property>
+         <obj_property name="ObjectShortName">S_AXI_WREADY</obj_property>
+         <obj_property name="CustomSignalColor">#FFA500</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_delorean/DUT/delorean_i/delorean_lcm_0/inst/U_delorean_axi_interface/S_AXI_WDATA" type="array">
+         <obj_property name="ElementShortName">S_AXI_WDATA[31:0]</obj_property>
+         <obj_property name="ObjectShortName">S_AXI_WDATA[31:0]</obj_property>
+         <obj_property name="CustomSignalColor">#FFA500</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_delorean/DUT/delorean_i/delorean_lcm_0/inst/U_delorean_regs/WR_BACK_PRESSURE" type="logic">
+         <obj_property name="ElementShortName">WR_BACK_PRESSURE</obj_property>
+         <obj_property name="ObjectShortName">WR_BACK_PRESSURE</obj_property>
+         <obj_property name="CustomSignalColor">#00FFFF</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_delorean/DUT/delorean_i/delorean_lcm_0/inst/U_delorean_axi_interface/WR_REQ" type="logic">
+         <obj_property name="ElementShortName">WR_REQ</obj_property>
+         <obj_property name="ObjectShortName">WR_REQ</obj_property>
+         <obj_property name="CustomSignalColor">#00FFFF</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_delorean/DUT/delorean_i/delorean_lcm_0/inst/U_delorean_axi_interface/WR_ACK" type="logic">
+         <obj_property name="ElementShortName">WR_ACK</obj_property>
+         <obj_property name="ObjectShortName">WR_ACK</obj_property>
+         <obj_property name="CustomSignalColor">#00FFFF</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_delorean/DUT/delorean_i/delorean_lcm_0/inst/U_delorean_axi_interface/write_busy" type="logic">
+         <obj_property name="ElementShortName">write_busy</obj_property>
+         <obj_property name="ObjectShortName">write_busy</obj_property>
+         <obj_property name="CustomSignalColor">#00FFFF</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_delorean/DUT/delorean_i/delorean_lcm_0/inst/U_delorean_regs/write_en" type="logic">
+         <obj_property name="ElementShortName">write_en</obj_property>
+         <obj_property name="ObjectShortName">write_en</obj_property>
+         <obj_property name="CustomSignalColor">#FF00FF</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_delorean/DUT/delorean_i/delorean_lcm_0/inst/U_delorean_regs/write_addr_pp" type="array">
+         <obj_property name="ElementShortName">write_addr_pp[11:0]</obj_property>
+         <obj_property name="ObjectShortName">write_addr_pp[11:0]</obj_property>
+         <obj_property name="CustomSignalColor">#FF00FF</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_delorean/DUT/delorean_i/delorean_lcm_0/inst/U_delorean_regs/write_data_pp" type="array">
+         <obj_property name="ElementShortName">write_data_pp[31:0]</obj_property>
+         <obj_property name="ObjectShortName">write_data_pp[31:0]</obj_property>
+         <obj_property name="CustomSignalColor">#FF00FF</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_delorean/DUT/delorean_i/delorean_lcm_0/inst/U_delorean_regs/write_strb_pp" type="array">
+         <obj_property name="ElementShortName">write_strb_pp[3:0]</obj_property>
+         <obj_property name="ObjectShortName">write_strb_pp[3:0]</obj_property>
+         <obj_property name="CustomSignalColor">#FF00FF</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_delorean/DUT/delorean_i/delorean_lcm_0/inst/U_delorean_regs/regfile[0]" type="array">
+         <obj_property name="ElementShortName">[0][31:0]</obj_property>
+         <obj_property name="ObjectShortName">[0][31:0]</obj_property>
+         <obj_property name="CustomSignalColor">#FFFFFF</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_delorean/DUT/delorean_i/delorean_lcm_0/inst/U_delorean_regs/regfile[1]" type="array">
+         <obj_property name="ElementShortName">[1][31:0]</obj_property>
+         <obj_property name="ObjectShortName">[1][31:0]</obj_property>
+         <obj_property name="CustomSignalColor">#FFFFFF</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_delorean/DUT/delorean_i/delorean_lcm_0/inst/U_delorean_regs/regfile[2]" type="array">
+         <obj_property name="ElementShortName">[2][31:0]</obj_property>
+         <obj_property name="ObjectShortName">[2][31:0]</obj_property>
+         <obj_property name="CustomSignalColor">#FFFFFF</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_delorean/DUT/delorean_i/delorean_lcm_0/inst/U_delorean_regs/regfile[23]" type="array">
+         <obj_property name="ElementShortName">[23][31:0]</obj_property>
+         <obj_property name="ObjectShortName">[23][31:0]</obj_property>
+         <obj_property name="CustomSignalColor">#FFFFFF</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_delorean/DUT/delorean_i/delorean_lcm_0/inst/U_delorean_regs/regfile[22]" type="array">
+         <obj_property name="ElementShortName">[22][31:0]</obj_property>
+         <obj_property name="ObjectShortName">[22][31:0]</obj_property>
+         <obj_property name="CustomSignalColor">#FFFFFF</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_delorean/DUT/delorean_i/delorean_lcm_0/inst/U_delorean_axi_interface/S_AXI_BREADY" type="logic">
+         <obj_property name="ElementShortName">S_AXI_BREADY</obj_property>
+         <obj_property name="ObjectShortName">S_AXI_BREADY</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_delorean/DUT/delorean_i/delorean_lcm_0/inst/U_delorean_axi_interface/S_AXI_BVALID" type="logic">
+         <obj_property name="ElementShortName">S_AXI_BVALID</obj_property>
+         <obj_property name="ObjectShortName">S_AXI_BVALID</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_delorean/DUT/delorean_i/delorean_lcm_0/inst/U_delorean_axi_interface/S_AXI_BRESP" type="array">
+         <obj_property name="ElementShortName">S_AXI_BRESP[1:0]</obj_property>
+         <obj_property name="ObjectShortName">S_AXI_BRESP[1:0]</obj_property>
+      </wvobject>
+   </wvobject>
+   <wvobject fp_name="group89" type="group">
+      <obj_property name="label">AXI READ - LCM</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <wvobject fp_name="/tb_delorean/DUT/delorean_i/delorean_lcm_0/inst/U_delorean_axi_interface/S_AXI_ARVALID" type="logic">
+         <obj_property name="ElementShortName">S_AXI_ARVALID</obj_property>
+         <obj_property name="ObjectShortName">S_AXI_ARVALID</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_delorean/DUT/delorean_i/delorean_lcm_0/inst/U_delorean_axi_interface/S_AXI_ARREADY" type="logic">
+         <obj_property name="ElementShortName">S_AXI_ARREADY</obj_property>
+         <obj_property name="ObjectShortName">S_AXI_ARREADY</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_delorean/DUT/delorean_i/delorean_lcm_0/inst/U_delorean_axi_interface/S_AXI_ARADDR" type="array">
+         <obj_property name="ElementShortName">S_AXI_ARADDR[11:0]</obj_property>
+         <obj_property name="ObjectShortName">S_AXI_ARADDR[11:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_delorean/DUT/delorean_i/delorean_lcm_0/inst/U_delorean_axi_interface/read_busy" type="logic">
+         <obj_property name="ElementShortName">read_busy</obj_property>
+         <obj_property name="ObjectShortName">read_busy</obj_property>
+         <obj_property name="CustomSignalColor">#FFA500</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_delorean/DUT/delorean_i/delorean_lcm_0/inst/U_delorean_axi_interface/RD_EN" type="logic">
+         <obj_property name="ElementShortName">RD_EN</obj_property>
+         <obj_property name="ObjectShortName">RD_EN</obj_property>
+         <obj_property name="CustomSignalColor">#FF00FF</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_delorean/DUT/delorean_i/delorean_lcm_0/inst/U_delorean_axi_interface/RD_ADDR" type="array">
+         <obj_property name="ElementShortName">RD_ADDR[11:0]</obj_property>
+         <obj_property name="ObjectShortName">RD_ADDR[11:0]</obj_property>
+         <obj_property name="CustomSignalColor">#FF00FF</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_delorean/DUT/delorean_i/delorean_lcm_0/inst/U_delorean_axi_interface/RD_VALID" type="logic">
+         <obj_property name="ElementShortName">RD_VALID</obj_property>
+         <obj_property name="ObjectShortName">RD_VALID</obj_property>
+         <obj_property name="CustomSignalColor">#FF00FF</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_delorean/DUT/delorean_i/delorean_lcm_0/inst/U_delorean_axi_interface/RD_DATA" type="array">
+         <obj_property name="ElementShortName">RD_DATA[31:0]</obj_property>
+         <obj_property name="ObjectShortName">RD_DATA[31:0]</obj_property>
+         <obj_property name="CustomSignalColor">#FF00FF</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_delorean/DUT/delorean_i/delorean_lcm_0/inst/U_delorean_regs/regfile[0]" type="array">
+         <obj_property name="ElementShortName">[0][31:0]</obj_property>
+         <obj_property name="ObjectShortName">[0][31:0]</obj_property>
+         <obj_property name="CustomSignalColor">#FFFFFF</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_delorean/DUT/delorean_i/delorean_lcm_0/inst/U_delorean_regs/regfile[1]" type="array">
+         <obj_property name="ElementShortName">[1][31:0]</obj_property>
+         <obj_property name="ObjectShortName">[1][31:0]</obj_property>
+         <obj_property name="CustomSignalColor">#FFFFFF</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_delorean/DUT/delorean_i/delorean_lcm_0/inst/U_delorean_regs/regfile[2]" type="array">
+         <obj_property name="ElementShortName">[2][31:0]</obj_property>
+         <obj_property name="ObjectShortName">[2][31:0]</obj_property>
+         <obj_property name="CustomSignalColor">#FFFFFF</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_delorean/DUT/delorean_i/delorean_lcm_0/inst/U_delorean_regs/regfile[23]" type="array">
+         <obj_property name="ElementShortName">[23][31:0]</obj_property>
+         <obj_property name="ObjectShortName">[23][31:0]</obj_property>
+         <obj_property name="CustomSignalColor">#FFFFFF</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_delorean/DUT/delorean_i/delorean_lcm_0/inst/U_delorean_regs/regfile[22]" type="array">
+         <obj_property name="ElementShortName">[22][31:0]</obj_property>
+         <obj_property name="ObjectShortName">[22][31:0]</obj_property>
+         <obj_property name="CustomSignalColor">#FFFFFF</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_delorean/DUT/delorean_i/delorean_lcm_0/inst/U_delorean_axi_interface/read_valid" type="logic">
+         <obj_property name="ElementShortName">read_valid</obj_property>
+         <obj_property name="ObjectShortName">read_valid</obj_property>
+         <obj_property name="CustomSignalColor">#FFA500</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_delorean/DUT/delorean_i/delorean_lcm_0/inst/U_delorean_axi_interface/read_data_pp" type="array">
+         <obj_property name="ElementShortName">read_data_pp[31:0]</obj_property>
+         <obj_property name="ObjectShortName">read_data_pp[31:0]</obj_property>
+         <obj_property name="CustomSignalColor">#FFA500</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_delorean/DUT/delorean_i/delorean_lcm_0/inst/U_delorean_axi_interface/S_AXI_RREADY" type="logic">
+         <obj_property name="ElementShortName">S_AXI_RREADY</obj_property>
+         <obj_property name="ObjectShortName">S_AXI_RREADY</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_delorean/DUT/delorean_i/delorean_lcm_0/inst/U_delorean_axi_interface/S_AXI_RVALID" type="logic">
+         <obj_property name="ElementShortName">S_AXI_RVALID</obj_property>
+         <obj_property name="ObjectShortName">S_AXI_RVALID</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_delorean/DUT/delorean_i/delorean_lcm_0/inst/U_delorean_axi_interface/S_AXI_RDATA" type="array">
+         <obj_property name="ElementShortName">S_AXI_RDATA[31:0]</obj_property>
+         <obj_property name="ObjectShortName">S_AXI_RDATA[31:0]</obj_property>
+      </wvobject>
+   </wvobject>
+   <wvobject fp_name="group150" type="group">
+      <obj_property name="label">AXI WRITE - SPI</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <wvobject fp_name="/tb_delorean/DUT/delorean_i/delorean_spi_0/inst/U_delorean_axi_interface/S_AXI_AWVALID" type="logic">
+         <obj_property name="ElementShortName">S_AXI_AWVALID</obj_property>
+         <obj_property name="ObjectShortName">S_AXI_AWVALID</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_delorean/DUT/delorean_i/delorean_spi_0/inst/U_delorean_axi_interface/S_AXI_AWREADY" type="logic">
+         <obj_property name="ElementShortName">S_AXI_AWREADY</obj_property>
+         <obj_property name="ObjectShortName">S_AXI_AWREADY</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_delorean/DUT/delorean_i/delorean_spi_0/inst/U_delorean_axi_interface/S_AXI_AWADDR" type="array">
+         <obj_property name="ElementShortName">S_AXI_AWADDR[11:0]</obj_property>
+         <obj_property name="ObjectShortName">S_AXI_AWADDR[11:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_delorean/DUT/delorean_i/delorean_spi_0/inst/U_delorean_axi_interface/S_AXI_WVALID" type="logic">
+         <obj_property name="ElementShortName">S_AXI_WVALID</obj_property>
+         <obj_property name="ObjectShortName">S_AXI_WVALID</obj_property>
+         <obj_property name="CustomSignalColor">#FFA500</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_delorean/DUT/delorean_i/delorean_spi_0/inst/U_delorean_axi_interface/S_AXI_WREADY" type="logic">
+         <obj_property name="ElementShortName">S_AXI_WREADY</obj_property>
+         <obj_property name="ObjectShortName">S_AXI_WREADY</obj_property>
+         <obj_property name="CustomSignalColor">#FFA500</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_delorean/DUT/delorean_i/delorean_spi_0/inst/U_delorean_axi_interface/S_AXI_WDATA" type="array">
+         <obj_property name="ElementShortName">S_AXI_WDATA[31:0]</obj_property>
+         <obj_property name="ObjectShortName">S_AXI_WDATA[31:0]</obj_property>
+         <obj_property name="CustomSignalColor">#FFA500</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_delorean/DUT/delorean_i/delorean_spi_0/inst/U_delorean_regs/WR_BACK_PRESSURE" type="logic">
+         <obj_property name="ElementShortName">WR_BACK_PRESSURE</obj_property>
+         <obj_property name="ObjectShortName">WR_BACK_PRESSURE</obj_property>
+         <obj_property name="CustomSignalColor">#00FFFF</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_delorean/DUT/delorean_i/delorean_spi_0/inst/U_delorean_axi_interface/WR_REQ" type="logic">
+         <obj_property name="ElementShortName">WR_REQ</obj_property>
+         <obj_property name="ObjectShortName">WR_REQ</obj_property>
+         <obj_property name="CustomSignalColor">#00FFFF</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_delorean/DUT/delorean_i/delorean_spi_0/inst/U_delorean_axi_interface/WR_ACK" type="logic">
+         <obj_property name="ElementShortName">WR_ACK</obj_property>
+         <obj_property name="ObjectShortName">WR_ACK</obj_property>
+         <obj_property name="CustomSignalColor">#00FFFF</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_delorean/DUT/delorean_i/delorean_spi_0/inst/U_delorean_axi_interface/write_busy" type="logic">
+         <obj_property name="ElementShortName">write_busy</obj_property>
+         <obj_property name="ObjectShortName">write_busy</obj_property>
+         <obj_property name="CustomSignalColor">#00FFFF</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_delorean/DUT/delorean_i/delorean_spi_0/inst/U_delorean_regs/write_en" type="logic">
+         <obj_property name="ElementShortName">write_en</obj_property>
+         <obj_property name="ObjectShortName">write_en</obj_property>
+         <obj_property name="CustomSignalColor">#FF00FF</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_delorean/DUT/delorean_i/delorean_spi_0/inst/U_delorean_regs/write_addr_pp" type="array">
+         <obj_property name="ElementShortName">write_addr_pp[11:0]</obj_property>
+         <obj_property name="ObjectShortName">write_addr_pp[11:0]</obj_property>
+         <obj_property name="CustomSignalColor">#FF00FF</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_delorean/DUT/delorean_i/delorean_spi_0/inst/U_delorean_regs/write_data_pp" type="array">
+         <obj_property name="ElementShortName">write_data_pp[31:0]</obj_property>
+         <obj_property name="ObjectShortName">write_data_pp[31:0]</obj_property>
+         <obj_property name="CustomSignalColor">#FF00FF</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_delorean/DUT/delorean_i/delorean_spi_0/inst/U_delorean_regs/write_strb_pp" type="array">
+         <obj_property name="ElementShortName">write_strb_pp[3:0]</obj_property>
+         <obj_property name="ObjectShortName">write_strb_pp[3:0]</obj_property>
+         <obj_property name="CustomSignalColor">#FF00FF</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_delorean/DUT/delorean_i/delorean_spi_0/inst/U_delorean_regs/regfile[0]" type="array">
+         <obj_property name="ElementShortName">[0][31:0]</obj_property>
+         <obj_property name="ObjectShortName">[0][31:0]</obj_property>
+         <obj_property name="CustomSignalColor">#FFFFFF</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_delorean/DUT/delorean_i/delorean_spi_0/inst/U_delorean_regs/regfile[1]" type="array">
+         <obj_property name="ElementShortName">[1][31:0]</obj_property>
+         <obj_property name="ObjectShortName">[1][31:0]</obj_property>
+         <obj_property name="CustomSignalColor">#FFFFFF</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_delorean/DUT/delorean_i/delorean_spi_0/inst/U_delorean_regs/regfile[2]" type="array">
+         <obj_property name="ElementShortName">[2][31:0]</obj_property>
+         <obj_property name="ObjectShortName">[2][31:0]</obj_property>
+         <obj_property name="CustomSignalColor">#FFFFFF</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_delorean/DUT/delorean_i/delorean_spi_0/inst/U_delorean_regs/regfile[25]" type="array">
+         <obj_property name="ElementShortName">[25][31:0]</obj_property>
+         <obj_property name="ObjectShortName">[25][31:0]</obj_property>
+         <obj_property name="CustomSignalColor">#FFFFFF</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_delorean/DUT/delorean_i/delorean_spi_0/inst/U_delorean_regs/regfile[26]" type="array">
+         <obj_property name="ElementShortName">[26][31:0]</obj_property>
+         <obj_property name="ObjectShortName">[26][31:0]</obj_property>
+         <obj_property name="CustomSignalColor">#FFFFFF</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_delorean/DUT/delorean_i/delorean_spi_0/inst/U_delorean_axi_interface/S_AXI_BREADY" type="logic">
+         <obj_property name="ElementShortName">S_AXI_BREADY</obj_property>
+         <obj_property name="ObjectShortName">S_AXI_BREADY</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_delorean/DUT/delorean_i/delorean_spi_0/inst/U_delorean_axi_interface/S_AXI_BVALID" type="logic">
+         <obj_property name="ElementShortName">S_AXI_BVALID</obj_property>
+         <obj_property name="ObjectShortName">S_AXI_BVALID</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_delorean/DUT/delorean_i/delorean_spi_0/inst/U_delorean_axi_interface/S_AXI_BRESP" type="array">
+         <obj_property name="ElementShortName">S_AXI_BRESP[1:0]</obj_property>
+         <obj_property name="ObjectShortName">S_AXI_BRESP[1:0]</obj_property>
+      </wvobject>
+   </wvobject>
+   <wvobject fp_name="group89" type="group">
+      <obj_property name="label">AXI READ - SPI</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <wvobject fp_name="/tb_delorean/DUT/delorean_i/delorean_spi_0/inst/U_delorean_axi_interface/S_AXI_ARVALID" type="logic">
+         <obj_property name="ElementShortName">S_AXI_ARVALID</obj_property>
+         <obj_property name="ObjectShortName">S_AXI_ARVALID</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_delorean/DUT/delorean_i/delorean_spi_0/inst/U_delorean_axi_interface/S_AXI_ARREADY" type="logic">
+         <obj_property name="ElementShortName">S_AXI_ARREADY</obj_property>
+         <obj_property name="ObjectShortName">S_AXI_ARREADY</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_delorean/DUT/delorean_i/delorean_spi_0/inst/U_delorean_axi_interface/S_AXI_ARADDR" type="array">
+         <obj_property name="ElementShortName">S_AXI_ARADDR[11:0]</obj_property>
+         <obj_property name="ObjectShortName">S_AXI_ARADDR[11:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_delorean/DUT/delorean_i/delorean_spi_0/inst/U_delorean_axi_interface/read_busy" type="logic">
+         <obj_property name="ElementShortName">read_busy</obj_property>
+         <obj_property name="ObjectShortName">read_busy</obj_property>
+         <obj_property name="CustomSignalColor">#FFA500</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_delorean/DUT/delorean_i/delorean_spi_0/inst/U_delorean_axi_interface/RD_EN" type="logic">
+         <obj_property name="ElementShortName">RD_EN</obj_property>
+         <obj_property name="ObjectShortName">RD_EN</obj_property>
+         <obj_property name="CustomSignalColor">#FF00FF</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_delorean/DUT/delorean_i/delorean_spi_0/inst/U_delorean_axi_interface/RD_ADDR" type="array">
+         <obj_property name="ElementShortName">RD_ADDR[11:0]</obj_property>
+         <obj_property name="ObjectShortName">RD_ADDR[11:0]</obj_property>
+         <obj_property name="CustomSignalColor">#FF00FF</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_delorean/DUT/delorean_i/delorean_spi_0/inst/U_delorean_axi_interface/RD_VALID" type="logic">
+         <obj_property name="ElementShortName">RD_VALID</obj_property>
+         <obj_property name="ObjectShortName">RD_VALID</obj_property>
+         <obj_property name="CustomSignalColor">#FF00FF</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_delorean/DUT/delorean_i/delorean_spi_0/inst/U_delorean_axi_interface/RD_DATA" type="array">
+         <obj_property name="ElementShortName">RD_DATA[31:0]</obj_property>
+         <obj_property name="ObjectShortName">RD_DATA[31:0]</obj_property>
+         <obj_property name="CustomSignalColor">#FF00FF</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_delorean/DUT/delorean_i/delorean_spi_0/inst/U_delorean_regs/regfile[0]" type="array">
+         <obj_property name="ElementShortName">[0][31:0]</obj_property>
+         <obj_property name="ObjectShortName">[0][31:0]</obj_property>
+         <obj_property name="CustomSignalColor">#FFFFFF</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_delorean/DUT/delorean_i/delorean_spi_0/inst/U_delorean_regs/regfile[1]" type="array">
+         <obj_property name="ElementShortName">[1][31:0]</obj_property>
+         <obj_property name="ObjectShortName">[1][31:0]</obj_property>
+         <obj_property name="CustomSignalColor">#FFFFFF</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_delorean/DUT/delorean_i/delorean_spi_0/inst/U_delorean_regs/regfile[2]" type="array">
+         <obj_property name="ElementShortName">[2][31:0]</obj_property>
+         <obj_property name="ObjectShortName">[2][31:0]</obj_property>
+         <obj_property name="CustomSignalColor">#FFFFFF</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_delorean/DUT/delorean_i/delorean_spi_0/inst/U_delorean_regs/regfile[25]" type="array">
+         <obj_property name="ElementShortName">[25][31:0]</obj_property>
+         <obj_property name="ObjectShortName">[25][31:0]</obj_property>
+         <obj_property name="CustomSignalColor">#FFFFFF</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_delorean/DUT/delorean_i/delorean_spi_0/inst/U_delorean_regs/regfile[26]" type="array">
+         <obj_property name="ElementShortName">[26][31:0]</obj_property>
+         <obj_property name="ObjectShortName">[26][31:0]</obj_property>
+         <obj_property name="CustomSignalColor">#FFFFFF</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_delorean/DUT/delorean_i/delorean_spi_0/inst/U_delorean_axi_interface/read_valid" type="logic">
+         <obj_property name="ElementShortName">read_valid</obj_property>
+         <obj_property name="ObjectShortName">read_valid</obj_property>
+         <obj_property name="CustomSignalColor">#FFA500</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_delorean/DUT/delorean_i/delorean_spi_0/inst/U_delorean_axi_interface/read_data_pp" type="array">
+         <obj_property name="ElementShortName">read_data_pp[31:0]</obj_property>
+         <obj_property name="ObjectShortName">read_data_pp[31:0]</obj_property>
+         <obj_property name="CustomSignalColor">#FFA500</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_delorean/DUT/delorean_i/delorean_spi_0/inst/U_delorean_axi_interface/S_AXI_RREADY" type="logic">
+         <obj_property name="ElementShortName">S_AXI_RREADY</obj_property>
+         <obj_property name="ObjectShortName">S_AXI_RREADY</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_delorean/DUT/delorean_i/delorean_spi_0/inst/U_delorean_axi_interface/S_AXI_RVALID" type="logic">
+         <obj_property name="ElementShortName">S_AXI_RVALID</obj_property>
+         <obj_property name="ObjectShortName">S_AXI_RVALID</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_delorean/DUT/delorean_i/delorean_spi_0/inst/U_delorean_axi_interface/S_AXI_RDATA" type="array">
+         <obj_property name="ElementShortName">S_AXI_RDATA[31:0]</obj_property>
+         <obj_property name="ObjectShortName">S_AXI_RDATA[31:0]</obj_property>
+      </wvobject>
+   </wvobject>
+   <wvobject fp_name="group101" type="group">
+      <obj_property name="label">CMD FIFO</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <wvobject fp_name="/tb_delorean/DUT/delorean_i/delorean_spi_0/inst/U_delorean_cmd_fifo/WEN" type="logic">
+         <obj_property name="ElementShortName">WEN</obj_property>
+         <obj_property name="ObjectShortName">WEN</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_delorean/DUT/delorean_i/delorean_spi_0/inst/U_delorean_cmd_fifo/FULL" type="logic">
+         <obj_property name="ElementShortName">FULL</obj_property>
+         <obj_property name="ObjectShortName">FULL</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_delorean/DUT/delorean_i/delorean_spi_0/inst/U_delorean_cmd_fifo/WDATA" type="array">
+         <obj_property name="ElementShortName">WDATA[31:0]</obj_property>
+         <obj_property name="ObjectShortName">WDATA[31:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_delorean/DUT/delorean_i/delorean_spi_0/inst/U_delorean_cmd_fifo/REN" type="logic">
+         <obj_property name="ElementShortName">REN</obj_property>
+         <obj_property name="ObjectShortName">REN</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_delorean/DUT/delorean_i/delorean_spi_0/inst/U_delorean_cmd_fifo/EMPTY" type="logic">
+         <obj_property name="ElementShortName">EMPTY</obj_property>
+         <obj_property name="ObjectShortName">EMPTY</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_delorean/DUT/delorean_i/delorean_spi_0/inst/U_delorean_cmd_fifo/RDATA" type="array">
+         <obj_property name="ElementShortName">RDATA[31:0]</obj_property>
+         <obj_property name="ObjectShortName">RDATA[31:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_delorean/DUT/delorean_i/delorean_spi_0/inst/U_delorean_cmd_fifo/COUNT" type="array">
+         <obj_property name="ElementShortName">COUNT[3:0]</obj_property>
+         <obj_property name="ObjectShortName">COUNT[3:0]</obj_property>
+      </wvobject>
+   </wvobject>
+   <wvobject fp_name="group109" type="group">
+      <obj_property name="label">RSP FIFO 0</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <wvobject fp_name="/tb_delorean/DUT/delorean_i/delorean_spi_0/inst/\gen_fifo[0].U_delorean_rsp_fifo /RESET" type="logic">
+         <obj_property name="ElementShortName">RESET</obj_property>
+         <obj_property name="ObjectShortName">RESET</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_delorean/DUT/delorean_i/delorean_spi_0/inst/\gen_fifo[0].U_delorean_rsp_fifo /WEN" type="logic">
+         <obj_property name="ElementShortName">WEN</obj_property>
+         <obj_property name="ObjectShortName">WEN</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_delorean/DUT/delorean_i/delorean_spi_0/inst/\gen_fifo[0].U_delorean_rsp_fifo /FULL" type="logic">
+         <obj_property name="ElementShortName">FULL</obj_property>
+         <obj_property name="ObjectShortName">FULL</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_delorean/DUT/delorean_i/delorean_spi_0/inst/\gen_fifo[0].U_delorean_rsp_fifo /WDATA" type="array">
+         <obj_property name="ElementShortName">WDATA[18:0]</obj_property>
+         <obj_property name="ObjectShortName">WDATA[18:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_delorean/DUT/delorean_i/delorean_spi_0/inst/\gen_fifo[0].U_delorean_rsp_fifo /REN" type="logic">
+         <obj_property name="ElementShortName">REN</obj_property>
+         <obj_property name="ObjectShortName">REN</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_delorean/DUT/delorean_i/delorean_spi_0/inst/\gen_fifo[0].U_delorean_rsp_fifo /EMPTY" type="logic">
+         <obj_property name="ElementShortName">EMPTY</obj_property>
+         <obj_property name="ObjectShortName">EMPTY</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_delorean/DUT/delorean_i/delorean_spi_0/inst/\gen_fifo[0].U_delorean_rsp_fifo /RDATA" type="array">
+         <obj_property name="ElementShortName">RDATA[18:0]</obj_property>
+         <obj_property name="ObjectShortName">RDATA[18:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_delorean/DUT/delorean_i/delorean_spi_0/inst/\gen_fifo[0].U_delorean_rsp_fifo /COUNT" type="array">
+         <obj_property name="ElementShortName">COUNT[5:0]</obj_property>
+         <obj_property name="ObjectShortName">COUNT[5:0]</obj_property>
+      </wvobject>
+   </wvobject>
+   <wvobject fp_name="group117" type="group">
+      <obj_property name="label">RSP FIFO 1</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <wvobject fp_name="/tb_delorean/DUT/delorean_i/delorean_spi_0/inst/\gen_fifo[1].U_delorean_rsp_fifo /RESET" type="logic">
+         <obj_property name="ElementShortName">RESET</obj_property>
+         <obj_property name="ObjectShortName">RESET</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_delorean/DUT/delorean_i/delorean_spi_0/inst/\gen_fifo[1].U_delorean_rsp_fifo /WEN" type="logic">
+         <obj_property name="ElementShortName">WEN</obj_property>
+         <obj_property name="ObjectShortName">WEN</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_delorean/DUT/delorean_i/delorean_spi_0/inst/\gen_fifo[1].U_delorean_rsp_fifo /FULL" type="logic">
+         <obj_property name="ElementShortName">FULL</obj_property>
+         <obj_property name="ObjectShortName">FULL</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_delorean/DUT/delorean_i/delorean_spi_0/inst/\gen_fifo[1].U_delorean_rsp_fifo /WDATA" type="array">
+         <obj_property name="ElementShortName">WDATA[18:0]</obj_property>
+         <obj_property name="ObjectShortName">WDATA[18:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_delorean/DUT/delorean_i/delorean_spi_0/inst/\gen_fifo[1].U_delorean_rsp_fifo /REN" type="logic">
+         <obj_property name="ElementShortName">REN</obj_property>
+         <obj_property name="ObjectShortName">REN</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_delorean/DUT/delorean_i/delorean_spi_0/inst/\gen_fifo[1].U_delorean_rsp_fifo /EMPTY" type="logic">
+         <obj_property name="ElementShortName">EMPTY</obj_property>
+         <obj_property name="ObjectShortName">EMPTY</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_delorean/DUT/delorean_i/delorean_spi_0/inst/\gen_fifo[1].U_delorean_rsp_fifo /RDATA" type="array">
+         <obj_property name="ElementShortName">RDATA[18:0]</obj_property>
+         <obj_property name="ObjectShortName">RDATA[18:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_delorean/DUT/delorean_i/delorean_spi_0/inst/\gen_fifo[1].U_delorean_rsp_fifo /COUNT" type="array">
+         <obj_property name="ElementShortName">COUNT[5:0]</obj_property>
+         <obj_property name="ObjectShortName">COUNT[5:0]</obj_property>
+      </wvobject>
+   </wvobject>
+   <wvobject fp_name="group161" type="group">
+      <obj_property name="label">SPI FSM</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <wvobject fp_name="/tb_delorean/DUT/delorean_i/delorean_spi_0/inst/U_delorean_spi_fsm/ADC_CHSEL" type="array">
+         <obj_property name="ElementShortName">ADC_CHSEL[1:0]</obj_property>
+         <obj_property name="ObjectShortName">ADC_CHSEL[1:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_delorean/DUT/delorean_i/delorean_spi_0/inst/U_delorean_spi_fsm/DAISY_EN" type="logic">
+         <obj_property name="ElementShortName">DAISY_EN</obj_property>
+         <obj_property name="ObjectShortName">DAISY_EN</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_delorean/DUT/delorean_i/delorean_spi_0/inst/U_delorean_spi_fsm/SPI_CLK_CONFIG" type="array">
+         <obj_property name="ElementShortName">SPI_CLK_CONFIG[31:0]</obj_property>
+         <obj_property name="ObjectShortName">SPI_CLK_CONFIG[31:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_delorean/DUT/delorean_i/delorean_spi_0/inst/U_delorean_spi_fsm/frame_data_0" type="array">
+         <obj_property name="ElementShortName">frame_data_0[15:0][15:0]</obj_property>
+         <obj_property name="ObjectShortName">frame_data_0[15:0][15:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_delorean/DUT/delorean_i/delorean_spi_0/inst/U_delorean_spi_fsm/frame_data_1" type="array">
+         <obj_property name="ElementShortName">frame_data_1[15:0][15:0]</obj_property>
+         <obj_property name="ObjectShortName">frame_data_1[15:0][15:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_delorean/DUT/delorean_i/delorean_spi_0/inst/U_delorean_spi_fsm/fill_cmd_fifo" type="logic">
+         <obj_property name="ElementShortName">fill_cmd_fifo</obj_property>
+         <obj_property name="ObjectShortName">fill_cmd_fifo</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_delorean/DUT/delorean_i/delorean_spi_0/inst/U_delorean_spi_fsm/CMD_FIFO_EMPTY" type="logic">
+         <obj_property name="ElementShortName">CMD_FIFO_EMPTY</obj_property>
+         <obj_property name="ObjectShortName">CMD_FIFO_EMPTY</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_delorean/DUT/delorean_i/delorean_spi_0/inst/U_delorean_spi_fsm/CMD_FIFO_REN" type="logic">
+         <obj_property name="ElementShortName">CMD_FIFO_REN</obj_property>
+         <obj_property name="ObjectShortName">CMD_FIFO_REN</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_delorean/DUT/delorean_i/delorean_spi_0/inst/U_delorean_spi_fsm/START" type="logic">
+         <obj_property name="ElementShortName">START</obj_property>
+         <obj_property name="ObjectShortName">START</obj_property>
+         <obj_property name="CustomSignalColor">#FFA500</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_delorean/DUT/delorean_i/delorean_spi_0/inst/U_delorean_spi_fsm/WDATA_REQ" type="logic">
+         <obj_property name="ElementShortName">WDATA_REQ</obj_property>
+         <obj_property name="ObjectShortName">WDATA_REQ</obj_property>
+         <obj_property name="CustomSignalColor">#FFA500</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_delorean/DUT/delorean_i/delorean_spi_0/inst/U_delorean_spi_fsm/DONE" type="logic">
+         <obj_property name="ElementShortName">DONE</obj_property>
+         <obj_property name="ObjectShortName">DONE</obj_property>
+         <obj_property name="CustomSignalColor">#FFA500</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_delorean/DUT/delorean_i/delorean_spi_0/inst/U_delorean_spi_fsm/state" type="array">
+         <obj_property name="ElementShortName">state[1:0]</obj_property>
+         <obj_property name="ObjectShortName">state[1:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="group160" type="group">
+         <obj_property name="label">cmd group</obj_property>
+         <obj_property name="DisplayName">label</obj_property>
+         <obj_property name="isExpanded"></obj_property>
+         <wvobject fp_name="/tb_delorean/DUT/delorean_i/delorean_spi_0/inst/U_delorean_spi_fsm/opcode" type="array">
+            <obj_property name="ElementShortName">opcode[3:0]</obj_property>
+            <obj_property name="ObjectShortName">opcode[3:0]</obj_property>
+            <obj_property name="CustomSignalColor">#FAAFBE</obj_property>
+            <obj_property name="UseCustomSignalColor">true</obj_property>
+         </wvobject>
+         <wvobject fp_name="/tb_delorean/DUT/delorean_i/delorean_spi_0/inst/U_delorean_spi_fsm/SLAVE_IDX" type="array">
+            <obj_property name="ElementShortName">SLAVE_IDX[2:0]</obj_property>
+            <obj_property name="ObjectShortName">SLAVE_IDX[2:0]</obj_property>
+            <obj_property name="CustomSignalColor">#FAAFBE</obj_property>
+            <obj_property name="UseCustomSignalColor">true</obj_property>
+         </wvobject>
+         <wvobject fp_name="/tb_delorean/DUT/delorean_i/delorean_spi_0/inst/U_delorean_spi_fsm/cmd_payload" type="array">
+            <obj_property name="ElementShortName">cmd_payload[23:0]</obj_property>
+            <obj_property name="ObjectShortName">cmd_payload[23:0]</obj_property>
+            <obj_property name="CustomSignalColor">#FAAFBE</obj_property>
+            <obj_property name="UseCustomSignalColor">true</obj_property>
+         </wvobject>
+      </wvobject>
+      <wvobject fp_name="/tb_delorean/DUT/delorean_i/delorean_spi_0/inst/U_delorean_spi_fsm/frame_ptr" type="array">
+         <obj_property name="ElementShortName">frame_ptr[3:0]</obj_property>
+         <obj_property name="ObjectShortName">frame_ptr[3:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_delorean/DUT/delorean_i/delorean_spi_0/inst/U_delorean_spi_fsm/cnt" type="array">
+         <obj_property name="ElementShortName">cnt[17:0]</obj_property>
+         <obj_property name="ObjectShortName">cnt[17:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_delorean/DUT/delorean_i/delorean_spi_0/inst/U_delorean_spi_fsm/frame_cnt" type="array">
+         <obj_property name="ElementShortName">frame_cnt[5:0]</obj_property>
+         <obj_property name="ObjectShortName">frame_cnt[5:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_delorean/DUT/delorean_i/delorean_spi_0/inst/U_delorean_spi_fsm/n_wait_cycles" type="array">
+         <obj_property name="ElementShortName">n_wait_cycles[17:0]</obj_property>
+         <obj_property name="ObjectShortName">n_wait_cycles[17:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_delorean/DUT/delorean_i/delorean_spi_0/inst/U_delorean_spi_fsm/n_frames" type="array">
+         <obj_property name="ElementShortName">n_frames[5:0]</obj_property>
+         <obj_property name="ObjectShortName">n_frames[5:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_delorean/DUT/delorean_i/delorean_spi_0/inst/U_delorean_spi_fsm/WDATA_0" type="array">
+         <obj_property name="ElementShortName">WDATA_0[15:0]</obj_property>
+         <obj_property name="ObjectShortName">WDATA_0[15:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_delorean/DUT/delorean_i/delorean_spi_0/inst/U_delorean_spi_fsm/WDATA_1" type="array">
+         <obj_property name="ElementShortName">WDATA_1[15:0]</obj_property>
+         <obj_property name="ObjectShortName">WDATA_1[15:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_delorean/DUT/delorean_i/delorean_spi_0/inst/U_delorean_spi_fsm/N_BASE_FRAMES" type="array">
+         <obj_property name="ElementShortName">N_BASE_FRAMES[3:0]</obj_property>
+         <obj_property name="ObjectShortName">N_BASE_FRAMES[3:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_delorean/DUT/delorean_i/delorean_spi_0/inst/U_delorean_spi_fsm/RSP_FIFO_FULL_0" type="logic">
+         <obj_property name="ElementShortName">RSP_FIFO_FULL_0</obj_property>
+         <obj_property name="ObjectShortName">RSP_FIFO_FULL_0</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_delorean/DUT/delorean_i/delorean_spi_0/inst/U_delorean_spi_fsm/RSP_FIFO_FULL_1" type="logic">
+         <obj_property name="ElementShortName">RSP_FIFO_FULL_1</obj_property>
+         <obj_property name="ObjectShortName">RSP_FIFO_FULL_1</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_delorean/DUT/delorean_i/delorean_spi_0/inst/U_delorean_spi_fsm/RSP_FIFO_WEN_0" type="logic">
+         <obj_property name="ElementShortName">RSP_FIFO_WEN_0</obj_property>
+         <obj_property name="ObjectShortName">RSP_FIFO_WEN_0</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_delorean/DUT/delorean_i/delorean_spi_0/inst/U_delorean_spi_fsm/RSP_FIFO_WEN_1" type="logic">
+         <obj_property name="ElementShortName">RSP_FIFO_WEN_1</obj_property>
+         <obj_property name="ObjectShortName">RSP_FIFO_WEN_1</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_delorean/DUT/delorean_i/delorean_spi_0/inst/U_delorean_spi_fsm/RSP_FIFO_WDATA_0" type="array">
+         <obj_property name="ElementShortName">RSP_FIFO_WDATA_0[18:0]</obj_property>
+         <obj_property name="ObjectShortName">RSP_FIFO_WDATA_0[18:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_delorean/DUT/delorean_i/delorean_spi_0/inst/U_delorean_spi_fsm/RSP_FIFO_WDATA_1" type="array">
+         <obj_property name="ElementShortName">RSP_FIFO_WDATA_1[18:0]</obj_property>
+         <obj_property name="ObjectShortName">RSP_FIFO_WDATA_1[18:0]</obj_property>
+      </wvobject>
+   </wvobject>
+   <wvobject fp_name="group188" type="group">
+      <obj_property name="label">SPI CONTROLLER</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <wvobject fp_name="/tb_delorean/DUT/delorean_i/delorean_spi_0/inst/U_delorean_spi_controller/CLK_DIV" type="array">
+         <obj_property name="ElementShortName">CLK_DIV[4:0]</obj_property>
+         <obj_property name="ObjectShortName">CLK_DIV[4:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_delorean/DUT/delorean_i/delorean_spi_0/inst/U_delorean_spi_controller/N_BASE_FRAMES" type="array">
+         <obj_property name="ElementShortName">N_BASE_FRAMES[3:0]</obj_property>
+         <obj_property name="ObjectShortName">N_BASE_FRAMES[3:0]</obj_property>
+         <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_delorean/DUT/delorean_i/delorean_spi_0/inst/U_delorean_spi_controller/SLAVE_IDX" type="array">
+         <obj_property name="ElementShortName">SLAVE_IDX[2:0]</obj_property>
+         <obj_property name="ObjectShortName">SLAVE_IDX[2:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_delorean/DUT/delorean_i/delorean_spi_0/inst/U_delorean_spi_controller/START" type="logic">
+         <obj_property name="ElementShortName">START</obj_property>
+         <obj_property name="ObjectShortName">START</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_delorean/DUT/delorean_i/delorean_spi_0/inst/U_delorean_spi_controller/state" type="array">
+         <obj_property name="ElementShortName">state[1:0]</obj_property>
+         <obj_property name="ObjectShortName">state[1:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_delorean/DUT/delorean_i/delorean_spi_0/inst/U_delorean_spi_controller/cnt" type="array">
+         <obj_property name="ElementShortName">cnt[4:0]</obj_property>
+         <obj_property name="ObjectShortName">cnt[4:0]</obj_property>
+         <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_delorean/DUT/delorean_i/delorean_spi_0/inst/U_delorean_spi_controller/sclk_posedge" type="logic">
+         <obj_property name="ElementShortName">sclk_posedge</obj_property>
+         <obj_property name="ObjectShortName">sclk_posedge</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_delorean/DUT/delorean_i/delorean_spi_0/inst/U_delorean_spi_controller/sclk_negedge" type="logic">
+         <obj_property name="ElementShortName">sclk_negedge</obj_property>
+         <obj_property name="ObjectShortName">sclk_negedge</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_delorean/DUT/delorean_i/delorean_spi_0/inst/U_delorean_spi_controller/SCLK" type="logic">
+         <obj_property name="ElementShortName">SCLK</obj_property>
+         <obj_property name="ObjectShortName">SCLK</obj_property>
+         <obj_property name="CustomSignalColor">#00FFFF</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_delorean/DUT/delorean_i/delorean_spi_0/inst/U_delorean_spi_controller/SS_B" type="array">
+         <obj_property name="ElementShortName">SS_B[5:0]</obj_property>
+         <obj_property name="ObjectShortName">SS_B[5:0]</obj_property>
+         <obj_property name="Reversed">false</obj_property>
+         <obj_property name="CustomSignalColor">#00FFFF</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+         <obj_property name="isExpanded"></obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_delorean/DUT/delorean_i/delorean_spi_0/inst/U_delorean_spi_controller/frame_cnt" type="array">
+         <obj_property name="ElementShortName">frame_cnt[4:0]</obj_property>
+         <obj_property name="ObjectShortName">frame_cnt[4:0]</obj_property>
+         <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_delorean/DUT/delorean_i/delorean_spi_0/inst/U_delorean_spi_controller/frame_cnt_tc" type="logic">
+         <obj_property name="ElementShortName">frame_cnt_tc</obj_property>
+         <obj_property name="ObjectShortName">frame_cnt_tc</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_delorean/DUT/delorean_i/delorean_spi_0/inst/U_delorean_spi_controller/bit_cnt" type="array">
+         <obj_property name="ElementShortName">bit_cnt[3:0]</obj_property>
+         <obj_property name="ObjectShortName">bit_cnt[3:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_delorean/DUT/delorean_i/delorean_spi_0/inst/U_delorean_spi_controller/bit_cnt_tc" type="logic">
+         <obj_property name="ElementShortName">bit_cnt_tc</obj_property>
+         <obj_property name="ObjectShortName">bit_cnt_tc</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_delorean/DUT/delorean_i/delorean_spi_0/inst/U_delorean_spi_controller/WDATA_REQ" type="logic">
+         <obj_property name="ElementShortName">WDATA_REQ</obj_property>
+         <obj_property name="ObjectShortName">WDATA_REQ</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_delorean/DUT/delorean_i/delorean_spi_0/inst/U_delorean_spi_controller/WDATA_0" type="array">
+         <obj_property name="ElementShortName">WDATA_0[15:0]</obj_property>
+         <obj_property name="ObjectShortName">WDATA_0[15:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_delorean/DUT/delorean_i/delorean_spi_0/inst/U_delorean_spi_controller/WDATA_1" type="array">
+         <obj_property name="ElementShortName">WDATA_1[15:0]</obj_property>
+         <obj_property name="ObjectShortName">WDATA_1[15:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_delorean/DUT/delorean_i/delorean_spi_0/inst/U_delorean_spi_controller/load_tx_data" type="logic">
+         <obj_property name="ElementShortName">load_tx_data</obj_property>
+         <obj_property name="ObjectShortName">load_tx_data</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_delorean/DUT/delorean_i/delorean_spi_0/inst/U_delorean_spi_controller/tx_data_0" type="array">
+         <obj_property name="ElementShortName">tx_data_0[15:0]</obj_property>
+         <obj_property name="ObjectShortName">tx_data_0[15:0]</obj_property>
+         <obj_property name="Radix">BINARYRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_delorean/DUT/delorean_i/delorean_spi_0/inst/U_delorean_spi_controller/tx_data_1" type="array">
+         <obj_property name="ElementShortName">tx_data_1[15:0]</obj_property>
+         <obj_property name="ObjectShortName">tx_data_1[15:0]</obj_property>
+         <obj_property name="Radix">BINARYRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_delorean/DUT/delorean_i/delorean_spi_0/inst/U_delorean_spi_controller/bit_cnt_rev" type="array">
+         <obj_property name="ElementShortName">bit_cnt_rev[3:0]</obj_property>
+         <obj_property name="ObjectShortName">bit_cnt_rev[3:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_delorean/DUT/delorean_i/delorean_spi_0/inst/U_delorean_spi_controller/MOSI" type="array">
+         <obj_property name="ElementShortName">MOSI[1:0]</obj_property>
+         <obj_property name="ObjectShortName">MOSI[1:0]</obj_property>
+         <obj_property name="CustomSignalColor">#00FFFF</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+         <obj_property name="isExpanded"></obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_delorean/DUT/delorean_i/delorean_spi_0/inst/U_delorean_spi_controller/MISO" type="array">
+         <obj_property name="ElementShortName">MISO[1:0]</obj_property>
+         <obj_property name="ObjectShortName">MISO[1:0]</obj_property>
+         <obj_property name="CustomSignalColor">#00FFFF</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+         <obj_property name="isExpanded"></obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_delorean/DUT/delorean_i/delorean_spi_0/inst/U_delorean_spi_controller/RDATA_0" type="array">
+         <obj_property name="ElementShortName">RDATA_0[15:0]</obj_property>
+         <obj_property name="ObjectShortName">RDATA_0[15:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_delorean/DUT/delorean_i/delorean_spi_0/inst/U_delorean_spi_controller/RDATA_1" type="array">
+         <obj_property name="ElementShortName">RDATA_1[15:0]</obj_property>
+         <obj_property name="ObjectShortName">RDATA_1[15:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_delorean/DUT/delorean_i/delorean_spi_0/inst/U_delorean_spi_controller/DONE" type="logic">
+         <obj_property name="ElementShortName">DONE</obj_property>
+         <obj_property name="ObjectShortName">DONE</obj_property>
+      </wvobject>
+   </wvobject>
+   <wvobject type="divider" fp_name="divider118">
+      <obj_property name="label">WIP below here</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+   </wvobject>
+</wave_config>

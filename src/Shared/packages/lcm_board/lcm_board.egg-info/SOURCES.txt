@@ -1,0 +1,16 @@
+MANIFEST.in
+setup.py
+lcm_board/__init__.py
+lcm_board/delorean.py
+lcm_board/lotus.py
+lcm_board/v_to_dv_algorithm_metrics_bravo.py
+lcm_board/v_to_dv_algorithm_metrics_delta.py
+lcm_board/voltage_pattern.py
+lcm_board/voltage_translator_archival.py
+lcm_board/voltage_translator_delta.py
+lcm_board/voltage_translator_fft_bravo.py
+lcm_board.egg-info/PKG-INFO
+lcm_board.egg-info/SOURCES.txt
+lcm_board.egg-info/dependency_links.txt
+lcm_board.egg-info/requires.txt
+lcm_board.egg-info/top_level.txt

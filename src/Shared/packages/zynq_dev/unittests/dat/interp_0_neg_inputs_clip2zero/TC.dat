@@ -1,0 +1,18 @@
+--
+-- TC.dat
+--
+NUM_CPI             1                   
+PRI_PER_CPI         100                 
+ACC_SAMPLES_PER_PRI 261                 
+INT_SAMPLES         2095                
+INT_PADDED_SAMPLES  2295                
+CLIP_HI             0x238                 
+CLIP_LO             0x22e                 
+AVG_BLK_SZ          8                   
+VEC_ACC_SCALE       0x0028f               
+RNG_SEED            1569423291          
+PKDET_THR           0x000d                
+PKDET_GUARD         0x000b                
+PKDET_ON_IDX        0                   
+PKDET_OFF_IDX       2200                
+IN_FILE             time_domain_s0_r10_z100

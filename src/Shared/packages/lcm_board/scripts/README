@@ -1,0 +1,55 @@
+Delorean System Alignment
+=========================
+Run the script using `python -i <path to delorean_system_alignment> <additional arguments>`
+Once the "Press Enter to start laser" prompt is shown the script should drop in to an interactive python environment, which you can verify by seeing '>>>' at beginning of the terminal prompt.
+
+There are 3  commands available here:
+
+Python Commands
+===============
+stop_laser(db)
+steer_rx_to_order(db, order)
+steer_tx_to_order(db, order)
+
+Using these commands:
+# steer rx to order 5
+>>> steer_rx_to_order(db, 5)
+# steer tx to order 70
+>>> steer_tx_to_order(db, 70)
+# stop the laser
+>>> stop_laser(db)
+
+In each of these cases the db variable is an instance of the DeloreanBoard class.
+
+
+Command Line Arguments
+======================
+    '-z', '--zynq',
+    required=True,
+    help="Zynq IPv4 address, e.g. '192.168.128.xxx'.")
+
+    '-f', '--freq',
+    default=20.,
+    type=float,
+    help="Pulse repetition frequency in kHz.")
+
+    '-p', '--pw',
+    default=5,
+    type=int,
+    help="Laser drive pulse width index, an int on range(16).")
+
+    '-c', '--ci',
+    default=2.5,
+    type=float,
+    help="iC Haus CI voltage setting in volts, a float <= 5.")
+
+    '-t', '--tx_order',
+    default=None,
+    type=int,
+    help='Order for Tx steering')
+    '-r', '--rx_order',
+                        default=None,
+                        type=int,
+                        help='Order for Rx steering')
+
+

@@ -1,0 +1,1017 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wave_config>
+   <wave_state>
+   </wave_state>
+   <db_ref_list>
+      <db_ref path="tb_lotus.wdb" id="1">
+         <top_modules>
+            <top_module name="axi_vip_pkg" />
+            <top_module name="glbl" />
+            <top_module name="std" />
+            <top_module name="tb_lotus" />
+            <top_module name="xil_common_vip_pkg" />
+         </top_modules>
+      </db_ref>
+   </db_ref_list>
+   <zoom_setting>
+      <ZoomStartTime time="0fs"></ZoomStartTime>
+      <ZoomEndTime time="500000000000fs"></ZoomEndTime>
+      <Cursor1Time time="0fs"></Cursor1Time>
+   </zoom_setting>
+   <column_width_setting>
+      <NameColumnWidth column_width="200"></NameColumnWidth>
+      <ValueColumnWidth column_width="64"></ValueColumnWidth>
+   </column_width_setting>
+   <WVObjectSize size="8" />
+   <wvobject fp_name="group76" type="group">
+      <obj_property name="label">AXI WRITE - BSC</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <wvobject fp_name="/tb_lotus/DUT/lotus_i/lotus_bsc_0/inst/I_lotus_axi_interface/S_AXI_AWVALID" type="logic">
+         <obj_property name="ElementShortName">S_AXI_AWVALID</obj_property>
+         <obj_property name="ObjectShortName">S_AXI_AWVALID</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_lotus/DUT/lotus_i/lotus_bsc_0/inst/I_lotus_axi_interface/S_AXI_AWREADY" type="logic">
+         <obj_property name="ElementShortName">S_AXI_AWREADY</obj_property>
+         <obj_property name="ObjectShortName">S_AXI_AWREADY</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_lotus/DUT/lotus_i/lotus_bsc_0/inst/I_lotus_axi_interface/S_AXI_AWADDR" type="array">
+         <obj_property name="ElementShortName">S_AXI_AWADDR[8:0]</obj_property>
+         <obj_property name="ObjectShortName">S_AXI_AWADDR[8:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_lotus/DUT/lotus_i/lotus_bsc_0/inst/I_lotus_axi_interface/S_AXI_WVALID" type="logic">
+         <obj_property name="ElementShortName">S_AXI_WVALID</obj_property>
+         <obj_property name="ObjectShortName">S_AXI_WVALID</obj_property>
+         <obj_property name="CustomSignalColor">#FFA500</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_lotus/DUT/lotus_i/lotus_bsc_0/inst/I_lotus_axi_interface/S_AXI_WREADY" type="logic">
+         <obj_property name="ElementShortName">S_AXI_WREADY</obj_property>
+         <obj_property name="ObjectShortName">S_AXI_WREADY</obj_property>
+         <obj_property name="CustomSignalColor">#FFA500</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_lotus/DUT/lotus_i/lotus_bsc_0/inst/I_lotus_axi_interface/S_AXI_WDATA" type="array">
+         <obj_property name="ElementShortName">S_AXI_WDATA[31:0]</obj_property>
+         <obj_property name="ObjectShortName">S_AXI_WDATA[31:0]</obj_property>
+         <obj_property name="CustomSignalColor">#FFA500</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_lotus/DUT/lotus_i/lotus_bsc_0/inst/I_lotus_active_mem/WR_BACK_PRESSURE" type="logic">
+         <obj_property name="ElementShortName">WR_BACK_PRESSURE</obj_property>
+         <obj_property name="ObjectShortName">WR_BACK_PRESSURE</obj_property>
+         <obj_property name="CustomSignalColor">#00FFFF</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_lotus/DUT/lotus_i/lotus_bsc_0/inst/I_lotus_axi_interface/WR_REQ" type="logic">
+         <obj_property name="ElementShortName">WR_REQ</obj_property>
+         <obj_property name="ObjectShortName">WR_REQ</obj_property>
+         <obj_property name="CustomSignalColor">#00FFFF</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_lotus/DUT/lotus_i/lotus_bsc_0/inst/I_lotus_axi_interface/WR_ACK" type="logic">
+         <obj_property name="ElementShortName">WR_ACK</obj_property>
+         <obj_property name="ObjectShortName">WR_ACK</obj_property>
+         <obj_property name="CustomSignalColor">#00FFFF</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_lotus/DUT/lotus_i/lotus_bsc_0/inst/I_lotus_axi_interface/write_busy" type="logic">
+         <obj_property name="ElementShortName">write_busy</obj_property>
+         <obj_property name="ObjectShortName">write_busy</obj_property>
+         <obj_property name="CustomSignalColor">#00FFFF</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_lotus/DUT/lotus_i/lotus_bsc_0/inst/I_lotus_active_mem/write_en" type="logic">
+         <obj_property name="ElementShortName">write_en</obj_property>
+         <obj_property name="ObjectShortName">write_en</obj_property>
+         <obj_property name="CustomSignalColor">#FF00FF</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_lotus/DUT/lotus_i/lotus_bsc_0/inst/I_lotus_active_mem/write_addr_pp" type="array">
+         <obj_property name="ElementShortName">write_addr_pp[8:0]</obj_property>
+         <obj_property name="ObjectShortName">write_addr_pp[8:0]</obj_property>
+         <obj_property name="CustomSignalColor">#FF00FF</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_lotus/DUT/lotus_i/lotus_bsc_0/inst/I_lotus_active_mem/write_data_pp" type="array">
+         <obj_property name="ElementShortName">write_data_pp[31:0]</obj_property>
+         <obj_property name="ObjectShortName">write_data_pp[31:0]</obj_property>
+         <obj_property name="CustomSignalColor">#FF00FF</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_lotus/DUT/lotus_i/lotus_bsc_0/inst/I_lotus_active_mem/write_strb_pp" type="array">
+         <obj_property name="ElementShortName">write_strb_pp[3:0]</obj_property>
+         <obj_property name="ObjectShortName">write_strb_pp[3:0]</obj_property>
+         <obj_property name="CustomSignalColor">#FF00FF</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_lotus/DUT/lotus_i/lotus_bsc_0/inst/I_lotus_active_mem/regfile[0]" type="array">
+         <obj_property name="ElementShortName">[0][31:0]</obj_property>
+         <obj_property name="ObjectShortName">[0][31:0]</obj_property>
+         <obj_property name="CustomSignalColor">#FFFFFF</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_lotus/DUT/lotus_i/lotus_bsc_0/inst/I_lotus_active_mem/regfile[1]" type="array">
+         <obj_property name="ElementShortName">[1][31:0]</obj_property>
+         <obj_property name="ObjectShortName">[1][31:0]</obj_property>
+         <obj_property name="CustomSignalColor">#FFFFFF</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_lotus/DUT/lotus_i/lotus_bsc_0/inst/I_lotus_active_mem/regfile[2]" type="array">
+         <obj_property name="ElementShortName">[2][31:0]</obj_property>
+         <obj_property name="ObjectShortName">[2][31:0]</obj_property>
+         <obj_property name="CustomSignalColor">#FFFFFF</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_lotus/DUT/lotus_i/lotus_bsc_0/inst/I_lotus_active_mem/regfile[49]" type="array">
+         <obj_property name="ElementShortName">[49][31:0]</obj_property>
+         <obj_property name="ObjectShortName">[49][31:0]</obj_property>
+         <obj_property name="CustomSignalColor">#FFFFFF</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_lotus/DUT/lotus_i/lotus_bsc_0/inst/I_lotus_active_mem/regfile[50]" type="array">
+         <obj_property name="ElementShortName">[50][31:0]</obj_property>
+         <obj_property name="ObjectShortName">[50][31:0]</obj_property>
+         <obj_property name="CustomSignalColor">#FFFFFF</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_lotus/DUT/lotus_i/lotus_bsc_0/inst/I_lotus_axi_interface/S_AXI_BREADY" type="logic">
+         <obj_property name="ElementShortName">S_AXI_BREADY</obj_property>
+         <obj_property name="ObjectShortName">S_AXI_BREADY</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_lotus/DUT/lotus_i/lotus_bsc_0/inst/I_lotus_axi_interface/S_AXI_BVALID" type="logic">
+         <obj_property name="ElementShortName">S_AXI_BVALID</obj_property>
+         <obj_property name="ObjectShortName">S_AXI_BVALID</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_lotus/DUT/lotus_i/lotus_bsc_0/inst/I_lotus_axi_interface/S_AXI_BRESP" type="array">
+         <obj_property name="ElementShortName">S_AXI_BRESP[1:0]</obj_property>
+         <obj_property name="ObjectShortName">S_AXI_BRESP[1:0]</obj_property>
+      </wvobject>
+   </wvobject>
+   <wvobject fp_name="group89" type="group">
+      <obj_property name="label">AXI READ - BSC</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <wvobject fp_name="/tb_lotus/DUT/lotus_i/lotus_bsc_0/inst/I_lotus_axi_interface/S_AXI_ARVALID" type="logic">
+         <obj_property name="ElementShortName">S_AXI_ARVALID</obj_property>
+         <obj_property name="ObjectShortName">S_AXI_ARVALID</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_lotus/DUT/lotus_i/lotus_bsc_0/inst/I_lotus_axi_interface/S_AXI_ARREADY" type="logic">
+         <obj_property name="ElementShortName">S_AXI_ARREADY</obj_property>
+         <obj_property name="ObjectShortName">S_AXI_ARREADY</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_lotus/DUT/lotus_i/lotus_bsc_0/inst/I_lotus_axi_interface/S_AXI_ARADDR" type="array">
+         <obj_property name="ElementShortName">S_AXI_ARADDR[8:0]</obj_property>
+         <obj_property name="ObjectShortName">S_AXI_ARADDR[8:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_lotus/DUT/lotus_i/lotus_bsc_0/inst/I_lotus_axi_interface/read_busy" type="logic">
+         <obj_property name="ElementShortName">read_busy</obj_property>
+         <obj_property name="ObjectShortName">read_busy</obj_property>
+         <obj_property name="CustomSignalColor">#FFA500</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_lotus/DUT/lotus_i/lotus_bsc_0/inst/I_lotus_axi_interface/RD_EN" type="logic">
+         <obj_property name="ElementShortName">RD_EN</obj_property>
+         <obj_property name="ObjectShortName">RD_EN</obj_property>
+         <obj_property name="CustomSignalColor">#FF00FF</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_lotus/DUT/lotus_i/lotus_bsc_0/inst/I_lotus_axi_interface/RD_ADDR" type="array">
+         <obj_property name="ElementShortName">RD_ADDR[8:0]</obj_property>
+         <obj_property name="ObjectShortName">RD_ADDR[8:0]</obj_property>
+         <obj_property name="CustomSignalColor">#FF00FF</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_lotus/DUT/lotus_i/lotus_bsc_0/inst/I_lotus_axi_interface/RD_VALID" type="logic">
+         <obj_property name="ElementShortName">RD_VALID</obj_property>
+         <obj_property name="ObjectShortName">RD_VALID</obj_property>
+         <obj_property name="CustomSignalColor">#FF00FF</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_lotus/DUT/lotus_i/lotus_bsc_0/inst/I_lotus_axi_interface/RD_DATA" type="array">
+         <obj_property name="ElementShortName">RD_DATA[31:0]</obj_property>
+         <obj_property name="ObjectShortName">RD_DATA[31:0]</obj_property>
+         <obj_property name="CustomSignalColor">#FF00FF</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_lotus/DUT/lotus_i/lotus_bsc_0/inst/I_lotus_active_mem/regfile[0]" type="array">
+         <obj_property name="ElementShortName">[0][31:0]</obj_property>
+         <obj_property name="ObjectShortName">[0][31:0]</obj_property>
+         <obj_property name="CustomSignalColor">#FFFFFF</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_lotus/DUT/lotus_i/lotus_bsc_0/inst/I_lotus_active_mem/regfile[1]" type="array">
+         <obj_property name="ElementShortName">[1][31:0]</obj_property>
+         <obj_property name="ObjectShortName">[1][31:0]</obj_property>
+         <obj_property name="CustomSignalColor">#FFFFFF</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_lotus/DUT/lotus_i/lotus_bsc_0/inst/I_lotus_active_mem/regfile[2]" type="array">
+         <obj_property name="ElementShortName">[2][31:0]</obj_property>
+         <obj_property name="ObjectShortName">[2][31:0]</obj_property>
+         <obj_property name="CustomSignalColor">#FFFFFF</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_lotus/DUT/lotus_i/lotus_bsc_0/inst/I_lotus_active_mem/regfile[49]" type="array">
+         <obj_property name="ElementShortName">[49][31:0]</obj_property>
+         <obj_property name="ObjectShortName">[49][31:0]</obj_property>
+         <obj_property name="CustomSignalColor">#FFFFFF</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_lotus/DUT/lotus_i/lotus_bsc_0/inst/I_lotus_active_mem/regfile[50]" type="array">
+         <obj_property name="ElementShortName">[50][31:0]</obj_property>
+         <obj_property name="ObjectShortName">[50][31:0]</obj_property>
+         <obj_property name="CustomSignalColor">#FFFFFF</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_lotus/DUT/lotus_i/lotus_bsc_0/inst/I_lotus_axi_interface/read_valid" type="logic">
+         <obj_property name="ElementShortName">read_valid</obj_property>
+         <obj_property name="ObjectShortName">read_valid</obj_property>
+         <obj_property name="CustomSignalColor">#FFA500</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_lotus/DUT/lotus_i/lotus_bsc_0/inst/I_lotus_axi_interface/read_data_pp" type="array">
+         <obj_property name="ElementShortName">read_data_pp[31:0]</obj_property>
+         <obj_property name="ObjectShortName">read_data_pp[31:0]</obj_property>
+         <obj_property name="CustomSignalColor">#FFA500</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_lotus/DUT/lotus_i/lotus_bsc_0/inst/I_lotus_axi_interface/S_AXI_RREADY" type="logic">
+         <obj_property name="ElementShortName">S_AXI_RREADY</obj_property>
+         <obj_property name="ObjectShortName">S_AXI_RREADY</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_lotus/DUT/lotus_i/lotus_bsc_0/inst/I_lotus_axi_interface/S_AXI_RVALID" type="logic">
+         <obj_property name="ElementShortName">S_AXI_RVALID</obj_property>
+         <obj_property name="ObjectShortName">S_AXI_RVALID</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_lotus/DUT/lotus_i/lotus_bsc_0/inst/I_lotus_axi_interface/S_AXI_RDATA" type="array">
+         <obj_property name="ElementShortName">S_AXI_RDATA[31:0]</obj_property>
+         <obj_property name="ObjectShortName">S_AXI_RDATA[31:0]</obj_property>
+      </wvobject>
+   </wvobject>
+   <wvobject fp_name="group74" type="group">
+      <obj_property name="label">LASER CONTROLLER</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <wvobject fp_name="/tb_lotus/DUT/lotus_i/lotus_bsc_0/inst/I_lotus_laser_control/CONTROL_VALID" type="logic">
+         <obj_property name="ElementShortName">CONTROL_VALID</obj_property>
+         <obj_property name="ObjectShortName">CONTROL_VALID</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_lotus/DUT/lotus_i/lotus_bsc_0/inst/I_lotus_laser_control/CONTROL" type="array">
+         <obj_property name="ElementShortName">CONTROL[31:0]</obj_property>
+         <obj_property name="ObjectShortName">CONTROL[31:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_lotus/DUT/lotus_i/lotus_bsc_0/inst/I_lotus_laser_control/intervals_per_frame" type="array">
+         <obj_property name="ElementShortName">intervals_per_frame[15:0]</obj_property>
+         <obj_property name="ObjectShortName">intervals_per_frame[15:0]</obj_property>
+         <obj_property name="CustomSignalColor">#DCDCDC</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+         <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_lotus/DUT/lotus_i/lotus_bsc_0/inst/I_lotus_laser_control/clks_per_interval" type="array">
+         <obj_property name="ElementShortName">clks_per_interval[7:0]</obj_property>
+         <obj_property name="ObjectShortName">clks_per_interval[7:0]</obj_property>
+         <obj_property name="CustomSignalColor">#DCDCDC</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+         <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_lotus/DUT/lotus_i/lotus_bsc_0/inst/I_lotus_laser_control/pulses_per_frame" type="array">
+         <obj_property name="ElementShortName">pulses_per_frame[7:0]</obj_property>
+         <obj_property name="ObjectShortName">pulses_per_frame[7:0]</obj_property>
+         <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+         <obj_property name="CustomSignalColor">#DCDCDC</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_lotus/DUT/lotus_i/lotus_bsc_0/inst/I_lotus_laser_control/continuous_mode" type="logic">
+         <obj_property name="ElementShortName">continuous_mode</obj_property>
+         <obj_property name="ObjectShortName">continuous_mode</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_lotus/DUT/lotus_i/lotus_bsc_0/inst/I_lotus_laser_control/enable" type="logic">
+         <obj_property name="ElementShortName">enable</obj_property>
+         <obj_property name="ObjectShortName">enable</obj_property>
+         <obj_property name="CustomSignalColor">#FFA500</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_lotus/DUT/lotus_i/lotus_bsc_0/inst/I_lotus_laser_control/start" type="logic">
+         <obj_property name="ElementShortName">start</obj_property>
+         <obj_property name="ObjectShortName">start</obj_property>
+         <obj_property name="CustomSignalColor">#FFA500</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_lotus/DUT/lotus_i/lotus_bsc_0/inst/I_lotus_laser_control/state" type="array">
+         <obj_property name="ElementShortName">state[1:0]</obj_property>
+         <obj_property name="ObjectShortName">state[1:0]</obj_property>
+         <obj_property name="CustomSignalColor">#FF00FF</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_lotus/DUT/lotus_i/lotus_bsc_0/inst/I_lotus_laser_control/cnt" type="array">
+         <obj_property name="ElementShortName">cnt[7:0]</obj_property>
+         <obj_property name="ObjectShortName">cnt[7:0]</obj_property>
+         <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+         <obj_property name="CustomSignalColor">#00FFFF</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_lotus/DUT/lotus_i/lotus_bsc_0/inst/I_lotus_laser_control/interval_cnt" type="array">
+         <obj_property name="ElementShortName">interval_cnt[15:0]</obj_property>
+         <obj_property name="ObjectShortName">interval_cnt[15:0]</obj_property>
+         <obj_property name="CustomSignalColor">#00FFFF</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+         <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_lotus/DUT/lotus_i/lotus_bsc_0/inst/I_lotus_laser_control/interval_done" type="logic">
+         <obj_property name="ElementShortName">interval_done</obj_property>
+         <obj_property name="ObjectShortName">interval_done</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_lotus/DUT/lotus_i/lotus_bsc_0/inst/I_lotus_laser_control/pulses_done" type="logic">
+         <obj_property name="ElementShortName">pulses_done</obj_property>
+         <obj_property name="ObjectShortName">pulses_done</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_lotus/DUT/lotus_i/lotus_bsc_0/inst/I_lotus_laser_control/frame_done" type="logic">
+         <obj_property name="ElementShortName">frame_done</obj_property>
+         <obj_property name="ObjectShortName">frame_done</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_lotus/DUT/lotus_i/lotus_bsc_0/inst/I_lotus_laser_control/LASER_TRIGGER" type="logic">
+         <obj_property name="ElementShortName">LASER_TRIGGER</obj_property>
+         <obj_property name="ObjectShortName">LASER_TRIGGER</obj_property>
+         <obj_property name="CustomSignalColor">#FFFF00</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+   </wvobject>
+   <wvobject fp_name="group111" type="group">
+      <obj_property name="label">TABLE MOVER</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <wvobject fp_name="/tb_lotus/DUT/lotus_i/lotus_bsc_0/inst/I_lotus_table_mover/TABLE_IDX" type="array">
+         <obj_property name="ElementShortName">TABLE_IDX[6:0]</obj_property>
+         <obj_property name="ObjectShortName">TABLE_IDX[6:0]</obj_property>
+         <obj_property name="CustomSignalColor">#FFA500</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+         <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_lotus/DUT/lotus_i/lotus_bsc_0/inst/I_lotus_table_mover/START_TXFER" type="logic">
+         <obj_property name="ElementShortName">START_TXFER</obj_property>
+         <obj_property name="ObjectShortName">START_TXFER</obj_property>
+         <obj_property name="CustomSignalColor">#FFA500</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_lotus/DUT/lotus_i/lotus_bsc_0/inst/I_lotus_table_mover/read_ptr_start" type="array">
+         <obj_property name="ElementShortName">read_ptr_start[12:0]</obj_property>
+         <obj_property name="ObjectShortName">read_ptr_start[12:0]</obj_property>
+         <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_lotus/DUT/lotus_i/lotus_bsc_0/inst/I_lotus_table_mover/write_ptr_start" type="array">
+         <obj_property name="ElementShortName">write_ptr_start[6:0]</obj_property>
+         <obj_property name="ObjectShortName">write_ptr_start[6:0]</obj_property>
+         <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_lotus/DUT/lotus_i/lotus_bsc_0/inst/I_lotus_table_mover/state" type="array">
+         <obj_property name="ElementShortName">state[1:0]</obj_property>
+         <obj_property name="ObjectShortName">state[1:0]</obj_property>
+         <obj_property name="CustomSignalColor">#0000FF</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_lotus/DUT/lotus_i/lotus_bsc_0/inst/I_lotus_table_mover/read_ptr" type="array">
+         <obj_property name="ElementShortName">read_ptr[12:0]</obj_property>
+         <obj_property name="ObjectShortName">read_ptr[12:0]</obj_property>
+         <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+         <obj_property name="CustomSignalColor">#FFD700</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_lotus/DUT/lotus_i/lotus_bsc_0/inst/I_lotus_table_mover/RD_EN" type="logic">
+         <obj_property name="ElementShortName">RD_EN</obj_property>
+         <obj_property name="ObjectShortName">RD_EN</obj_property>
+         <obj_property name="CustomSignalColor">#FFD700</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_lotus/DUT/lotus_i/lotus_bsc_0/inst/I_lotus_table_mover/RD_ADDR" type="array">
+         <obj_property name="ElementShortName">RD_ADDR[12:0]</obj_property>
+         <obj_property name="ObjectShortName">RD_ADDR[12:0]</obj_property>
+         <obj_property name="CustomSignalColor">#FFD700</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+         <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_lotus/DUT/lotus_i/lotus_bsc_0/inst/I_lotus_table_mover/RD_DATA" type="array">
+         <obj_property name="ElementShortName">RD_DATA[31:0]</obj_property>
+         <obj_property name="ObjectShortName">RD_DATA[31:0]</obj_property>
+         <obj_property name="CustomSignalColor">#FFD700</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_lotus/DUT/lotus_i/lotus_bsc_0/inst/I_lotus_table_mover/write_ptr" type="array">
+         <obj_property name="ElementShortName">write_ptr[6:0]</obj_property>
+         <obj_property name="ObjectShortName">write_ptr[6:0]</obj_property>
+         <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+         <obj_property name="CustomSignalColor">#00FFFF</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_lotus/DUT/lotus_i/lotus_bsc_0/inst/I_lotus_table_mover/WR_REQ" type="logic">
+         <obj_property name="ElementShortName">WR_REQ</obj_property>
+         <obj_property name="ObjectShortName">WR_REQ</obj_property>
+         <obj_property name="CustomSignalColor">#00FFFF</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_lotus/DUT/lotus_i/lotus_bsc_0/inst/I_lotus_table_mover/WR_ADDR" type="array">
+         <obj_property name="ElementShortName">WR_ADDR[8:0]</obj_property>
+         <obj_property name="ObjectShortName">WR_ADDR[8:0]</obj_property>
+         <obj_property name="CustomSignalColor">#00FFFF</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+         <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_lotus/DUT/lotus_i/lotus_bsc_0/inst/I_lotus_table_mover/WR_DATA" type="array">
+         <obj_property name="ElementShortName">WR_DATA[31:0]</obj_property>
+         <obj_property name="ObjectShortName">WR_DATA[31:0]</obj_property>
+         <obj_property name="CustomSignalColor">#00FFFF</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_lotus/DUT/lotus_i/lotus_bsc_0/inst/I_lotus_table_mover/WR_STRB" type="array">
+         <obj_property name="ElementShortName">WR_STRB[3:0]</obj_property>
+         <obj_property name="ObjectShortName">WR_STRB[3:0]</obj_property>
+         <obj_property name="CustomSignalColor">#00FFFF</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_lotus/DUT/lotus_i/lotus_bsc_0/inst/I_lotus_table_mover/WR_ACK" type="logic">
+         <obj_property name="ElementShortName">WR_ACK</obj_property>
+         <obj_property name="ObjectShortName">WR_ACK</obj_property>
+         <obj_property name="CustomSignalColor">#00FFFF</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_lotus/DUT/lotus_i/lotus_bsc_0/inst/I_lotus_active_mem/write_en" type="logic">
+         <obj_property name="ElementShortName">write_en</obj_property>
+         <obj_property name="ObjectShortName">write_en</obj_property>
+         <obj_property name="CustomSignalColor">#FF00FF</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_lotus/DUT/lotus_i/lotus_bsc_0/inst/I_lotus_active_mem/write_addr_pp" type="array">
+         <obj_property name="ElementShortName">write_addr_pp[8:0]</obj_property>
+         <obj_property name="ObjectShortName">write_addr_pp[8:0]</obj_property>
+         <obj_property name="CustomSignalColor">#FF00FF</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+         <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_lotus/DUT/lotus_i/lotus_bsc_0/inst/I_lotus_active_mem/write_data_pp" type="array">
+         <obj_property name="ElementShortName">write_data_pp[31:0]</obj_property>
+         <obj_property name="ObjectShortName">write_data_pp[31:0]</obj_property>
+         <obj_property name="CustomSignalColor">#FF00FF</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_lotus/DUT/lotus_i/lotus_bsc_0/inst/I_lotus_active_mem/write_strb_pp" type="array">
+         <obj_property name="ElementShortName">write_strb_pp[3:0]</obj_property>
+         <obj_property name="ObjectShortName">write_strb_pp[3:0]</obj_property>
+         <obj_property name="CustomSignalColor">#FF00FF</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_lotus/DUT/lotus_i/lotus_bsc_0/inst/I_lotus_active_mem/regfile[0]" type="array">
+         <obj_property name="ElementShortName">[0][31:0]</obj_property>
+         <obj_property name="ObjectShortName">[0][31:0]</obj_property>
+         <obj_property name="CustomSignalColor">#FFFFFF</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_lotus/DUT/lotus_i/lotus_bsc_0/inst/I_lotus_active_mem/regfile[1]" type="array">
+         <obj_property name="ElementShortName">[1][31:0]</obj_property>
+         <obj_property name="ObjectShortName">[1][31:0]</obj_property>
+         <obj_property name="CustomSignalColor">#FFFFFF</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_lotus/DUT/lotus_i/lotus_bsc_0/inst/I_lotus_active_mem/regfile[2]" type="array">
+         <obj_property name="ElementShortName">[2][31:0]</obj_property>
+         <obj_property name="ObjectShortName">[2][31:0]</obj_property>
+         <obj_property name="CustomSignalColor">#FFFFFF</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_lotus/DUT/lotus_i/lotus_bsc_0/inst/I_lotus_active_mem/regfile[49]" type="array">
+         <obj_property name="ElementShortName">[49][31:0]</obj_property>
+         <obj_property name="ObjectShortName">[49][31:0]</obj_property>
+         <obj_property name="CustomSignalColor">#FFFFFF</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_lotus/DUT/lotus_i/lotus_bsc_0/inst/I_lotus_active_mem/regfile[50]" type="array">
+         <obj_property name="ElementShortName">[50][31:0]</obj_property>
+         <obj_property name="ObjectShortName">[50][31:0]</obj_property>
+         <obj_property name="CustomSignalColor">#FFFFFF</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_lotus/DUT/lotus_i/lotus_bsc_0/inst/I_lotus_table_mover/done" type="logic">
+         <obj_property name="ElementShortName">done</obj_property>
+         <obj_property name="ObjectShortName">done</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_lotus/DUT/lotus_i/lotus_bsc_0/inst/I_lotus_table_mover/TXFER_BUSY" type="logic">
+         <obj_property name="ElementShortName">TXFER_BUSY</obj_property>
+         <obj_property name="ObjectShortName">TXFER_BUSY</obj_property>
+         <obj_property name="CustomSignalColor">#FFA500</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_lotus/DUT/lotus_i/lotus_bsc_0/inst/I_lotus_table_mover/TXFER_DONE" type="logic">
+         <obj_property name="ElementShortName">TXFER_DONE</obj_property>
+         <obj_property name="ObjectShortName">TXFER_DONE</obj_property>
+         <obj_property name="CustomSignalColor">#FFA500</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+   </wvobject>
+   <wvobject fp_name="group130" type="group">
+      <obj_property name="label">SYNC</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <wvobject fp_name="/tb_lotus/DUT/lotus_i/lotus_bsc_0/inst/I_lotus_core/I_lotus_sync_a2b/A_CLK" type="logic">
+         <obj_property name="ElementShortName">A_CLK</obj_property>
+         <obj_property name="ObjectShortName">A_CLK</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_lotus/DUT/lotus_i/lotus_bsc_0/inst/I_lotus_core/I_lotus_sync_a2b/A_BUSY" type="logic">
+         <obj_property name="ElementShortName">A_BUSY</obj_property>
+         <obj_property name="ObjectShortName">A_BUSY</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_lotus/DUT/lotus_i/lotus_bsc_0/inst/I_lotus_core/I_lotus_sync_a2b/A_REQ" type="logic">
+         <obj_property name="ElementShortName">A_REQ</obj_property>
+         <obj_property name="ObjectShortName">A_REQ</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_lotus/DUT/lotus_i/lotus_bsc_0/inst/I_lotus_core/I_lotus_sync_a2b/A_DATA" type="array">
+         <obj_property name="ElementShortName">A_DATA[31:0]</obj_property>
+         <obj_property name="ObjectShortName">A_DATA[31:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_lotus/DUT/lotus_i/lotus_bsc_0/inst/I_lotus_core/I_lotus_sync_a2b/A_DATA2" type="array">
+         <obj_property name="ElementShortName">A_DATA2[1631:0]</obj_property>
+         <obj_property name="ObjectShortName">A_DATA2[1631:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_lotus/DUT/lotus_i/lotus_bsc_0/inst/I_lotus_core/I_lotus_sync_a2b/ax_req" type="logic">
+         <obj_property name="ElementShortName">ax_req</obj_property>
+         <obj_property name="ObjectShortName">ax_req</obj_property>
+         <obj_property name="CustomSignalColor">#FF00FF</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_lotus/DUT/lotus_i/lotus_bsc_0/inst/I_lotus_core/I_lotus_sync_a2b/b_req_sync0" type="logic">
+         <obj_property name="ElementShortName">b_req_sync0</obj_property>
+         <obj_property name="ObjectShortName">b_req_sync0</obj_property>
+         <obj_property name="CustomSignalColor">#FF00FF</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_lotus/DUT/lotus_i/lotus_bsc_0/inst/I_lotus_core/I_lotus_sync_a2b/b_req_sync1" type="logic">
+         <obj_property name="ElementShortName">b_req_sync1</obj_property>
+         <obj_property name="ObjectShortName">b_req_sync1</obj_property>
+         <obj_property name="CustomSignalColor">#FF00FF</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_lotus/DUT/lotus_i/lotus_bsc_0/inst/I_lotus_core/I_lotus_sync_a2b/b_req_sync2" type="logic">
+         <obj_property name="ElementShortName">b_req_sync2</obj_property>
+         <obj_property name="ObjectShortName">b_req_sync2</obj_property>
+         <obj_property name="CustomSignalColor">#FF00FF</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_lotus/DUT/lotus_i/lotus_bsc_0/inst/I_lotus_core/I_lotus_sync_a2b/B_CLK" type="logic">
+         <obj_property name="ElementShortName">B_CLK</obj_property>
+         <obj_property name="ObjectShortName">B_CLK</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_lotus/DUT/lotus_i/lotus_bsc_0/inst/I_lotus_core/I_lotus_sync_a2b/sample_en" type="logic">
+         <obj_property name="ElementShortName">sample_en</obj_property>
+         <obj_property name="ObjectShortName">sample_en</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_lotus/DUT/lotus_i/lotus_bsc_0/inst/I_lotus_core/I_lotus_sync_a2b/sample_valid" type="logic">
+         <obj_property name="ElementShortName">sample_valid</obj_property>
+         <obj_property name="ObjectShortName">sample_valid</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_lotus/DUT/lotus_i/lotus_bsc_0/inst/I_lotus_core/I_lotus_sync_a2b/B_DATA[3]" type="logic">
+         <obj_property name="ElementShortName">[3]</obj_property>
+         <obj_property name="ObjectShortName">[3]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_lotus/DUT/lotus_i/lotus_bsc_0/inst/I_lotus_core/I_lotus_sync_a2b/B_DATA_VALID" type="logic">
+         <obj_property name="ElementShortName">B_DATA_VALID</obj_property>
+         <obj_property name="ObjectShortName">B_DATA_VALID</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_lotus/DUT/lotus_i/lotus_bsc_0/inst/I_lotus_core/I_lotus_sync_a2b/B_DATA" type="array">
+         <obj_property name="ElementShortName">B_DATA[31:0]</obj_property>
+         <obj_property name="ObjectShortName">B_DATA[31:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_lotus/DUT/lotus_i/lotus_bsc_0/inst/I_lotus_core/I_lotus_sync_a2b/B_DATA2" type="array">
+         <obj_property name="ElementShortName">B_DATA2[1631:0]</obj_property>
+         <obj_property name="ObjectShortName">B_DATA2[1631:0]</obj_property>
+         <obj_property name="Radix">HEXRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_lotus/DUT/lotus_i/lotus_bsc_0/inst/I_lotus_core/I_lotus_sync_a2b/bx_ack" type="logic">
+         <obj_property name="ElementShortName">bx_ack</obj_property>
+         <obj_property name="ObjectShortName">bx_ack</obj_property>
+         <obj_property name="CustomSignalColor">#FF00FF</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_lotus/DUT/lotus_i/lotus_bsc_0/inst/I_lotus_core/I_lotus_sync_a2b/a_ack_sync0" type="logic">
+         <obj_property name="ElementShortName">a_ack_sync0</obj_property>
+         <obj_property name="ObjectShortName">a_ack_sync0</obj_property>
+         <obj_property name="CustomSignalColor">#FF00FF</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_lotus/DUT/lotus_i/lotus_bsc_0/inst/I_lotus_core/I_lotus_sync_a2b/a_ack_sync1" type="logic">
+         <obj_property name="ElementShortName">a_ack_sync1</obj_property>
+         <obj_property name="ObjectShortName">a_ack_sync1</obj_property>
+         <obj_property name="CustomSignalColor">#FF00FF</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_lotus/DUT/lotus_i/lotus_bsc_0/inst/I_lotus_core/reset" type="logic">
+         <obj_property name="ElementShortName">reset</obj_property>
+         <obj_property name="ObjectShortName">reset</obj_property>
+         <obj_property name="CustomSignalColor">#FFA500</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_lotus/DUT/lotus_i/lotus_bsc_0/inst/I_lotus_core/init" type="logic">
+         <obj_property name="ElementShortName">init</obj_property>
+         <obj_property name="ObjectShortName">init</obj_property>
+         <obj_property name="CustomSignalColor">#FFA500</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_lotus/DUT/lotus_i/lotus_bsc_0/inst/I_lotus_core/enable" type="logic">
+         <obj_property name="ElementShortName">enable</obj_property>
+         <obj_property name="ObjectShortName">enable</obj_property>
+         <obj_property name="CustomSignalColor">#FFA500</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_lotus/DUT/lotus_i/lotus_bsc_0/inst/I_lotus_core/apply" type="logic">
+         <obj_property name="ElementShortName">apply</obj_property>
+         <obj_property name="ObjectShortName">apply</obj_property>
+         <obj_property name="CustomSignalColor">#FFA500</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+   </wvobject>
+   <wvobject fp_name="group164" type="group">
+      <obj_property name="label">SCAN_SEQ_FSM</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <wvobject fp_name="/tb_lotus/DUT/lotus_i/lotus_bsc_0/inst/I_lotus_core/I_lotus_fsm_scan_seq/CLK" type="logic">
+         <obj_property name="ElementShortName">CLK</obj_property>
+         <obj_property name="ObjectShortName">CLK</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_lotus/DUT/lotus_i/lotus_bsc_0/inst/I_lotus_core/I_lotus_fsm_scan_seq/DWELL_N_CYCLES" type="array">
+         <obj_property name="ElementShortName">DWELL_N_CYCLES[19:0]</obj_property>
+         <obj_property name="ObjectShortName">DWELL_N_CYCLES[19:0]</obj_property>
+         <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_lotus/DUT/lotus_i/lotus_bsc_0/inst/I_lotus_core/I_lotus_fsm_scan_seq/RESET" type="logic">
+         <obj_property name="ElementShortName">RESET</obj_property>
+         <obj_property name="ObjectShortName">RESET</obj_property>
+         <obj_property name="CustomSignalColor">#FFA500</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_lotus/DUT/lotus_i/lotus_bsc_0/inst/I_lotus_core/I_lotus_fsm_scan_seq/INIT" type="logic">
+         <obj_property name="ElementShortName">INIT</obj_property>
+         <obj_property name="ObjectShortName">INIT</obj_property>
+         <obj_property name="CustomSignalColor">#FFA500</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_lotus/DUT/lotus_i/lotus_bsc_0/inst/I_lotus_core/I_lotus_fsm_scan_seq/ENABLE" type="logic">
+         <obj_property name="ElementShortName">ENABLE</obj_property>
+         <obj_property name="ObjectShortName">ENABLE</obj_property>
+         <obj_property name="CustomSignalColor">#FFA500</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_lotus/DUT/lotus_i/lotus_bsc_0/inst/I_lotus_core/I_lotus_fsm_scan_seq/APPLY" type="logic">
+         <obj_property name="ElementShortName">APPLY</obj_property>
+         <obj_property name="ObjectShortName">APPLY</obj_property>
+         <obj_property name="CustomSignalColor">#FFA500</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_lotus/DUT/lotus_i/lotus_bsc_0/inst/I_lotus_core/I_lotus_fsm_scan_seq/clear_apply" type="logic">
+         <obj_property name="ElementShortName">clear_apply</obj_property>
+         <obj_property name="ObjectShortName">clear_apply</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_lotus/DUT/lotus_i/lotus_bsc_0/inst/I_lotus_core/I_lotus_fsm_scan_seq/apply_is_pending" type="logic">
+         <obj_property name="ElementShortName">apply_is_pending</obj_property>
+         <obj_property name="ObjectShortName">apply_is_pending</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_lotus/DUT/lotus_i/lotus_bsc_0/inst/I_lotus_core/I_lotus_fsm_scan_seq/state" type="array">
+         <obj_property name="ElementShortName">state[3:0]</obj_property>
+         <obj_property name="ObjectShortName">state[3:0]</obj_property>
+         <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_lotus/DUT/lotus_i/lotus_bsc_0/inst/I_lotus_core/I_lotus_fsm_scan_seq/reset_cnt" type="logic">
+         <obj_property name="ElementShortName">reset_cnt</obj_property>
+         <obj_property name="ObjectShortName">reset_cnt</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_lotus/DUT/lotus_i/lotus_bsc_0/inst/I_lotus_core/I_lotus_fsm_scan_seq/cnt" type="array">
+         <obj_property name="ElementShortName">cnt[19:0]</obj_property>
+         <obj_property name="ObjectShortName">cnt[19:0]</obj_property>
+         <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_lotus/DUT/lotus_i/lotus_bsc_0/inst/I_lotus_core/I_lotus_fsm_scan_seq/dwell_expired" type="logic">
+         <obj_property name="ElementShortName">dwell_expired</obj_property>
+         <obj_property name="ObjectShortName">dwell_expired</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_lotus/DUT/lotus_i/lotus_bsc_0/inst/I_lotus_core/I_lotus_fsm_scan_seq/PROG_START" type="logic">
+         <obj_property name="ElementShortName">PROG_START</obj_property>
+         <obj_property name="ObjectShortName">PROG_START</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_lotus/DUT/lotus_i/lotus_bsc_0/inst/I_lotus_core/I_lotus_fsm_scan_seq/PROG_DONE" type="logic">
+         <obj_property name="ElementShortName">PROG_DONE</obj_property>
+         <obj_property name="ObjectShortName">PROG_DONE</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_lotus/DUT/lotus_i/lotus_bsc_0/inst/I_lotus_core/I_lotus_fsm_scan_seq/phase" type="logic">
+         <obj_property name="ElementShortName">phase</obj_property>
+         <obj_property name="ObjectShortName">phase</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_lotus/DUT/lotus_i/lotus_bsc_0/inst/I_lotus_core/I_lotus_fsm_scan_seq/POL" type="logic">
+         <obj_property name="ElementShortName">POL</obj_property>
+         <obj_property name="ObjectShortName">POL</obj_property>
+         <obj_property name="CustomSignalColor">#00FFFF</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_lotus/DUT/lotus_i/lotus_bsc_0/inst/I_lotus_core/I_lotus_fsm_scan_seq/TP1" type="logic">
+         <obj_property name="ElementShortName">TP1</obj_property>
+         <obj_property name="ObjectShortName">TP1</obj_property>
+         <obj_property name="CustomSignalColor">#00FFFF</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_lotus/DUT/lotus_i/lotus_bsc_0/inst/I_lotus_core/I_lotus_fsm_scan_seq/FORCE_ONES" type="logic">
+         <obj_property name="ElementShortName">FORCE_ONES</obj_property>
+         <obj_property name="ObjectShortName">FORCE_ONES</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_lotus/DUT/lotus_i/lotus_bsc_0/inst/I_lotus_core/I_lotus_fsm_scan_seq/ITO_CLK" type="logic">
+         <obj_property name="ElementShortName">ITO_CLK</obj_property>
+         <obj_property name="ObjectShortName">ITO_CLK</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_lotus/DUT/lotus_i/lotus_bsc_0/inst/I_lotus_core/I_lotus_fsm_scan_seq/STATE_EQ_PROG" type="logic">
+         <obj_property name="ElementShortName">STATE_EQ_PROG</obj_property>
+         <obj_property name="ObjectShortName">STATE_EQ_PROG</obj_property>
+      </wvobject>
+   </wvobject>
+   <wvobject fp_name="group141" type="group">
+      <obj_property name="label">MINI-LVDS</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <wvobject fp_name="/tb_lotus/DUT/lotus_i/lotus_bsc_0/inst/I_lotus_core/I_lotus_fsm_lvds_data/CLK" type="logic">
+         <obj_property name="ElementShortName">CLK</obj_property>
+         <obj_property name="ObjectShortName">CLK</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_lotus/DUT/lotus_i/lotus_bsc_0/inst/I_lotus_core/I_lotus_fsm_lvds_data/FORCE_ONES" type="logic">
+         <obj_property name="ElementShortName">FORCE_ONES</obj_property>
+         <obj_property name="ObjectShortName">FORCE_ONES</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_lotus/DUT/lotus_i/lotus_bsc_0/inst/I_lotus_core/I_lotus_fsm_lvds_data/START" type="logic">
+         <obj_property name="ElementShortName">START</obj_property>
+         <obj_property name="ObjectShortName">START</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_lotus/DUT/lotus_i/lotus_bsc_0/inst/I_lotus_core/I_lotus_fsm_lvds_data/DONE" type="logic">
+         <obj_property name="ElementShortName">DONE</obj_property>
+         <obj_property name="ObjectShortName">DONE</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_lotus/DUT/lotus_i/lotus_bsc_0/inst/I_lotus_core/I_lotus_fsm_lvds_data/state" type="array">
+         <obj_property name="ElementShortName">state[2:0]</obj_property>
+         <obj_property name="ObjectShortName">state[2:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_lotus/DUT/lotus_i/lotus_bsc_0/inst/I_lotus_core/I_lotus_fsm_lvds_data/cnt" type="array">
+         <obj_property name="ElementShortName">cnt[3:0]</obj_property>
+         <obj_property name="ObjectShortName">cnt[3:0]</obj_property>
+         <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_lotus/DUT/lotus_i/lotus_bsc_0/inst/I_lotus_core/I_lotus_fsm_lvds_data/step" type="array">
+         <obj_property name="ElementShortName">step[7:0]</obj_property>
+         <obj_property name="ObjectShortName">step[7:0]</obj_property>
+         <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_lotus/DUT/lotus_i/lotus_bsc_0/inst/I_lotus_core/I_lotus_fsm_lvds_data/bit_sel" type="array">
+         <obj_property name="ElementShortName">bit_sel[2:0]</obj_property>
+         <obj_property name="ObjectShortName">bit_sel[2:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_lotus/DUT/lotus_i/lotus_bsc_0/inst/I_lotus_core/I_lotus_fsm_lvds_data/I_lotus_data_mux/b0" type="array">
+         <obj_property name="ElementShortName">b0[7:0]</obj_property>
+         <obj_property name="ObjectShortName">b0[7:0]</obj_property>
+         <obj_property name="CustomSignalColor">#FF00FF</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_lotus/DUT/lotus_i/lotus_bsc_0/inst/I_lotus_core/I_lotus_fsm_lvds_data/I_lotus_data_mux/b1" type="array">
+         <obj_property name="ElementShortName">b1[7:0]</obj_property>
+         <obj_property name="ObjectShortName">b1[7:0]</obj_property>
+         <obj_property name="CustomSignalColor">#FF00FF</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_lotus/DUT/lotus_i/lotus_bsc_0/inst/I_lotus_core/I_lotus_fsm_lvds_data/I_lotus_data_mux/b2" type="array">
+         <obj_property name="ElementShortName">b2[7:0]</obj_property>
+         <obj_property name="ObjectShortName">b2[7:0]</obj_property>
+         <obj_property name="CustomSignalColor">#FF00FF</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_lotus/DUT/lotus_i/lotus_bsc_0/inst/I_lotus_core/I_lotus_fsm_lvds_data/I_lotus_data_mux/b3" type="array">
+         <obj_property name="ElementShortName">b3[7:0]</obj_property>
+         <obj_property name="ObjectShortName">b3[7:0]</obj_property>
+         <obj_property name="CustomSignalColor">#FF00FF</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_lotus/DUT/lotus_i/lotus_bsc_0/inst/I_lotus_core/I_lotus_fsm_lvds_data/I_lotus_data_mux/b4" type="array">
+         <obj_property name="ElementShortName">b4[7:0]</obj_property>
+         <obj_property name="ObjectShortName">b4[7:0]</obj_property>
+         <obj_property name="CustomSignalColor">#FF00FF</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_lotus/DUT/lotus_i/lotus_bsc_0/inst/I_lotus_core/I_lotus_fsm_lvds_data/I_lotus_data_mux/b5" type="array">
+         <obj_property name="ElementShortName">b5[7:0]</obj_property>
+         <obj_property name="ObjectShortName">b5[7:0]</obj_property>
+         <obj_property name="CustomSignalColor">#FF00FF</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_lotus/DUT/lotus_i/lotus_bsc_0/inst/I_lotus_core/I_lotus_fsm_lvds_data/lvds_data_muxed" type="array">
+         <obj_property name="ElementShortName">lvds_data_muxed[5:0]</obj_property>
+         <obj_property name="ObjectShortName">lvds_data_muxed[5:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_lotus/DUT/lotus_i/lotus_bsc_0/inst/I_lotus_core/I_lotus_fsm_lvds_data/LVDS_CLK" type="logic">
+         <obj_property name="ElementShortName">LVDS_CLK</obj_property>
+         <obj_property name="ObjectShortName">LVDS_CLK</obj_property>
+         <obj_property name="CustomSignalColor">#00FFFF</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_lotus/DUT/lotus_i/lotus_bsc_0/inst/I_lotus_core/I_lotus_fsm_lvds_data/LVDS_DATA" type="array">
+         <obj_property name="ElementShortName">LVDS_DATA[5:0]</obj_property>
+         <obj_property name="ObjectShortName">LVDS_DATA[5:0]</obj_property>
+         <obj_property name="CustomSignalColor">#00FFFF</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+   </wvobject>
+   <wvobject fp_name="group150" type="group">
+      <obj_property name="label">AXI WRITE - SPI</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <wvobject fp_name="/tb_lotus/DUT/lotus_i/lotus_spi_0/inst/I_lotus_axi_interface/S_AXI_AWVALID" type="logic">
+         <obj_property name="ElementShortName">S_AXI_AWVALID</obj_property>
+         <obj_property name="ObjectShortName">S_AXI_AWVALID</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_lotus/DUT/lotus_i/lotus_spi_0/inst/I_lotus_axi_interface/S_AXI_AWREADY" type="logic">
+         <obj_property name="ElementShortName">S_AXI_AWREADY</obj_property>
+         <obj_property name="ObjectShortName">S_AXI_AWREADY</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_lotus/DUT/lotus_i/lotus_spi_0/inst/I_lotus_axi_interface/S_AXI_AWADDR" type="array">
+         <obj_property name="ElementShortName">S_AXI_AWADDR[8:0]</obj_property>
+         <obj_property name="ObjectShortName">S_AXI_AWADDR[8:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_lotus/DUT/lotus_i/lotus_spi_0/inst/I_lotus_axi_interface/S_AXI_WVALID" type="logic">
+         <obj_property name="ElementShortName">S_AXI_WVALID</obj_property>
+         <obj_property name="ObjectShortName">S_AXI_WVALID</obj_property>
+         <obj_property name="CustomSignalColor">#FFA500</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_lotus/DUT/lotus_i/lotus_spi_0/inst/I_lotus_axi_interface/S_AXI_WREADY" type="logic">
+         <obj_property name="ElementShortName">S_AXI_WREADY</obj_property>
+         <obj_property name="ObjectShortName">S_AXI_WREADY</obj_property>
+         <obj_property name="CustomSignalColor">#FFA500</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_lotus/DUT/lotus_i/lotus_spi_0/inst/I_lotus_axi_interface/S_AXI_WDATA" type="array">
+         <obj_property name="ElementShortName">S_AXI_WDATA[31:0]</obj_property>
+         <obj_property name="ObjectShortName">S_AXI_WDATA[31:0]</obj_property>
+         <obj_property name="CustomSignalColor">#FFA500</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_lotus/DUT/lotus_i/lotus_spi_0/inst/I_lotus_active_mem/WR_BACK_PRESSURE" type="logic">
+         <obj_property name="ElementShortName">WR_BACK_PRESSURE</obj_property>
+         <obj_property name="ObjectShortName">WR_BACK_PRESSURE</obj_property>
+         <obj_property name="CustomSignalColor">#00FFFF</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_lotus/DUT/lotus_i/lotus_spi_0/inst/I_lotus_axi_interface/WR_REQ" type="logic">
+         <obj_property name="ElementShortName">WR_REQ</obj_property>
+         <obj_property name="ObjectShortName">WR_REQ</obj_property>
+         <obj_property name="CustomSignalColor">#00FFFF</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_lotus/DUT/lotus_i/lotus_spi_0/inst/I_lotus_axi_interface/WR_ACK" type="logic">
+         <obj_property name="ElementShortName">WR_ACK</obj_property>
+         <obj_property name="ObjectShortName">WR_ACK</obj_property>
+         <obj_property name="CustomSignalColor">#00FFFF</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_lotus/DUT/lotus_i/lotus_spi_0/inst/I_lotus_axi_interface/write_busy" type="logic">
+         <obj_property name="ElementShortName">write_busy</obj_property>
+         <obj_property name="ObjectShortName">write_busy</obj_property>
+         <obj_property name="CustomSignalColor">#00FFFF</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_lotus/DUT/lotus_i/lotus_spi_0/inst/I_lotus_active_mem/write_en" type="logic">
+         <obj_property name="ElementShortName">write_en</obj_property>
+         <obj_property name="ObjectShortName">write_en</obj_property>
+         <obj_property name="CustomSignalColor">#FF00FF</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_lotus/DUT/lotus_i/lotus_spi_0/inst/I_lotus_active_mem/write_addr_pp" type="array">
+         <obj_property name="ElementShortName">write_addr_pp[8:0]</obj_property>
+         <obj_property name="ObjectShortName">write_addr_pp[8:0]</obj_property>
+         <obj_property name="CustomSignalColor">#FF00FF</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_lotus/DUT/lotus_i/lotus_spi_0/inst/I_lotus_active_mem/write_data_pp" type="array">
+         <obj_property name="ElementShortName">write_data_pp[31:0]</obj_property>
+         <obj_property name="ObjectShortName">write_data_pp[31:0]</obj_property>
+         <obj_property name="CustomSignalColor">#FF00FF</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_lotus/DUT/lotus_i/lotus_spi_0/inst/I_lotus_active_mem/write_strb_pp" type="array">
+         <obj_property name="ElementShortName">write_strb_pp[3:0]</obj_property>
+         <obj_property name="ObjectShortName">write_strb_pp[3:0]</obj_property>
+         <obj_property name="CustomSignalColor">#FF00FF</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_lotus/DUT/lotus_i/lotus_spi_0/inst/I_lotus_active_mem/regfile[0]" type="array">
+         <obj_property name="ElementShortName">[0][31:0]</obj_property>
+         <obj_property name="ObjectShortName">[0][31:0]</obj_property>
+         <obj_property name="CustomSignalColor">#FFFFFF</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_lotus/DUT/lotus_i/lotus_spi_0/inst/I_lotus_active_mem/regfile[1]" type="array">
+         <obj_property name="ElementShortName">[1][31:0]</obj_property>
+         <obj_property name="ObjectShortName">[1][31:0]</obj_property>
+         <obj_property name="CustomSignalColor">#FFFFFF</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_lotus/DUT/lotus_i/lotus_spi_0/inst/I_lotus_active_mem/regfile[2]" type="array">
+         <obj_property name="ElementShortName">[2][31:0]</obj_property>
+         <obj_property name="ObjectShortName">[2][31:0]</obj_property>
+         <obj_property name="CustomSignalColor">#FFFFFF</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_lotus/DUT/lotus_i/lotus_spi_0/inst/I_lotus_axi_interface/S_AXI_BREADY" type="logic">
+         <obj_property name="ElementShortName">S_AXI_BREADY</obj_property>
+         <obj_property name="ObjectShortName">S_AXI_BREADY</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_lotus/DUT/lotus_i/lotus_spi_0/inst/I_lotus_axi_interface/S_AXI_BVALID" type="logic">
+         <obj_property name="ElementShortName">S_AXI_BVALID</obj_property>
+         <obj_property name="ObjectShortName">S_AXI_BVALID</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_lotus/DUT/lotus_i/lotus_spi_0/inst/I_lotus_axi_interface/S_AXI_BRESP" type="array">
+         <obj_property name="ElementShortName">S_AXI_BRESP[1:0]</obj_property>
+         <obj_property name="ObjectShortName">S_AXI_BRESP[1:0]</obj_property>
+      </wvobject>
+   </wvobject>
+   <wvobject fp_name="group89" type="group">
+      <obj_property name="label">AXI READ - SPI</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <wvobject fp_name="/tb_lotus/DUT/lotus_i/lotus_spi_0/inst/I_lotus_axi_interface/S_AXI_ARVALID" type="logic">
+         <obj_property name="ElementShortName">S_AXI_ARVALID</obj_property>
+         <obj_property name="ObjectShortName">S_AXI_ARVALID</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_lotus/DUT/lotus_i/lotus_spi_0/inst/I_lotus_axi_interface/S_AXI_ARREADY" type="logic">
+         <obj_property name="ElementShortName">S_AXI_ARREADY</obj_property>
+         <obj_property name="ObjectShortName">S_AXI_ARREADY</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_lotus/DUT/lotus_i/lotus_spi_0/inst/I_lotus_axi_interface/S_AXI_ARADDR" type="array">
+         <obj_property name="ElementShortName">S_AXI_ARADDR[8:0]</obj_property>
+         <obj_property name="ObjectShortName">S_AXI_ARADDR[8:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_lotus/DUT/lotus_i/lotus_spi_0/inst/I_lotus_axi_interface/read_busy" type="logic">
+         <obj_property name="ElementShortName">read_busy</obj_property>
+         <obj_property name="ObjectShortName">read_busy</obj_property>
+         <obj_property name="CustomSignalColor">#FFA500</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_lotus/DUT/lotus_i/lotus_spi_0/inst/I_lotus_axi_interface/RD_EN" type="logic">
+         <obj_property name="ElementShortName">RD_EN</obj_property>
+         <obj_property name="ObjectShortName">RD_EN</obj_property>
+         <obj_property name="CustomSignalColor">#FF00FF</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_lotus/DUT/lotus_i/lotus_spi_0/inst/I_lotus_axi_interface/RD_ADDR" type="array">
+         <obj_property name="ElementShortName">RD_ADDR[8:0]</obj_property>
+         <obj_property name="ObjectShortName">RD_ADDR[8:0]</obj_property>
+         <obj_property name="CustomSignalColor">#FF00FF</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_lotus/DUT/lotus_i/lotus_spi_0/inst/I_lotus_axi_interface/RD_VALID" type="logic">
+         <obj_property name="ElementShortName">RD_VALID</obj_property>
+         <obj_property name="ObjectShortName">RD_VALID</obj_property>
+         <obj_property name="CustomSignalColor">#FF00FF</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_lotus/DUT/lotus_i/lotus_spi_0/inst/I_lotus_axi_interface/RD_DATA" type="array">
+         <obj_property name="ElementShortName">RD_DATA[31:0]</obj_property>
+         <obj_property name="ObjectShortName">RD_DATA[31:0]</obj_property>
+         <obj_property name="CustomSignalColor">#FF00FF</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_lotus/DUT/lotus_i/lotus_spi_0/inst/I_lotus_active_mem/regfile[0]" type="array">
+         <obj_property name="ElementShortName">[0][31:0]</obj_property>
+         <obj_property name="ObjectShortName">[0][31:0]</obj_property>
+         <obj_property name="CustomSignalColor">#FFFFFF</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_lotus/DUT/lotus_i/lotus_spi_0/inst/I_lotus_active_mem/regfile[1]" type="array">
+         <obj_property name="ElementShortName">[1][31:0]</obj_property>
+         <obj_property name="ObjectShortName">[1][31:0]</obj_property>
+         <obj_property name="CustomSignalColor">#FFFFFF</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_lotus/DUT/lotus_i/lotus_spi_0/inst/I_lotus_active_mem/regfile[2]" type="array">
+         <obj_property name="ElementShortName">[2][31:0]</obj_property>
+         <obj_property name="ObjectShortName">[2][31:0]</obj_property>
+         <obj_property name="CustomSignalColor">#FFFFFF</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_lotus/DUT/lotus_i/lotus_spi_0/inst/I_lotus_axi_interface/read_valid" type="logic">
+         <obj_property name="ElementShortName">read_valid</obj_property>
+         <obj_property name="ObjectShortName">read_valid</obj_property>
+         <obj_property name="CustomSignalColor">#FFA500</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_lotus/DUT/lotus_i/lotus_spi_0/inst/I_lotus_axi_interface/read_data_pp" type="array">
+         <obj_property name="ElementShortName">read_data_pp[31:0]</obj_property>
+         <obj_property name="ObjectShortName">read_data_pp[31:0]</obj_property>
+         <obj_property name="CustomSignalColor">#FFA500</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_lotus/DUT/lotus_i/lotus_spi_0/inst/I_lotus_axi_interface/S_AXI_RREADY" type="logic">
+         <obj_property name="ElementShortName">S_AXI_RREADY</obj_property>
+         <obj_property name="ObjectShortName">S_AXI_RREADY</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_lotus/DUT/lotus_i/lotus_spi_0/inst/I_lotus_axi_interface/S_AXI_RVALID" type="logic">
+         <obj_property name="ElementShortName">S_AXI_RVALID</obj_property>
+         <obj_property name="ObjectShortName">S_AXI_RVALID</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_lotus/DUT/lotus_i/lotus_spi_0/inst/I_lotus_axi_interface/S_AXI_RDATA" type="array">
+         <obj_property name="ElementShortName">S_AXI_RDATA[31:0]</obj_property>
+         <obj_property name="ObjectShortName">S_AXI_RDATA[31:0]</obj_property>
+      </wvobject>
+   </wvobject>
+   <wvobject type="divider" fp_name="divider359">
+      <obj_property name="label">WIP below here</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+   </wvobject>
+</wave_config>

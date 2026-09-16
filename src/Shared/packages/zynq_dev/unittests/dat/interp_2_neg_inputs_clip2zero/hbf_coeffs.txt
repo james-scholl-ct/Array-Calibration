@@ -1,0 +1,25 @@
+
+
+assign interp_h0_u[0]=       -21;
+assign interp_h0_u[1]=       116;
+assign interp_h0_u[2]=      -341;
+assign interp_h0_u[3]=       786;
+assign interp_h0_u[4]=     -1589;
+assign interp_h0_u[5]=      3054;
+assign interp_h0_u[6]=     -6226;
+assign interp_h0_u[7]=     20608;
+assign interp_h0_u[8]=     32767;
+
+
+assign interp_h1_u[0]=       -44;
+assign interp_h1_u[1]=       834;
+assign interp_h1_u[2]=     -4112;
+assign interp_h1_u[3]=     19722;
+assign interp_h1_u[4]=     32767;
+
+
+assign interp_h2_u[0]=       -44;
+assign interp_h2_u[1]=       834;
+assign interp_h2_u[2]=     -4112;
+assign interp_h2_u[3]=     19722;
+assign interp_h2_u[4]=     32767;

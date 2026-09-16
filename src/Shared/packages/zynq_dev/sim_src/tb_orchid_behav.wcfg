@@ -1,0 +1,677 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wave_config>
+   <wave_state>
+   </wave_state>
+   <db_ref_list>
+      <db_ref path="tb_orchid.wdb" id="1">
+         <top_modules>
+            <top_module name="axi_vip_pkg" />
+            <top_module name="glbl" />
+            <top_module name="std" />
+            <top_module name="tb_orchid" />
+            <top_module name="xil_common_vip_pkg" />
+         </top_modules>
+      </db_ref>
+   </db_ref_list>
+   <zoom_setting>
+      <ZoomStartTime time="0fs"></ZoomStartTime>
+      <ZoomEndTime time="154245000001fs"></ZoomEndTime>
+      <Cursor1Time time="154245000000fs"></Cursor1Time>
+   </zoom_setting>
+   <column_width_setting>
+      <NameColumnWidth column_width="193"></NameColumnWidth>
+      <ValueColumnWidth column_width="58"></ValueColumnWidth>
+   </column_width_setting>
+   <WVObjectSize size="12" />
+   <wave_markers>
+      <marker time="23463333000" label="" />
+   </wave_markers>
+   <wvobject fp_name="/tb_orchid/tb_ps_clk" type="logic">
+      <obj_property name="ElementShortName">tb_ps_clk</obj_property>
+      <obj_property name="ObjectShortName">tb_ps_clk</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_orchid/tb_ps_por_b" type="logic">
+      <obj_property name="ElementShortName">tb_ps_por_b</obj_property>
+      <obj_property name="ObjectShortName">tb_ps_por_b</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_orchid/tb_ps_srst_b" type="logic">
+      <obj_property name="ElementShortName">tb_ps_srst_b</obj_property>
+      <obj_property name="ObjectShortName">tb_ps_srst_b</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_orchid/DUT/orchid_i/processing_system7_0/FCLK_CLK0" type="logic">
+      <obj_property name="ElementShortName">FCLK_CLK0</obj_property>
+      <obj_property name="ObjectShortName">FCLK_CLK0</obj_property>
+      <obj_property name="CustomSignalColor">#00FFFF</obj_property>
+      <obj_property name="UseCustomSignalColor">true</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_orchid/DUT/orchid_i/processing_system7_0/FCLK_RESET0_N" type="logic">
+      <obj_property name="ElementShortName">FCLK_RESET0_N</obj_property>
+      <obj_property name="ObjectShortName">FCLK_RESET0_N</obj_property>
+      <obj_property name="CustomSignalColor">#00FFFF</obj_property>
+      <obj_property name="UseCustomSignalColor">true</obj_property>
+   </wvobject>
+   <wvobject type="divider" fp_name="divider16">
+      <obj_property name="label">Blocks</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+   </wvobject>
+   <wvobject fp_name="group22" type="group">
+      <obj_property name="label">RST</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <wvobject fp_name="/tb_orchid/DUT/orchid_i/rst_ps7_0_100M/slowest_sync_clk" type="logic">
+         <obj_property name="ElementShortName">slowest_sync_clk</obj_property>
+         <obj_property name="ObjectShortName">slowest_sync_clk</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_orchid/DUT/orchid_i/rst_ps7_0_100M/ext_reset_in" type="logic">
+         <obj_property name="ElementShortName">ext_reset_in</obj_property>
+         <obj_property name="ObjectShortName">ext_reset_in</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_orchid/DUT/orchid_i/rst_ps7_0_100M/interconnect_aresetn" type="array">
+         <obj_property name="ElementShortName">interconnect_aresetn[0:0]</obj_property>
+         <obj_property name="ObjectShortName">interconnect_aresetn[0:0]</obj_property>
+         <obj_property name="Radix">BINARYRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_orchid/DUT/orchid_i/rst_ps7_0_100M/peripheral_aresetn" type="array">
+         <obj_property name="ElementShortName">peripheral_aresetn[0:0]</obj_property>
+         <obj_property name="ObjectShortName">peripheral_aresetn[0:0]</obj_property>
+         <obj_property name="Radix">BINARYRADIX</obj_property>
+         <obj_property name="WaveformStyle">STYLE_DIGITAL</obj_property>
+      </wvobject>
+   </wvobject>
+   <wvobject fp_name="group15" type="group">
+      <obj_property name="label">CLK_WIZ</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <wvobject fp_name="/tb_orchid/DUT/orchid_i/clk_wiz_0/resetn" type="logic">
+         <obj_property name="ElementShortName">resetn</obj_property>
+         <obj_property name="ObjectShortName">resetn</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_orchid/DUT/orchid_i/clk_wiz_0/locked" type="logic">
+         <obj_property name="ElementShortName">locked</obj_property>
+         <obj_property name="ObjectShortName">locked</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_orchid/DUT/orchid_i/clk_wiz_0/clk_in1" type="logic">
+         <obj_property name="ElementShortName">clk_in1</obj_property>
+         <obj_property name="ObjectShortName">clk_in1</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_orchid/DUT/orchid_i/clk_wiz_0/clk_out1" type="logic">
+         <obj_property name="ElementShortName">clk_out1</obj_property>
+         <obj_property name="ObjectShortName">clk_out1</obj_property>
+      </wvobject>
+   </wvobject>
+   <wvobject fp_name="group47" type="group">
+      <obj_property name="label">AXI4LITE @ IP</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <wvobject fp_name="/tb_orchid/DUT/orchid_i/orchid_0/s00_axi_aclk" type="logic">
+         <obj_property name="ElementShortName">s00_axi_aclk</obj_property>
+         <obj_property name="ObjectShortName">s00_axi_aclk</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_orchid/DUT/orchid_i/orchid_0/s00_axi_aresetn" type="logic">
+         <obj_property name="ElementShortName">s00_axi_aresetn</obj_property>
+         <obj_property name="ObjectShortName">s00_axi_aresetn</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_orchid/DUT/orchid_i/orchid_0/s00_axi_awready" type="logic">
+         <obj_property name="ElementShortName">s00_axi_awready</obj_property>
+         <obj_property name="ObjectShortName">s00_axi_awready</obj_property>
+         <obj_property name="CustomSignalColor">#00FFFF</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_orchid/DUT/orchid_i/orchid_0/s00_axi_awvalid" type="logic">
+         <obj_property name="ElementShortName">s00_axi_awvalid</obj_property>
+         <obj_property name="ObjectShortName">s00_axi_awvalid</obj_property>
+         <obj_property name="CustomSignalColor">#00FFFF</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_orchid/DUT/orchid_i/orchid_0/s00_axi_awaddr" type="array">
+         <obj_property name="ElementShortName">s00_axi_awaddr[8:0]</obj_property>
+         <obj_property name="ObjectShortName">s00_axi_awaddr[8:0]</obj_property>
+         <obj_property name="CustomSignalColor">#00FFFF</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_orchid/DUT/orchid_i/orchid_0/s00_axi_awprot" type="array">
+         <obj_property name="ElementShortName">s00_axi_awprot[2:0]</obj_property>
+         <obj_property name="ObjectShortName">s00_axi_awprot[2:0]</obj_property>
+         <obj_property name="CustomSignalColor">#00FFFF</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_orchid/DUT/orchid_i/orchid_0/s00_axi_wready" type="logic">
+         <obj_property name="ElementShortName">s00_axi_wready</obj_property>
+         <obj_property name="ObjectShortName">s00_axi_wready</obj_property>
+         <obj_property name="CustomSignalColor">#FFA500</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_orchid/DUT/orchid_i/orchid_0/s00_axi_wvalid" type="logic">
+         <obj_property name="ElementShortName">s00_axi_wvalid</obj_property>
+         <obj_property name="ObjectShortName">s00_axi_wvalid</obj_property>
+         <obj_property name="CustomSignalColor">#FFA500</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_orchid/DUT/orchid_i/orchid_0/s00_axi_wdata" type="array">
+         <obj_property name="ElementShortName">s00_axi_wdata[31:0]</obj_property>
+         <obj_property name="ObjectShortName">s00_axi_wdata[31:0]</obj_property>
+         <obj_property name="CustomSignalColor">#FFA500</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_orchid/DUT/orchid_i/orchid_0/s00_axi_wstrb" type="array">
+         <obj_property name="ElementShortName">s00_axi_wstrb[3:0]</obj_property>
+         <obj_property name="ObjectShortName">s00_axi_wstrb[3:0]</obj_property>
+         <obj_property name="CustomSignalColor">#FFA500</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_orchid/DUT/orchid_i/orchid_0/s00_axi_bready" type="logic">
+         <obj_property name="ElementShortName">s00_axi_bready</obj_property>
+         <obj_property name="ObjectShortName">s00_axi_bready</obj_property>
+         <obj_property name="CustomSignalColor">#FF00FF</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_orchid/DUT/orchid_i/orchid_0/s00_axi_bvalid" type="logic">
+         <obj_property name="ElementShortName">s00_axi_bvalid</obj_property>
+         <obj_property name="ObjectShortName">s00_axi_bvalid</obj_property>
+         <obj_property name="CustomSignalColor">#FF00FF</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_orchid/DUT/orchid_i/orchid_0/s00_axi_bresp" type="array">
+         <obj_property name="ElementShortName">s00_axi_bresp[1:0]</obj_property>
+         <obj_property name="ObjectShortName">s00_axi_bresp[1:0]</obj_property>
+         <obj_property name="CustomSignalColor">#FF00FF</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_orchid/DUT/orchid_i/orchid_0/s00_axi_arready" type="logic">
+         <obj_property name="ElementShortName">s00_axi_arready</obj_property>
+         <obj_property name="ObjectShortName">s00_axi_arready</obj_property>
+         <obj_property name="CustomSignalColor">#FFA500</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_orchid/DUT/orchid_i/orchid_0/s00_axi_arvalid" type="logic">
+         <obj_property name="ElementShortName">s00_axi_arvalid</obj_property>
+         <obj_property name="ObjectShortName">s00_axi_arvalid</obj_property>
+         <obj_property name="CustomSignalColor">#FFA500</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_orchid/DUT/orchid_i/orchid_0/s00_axi_araddr" type="array">
+         <obj_property name="ElementShortName">s00_axi_araddr[8:0]</obj_property>
+         <obj_property name="ObjectShortName">s00_axi_araddr[8:0]</obj_property>
+         <obj_property name="CustomSignalColor">#FFA500</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_orchid/DUT/orchid_i/orchid_0/s00_axi_arprot" type="array">
+         <obj_property name="ElementShortName">s00_axi_arprot[2:0]</obj_property>
+         <obj_property name="ObjectShortName">s00_axi_arprot[2:0]</obj_property>
+         <obj_property name="CustomSignalColor">#FFA500</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_orchid/DUT/orchid_i/orchid_0/s00_axi_rready" type="logic">
+         <obj_property name="ElementShortName">s00_axi_rready</obj_property>
+         <obj_property name="ObjectShortName">s00_axi_rready</obj_property>
+         <obj_property name="CustomSignalColor">#FF00FF</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_orchid/DUT/orchid_i/orchid_0/s00_axi_rvalid" type="logic">
+         <obj_property name="ElementShortName">s00_axi_rvalid</obj_property>
+         <obj_property name="ObjectShortName">s00_axi_rvalid</obj_property>
+         <obj_property name="CustomSignalColor">#FF00FF</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_orchid/DUT/orchid_i/orchid_0/s00_axi_rdata" type="array">
+         <obj_property name="ElementShortName">s00_axi_rdata[31:0]</obj_property>
+         <obj_property name="ObjectShortName">s00_axi_rdata[31:0]</obj_property>
+         <obj_property name="CustomSignalColor">#FF00FF</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_orchid/DUT/orchid_i/orchid_0/s00_axi_rresp" type="array">
+         <obj_property name="ElementShortName">s00_axi_rresp[1:0]</obj_property>
+         <obj_property name="ObjectShortName">s00_axi_rresp[1:0]</obj_property>
+         <obj_property name="CustomSignalColor">#FF00FF</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_orchid/DUT/orchid_i/orchid_0/inst/I_orchid_axi_interface/AXI_WRITE_ENABLES" type="array">
+         <obj_property name="ElementShortName">AXI_WRITE_ENABLES[71:0]</obj_property>
+         <obj_property name="ObjectShortName">AXI_WRITE_ENABLES[71:0]</obj_property>
+         <obj_property name="Radix">HEXRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_orchid/DUT/orchid_i/orchid_0/inst/I_orchid_axi_interface/axi_awaddr" type="array">
+         <obj_property name="ElementShortName">axi_awaddr[8:0]</obj_property>
+         <obj_property name="ObjectShortName">axi_awaddr[8:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_orchid/DUT/orchid_i/orchid_0/inst/I_orchid_axi_interface/aw_en" type="logic">
+         <obj_property name="ElementShortName">aw_en</obj_property>
+         <obj_property name="ObjectShortName">aw_en</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_orchid/DUT/orchid_i/orchid_0/inst/I_orchid_axi_interface/axi_araddr" type="array">
+         <obj_property name="ElementShortName">axi_araddr[8:0]</obj_property>
+         <obj_property name="ObjectShortName">axi_araddr[8:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_orchid/DUT/orchid_i/orchid_0/inst/I_orchid_axi_interface/reg_data_out" type="array">
+         <obj_property name="ElementShortName">reg_data_out[31:0]</obj_property>
+         <obj_property name="ObjectShortName">reg_data_out[31:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_orchid/DUT/orchid_i/orchid_0/inst/I_orchid_axi_interface/slv_regs[0]" type="array">
+         <obj_property name="ElementShortName">[0][31:0]</obj_property>
+         <obj_property name="ObjectShortName">[0][31:0]</obj_property>
+         <obj_property name="CustomSignalColor">#808080</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_orchid/DUT/orchid_i/orchid_0/inst/I_orchid_axi_interface/slv_regs[1]" type="array">
+         <obj_property name="ElementShortName">[1][31:0]</obj_property>
+         <obj_property name="ObjectShortName">[1][31:0]</obj_property>
+         <obj_property name="CustomSignalColor">#808080</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_orchid/DUT/orchid_i/orchid_0/inst/I_orchid_axi_interface/slv_regs[2]" type="array">
+         <obj_property name="ElementShortName">[2][31:0]</obj_property>
+         <obj_property name="ObjectShortName">[2][31:0]</obj_property>
+         <obj_property name="CustomSignalColor">#808080</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_orchid/DUT/orchid_i/orchid_0/inst/I_orchid_axi_interface/slv_regs[3]" type="array">
+         <obj_property name="ElementShortName">[3][31:0]</obj_property>
+         <obj_property name="ObjectShortName">[3][31:0]</obj_property>
+         <obj_property name="CustomSignalColor">#808080</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_orchid/DUT/orchid_i/orchid_0/inst/I_orchid_axi_interface/slv_regs[63]" type="array">
+         <obj_property name="ElementShortName">[63][31:0]</obj_property>
+         <obj_property name="ObjectShortName">[63][31:0]</obj_property>
+         <obj_property name="CustomSignalColor">#808080</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_orchid/DUT/orchid_i/orchid_0/inst/I_orchid_axi_interface/slv_regs[64]" type="array">
+         <obj_property name="ElementShortName">[64][31:0]</obj_property>
+         <obj_property name="ObjectShortName">[64][31:0]</obj_property>
+         <obj_property name="CustomSignalColor">#808080</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_orchid/DUT/orchid_i/orchid_0/inst/I_orchid_axi_interface/slv_regs[65]" type="array">
+         <obj_property name="ElementShortName">[65][31:0]</obj_property>
+         <obj_property name="ObjectShortName">[65][31:0]</obj_property>
+         <obj_property name="CustomSignalColor">#808080</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_orchid/DUT/orchid_i/orchid_0/inst/I_orchid_axi_interface/sum" type="array">
+         <obj_property name="ElementShortName">sum[31:0]</obj_property>
+         <obj_property name="ObjectShortName">sum[31:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_orchid/DUT/orchid_i/orchid_0/inst/I_orchid_axi_interface/slv_regs[66]" type="array">
+         <obj_property name="ElementShortName">[66][31:0]</obj_property>
+         <obj_property name="ObjectShortName">[66][31:0]</obj_property>
+         <obj_property name="CustomSignalColor">#808080</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_orchid/DUT/orchid_i/orchid_0/inst/I_orchid_axi_interface/slv_regs[67]" type="array">
+         <obj_property name="ElementShortName">[67][31:0]</obj_property>
+         <obj_property name="ObjectShortName">[67][31:0]</obj_property>
+         <obj_property name="CustomSignalColor">#808080</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_orchid/DUT/orchid_i/orchid_0/inst/I_orchid_axi_interface/slv_regs[68]" type="array">
+         <obj_property name="ElementShortName">[68][31:0]</obj_property>
+         <obj_property name="ObjectShortName">[68][31:0]</obj_property>
+         <obj_property name="CustomSignalColor">#808080</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_orchid/DUT/orchid_i/orchid_0/inst/I_orchid_axi_interface/slv_regs[69]" type="array">
+         <obj_property name="ElementShortName">[69][31:0]</obj_property>
+         <obj_property name="ObjectShortName">[69][31:0]</obj_property>
+         <obj_property name="CustomSignalColor">#808080</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_orchid/DUT/orchid_i/orchid_0/inst/I_orchid_axi_interface/slv_regs[70]" type="array">
+         <obj_property name="ElementShortName">[70][31:0]</obj_property>
+         <obj_property name="ObjectShortName">[70][31:0]</obj_property>
+         <obj_property name="CustomSignalColor">#808080</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_orchid/DUT/orchid_i/orchid_0/inst/I_orchid_axi_interface/slv_regs[71]" type="array">
+         <obj_property name="ElementShortName">[71][31:0]</obj_property>
+         <obj_property name="ObjectShortName">[71][31:0]</obj_property>
+         <obj_property name="CustomSignalColor">#808080</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_orchid/rdata" type="array">
+         <obj_property name="ElementShortName">rdata[31:0]</obj_property>
+         <obj_property name="ObjectShortName">rdata[31:0]</obj_property>
+         <obj_property name="CustomSignalColor">#F0E68C</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_orchid/rresp" type="logic">
+         <obj_property name="ElementShortName">rresp</obj_property>
+         <obj_property name="ObjectShortName">rresp</obj_property>
+         <obj_property name="CustomSignalColor">#F0E68C</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_orchid/bresp" type="logic">
+         <obj_property name="ElementShortName">bresp</obj_property>
+         <obj_property name="ObjectShortName">bresp</obj_property>
+         <obj_property name="CustomSignalColor">#F0E68C</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+   </wvobject>
+   <wvobject fp_name="group148" type="group">
+      <obj_property name="label">SYNC</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <wvobject fp_name="/tb_orchid/DUT/orchid_i/orchid_0/inst/I_orchid_sync_a2b/A_SRESET" type="logic">
+         <obj_property name="ElementShortName">A_SRESET</obj_property>
+         <obj_property name="ObjectShortName">A_SRESET</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_orchid/DUT/orchid_i/orchid_0/inst/I_orchid_sync_a2b/A_CLK" type="logic">
+         <obj_property name="ElementShortName">A_CLK</obj_property>
+         <obj_property name="ObjectShortName">A_CLK</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_orchid/DUT/orchid_i/orchid_0/inst/I_orchid_sync_a2b/A_DATA" type="array">
+         <obj_property name="ElementShortName">A_DATA[31:0]</obj_property>
+         <obj_property name="ObjectShortName">A_DATA[31:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_orchid/DUT/orchid_i/orchid_0/inst/I_orchid_sync_a2b/A_REQ" type="logic">
+         <obj_property name="ElementShortName">A_REQ</obj_property>
+         <obj_property name="ObjectShortName">A_REQ</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_orchid/DUT/orchid_i/orchid_0/inst/I_orchid_sync_a2b/b2a_ack" type="logic">
+         <obj_property name="ElementShortName">b2a_ack</obj_property>
+         <obj_property name="ObjectShortName">b2a_ack</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_orchid/DUT/orchid_i/orchid_0/inst/I_orchid_sync_a2b/b2a_ack_sync0" type="logic">
+         <obj_property name="ElementShortName">b2a_ack_sync0</obj_property>
+         <obj_property name="ObjectShortName">b2a_ack_sync0</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_orchid/DUT/orchid_i/orchid_0/inst/I_orchid_sync_a2b/b2a_ack_sync1" type="logic">
+         <obj_property name="ElementShortName">b2a_ack_sync1</obj_property>
+         <obj_property name="ObjectShortName">b2a_ack_sync1</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_orchid/DUT/orchid_i/orchid_0/inst/I_orchid_sync_a2b/a2b_req" type="logic">
+         <obj_property name="ElementShortName">a2b_req</obj_property>
+         <obj_property name="ObjectShortName">a2b_req</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_orchid/DUT/orchid_i/orchid_0/inst/I_orchid_sync_a2b/B_CLK" type="logic">
+         <obj_property name="ElementShortName">B_CLK</obj_property>
+         <obj_property name="ObjectShortName">B_CLK</obj_property>
+         <obj_property name="CustomSignalColor">#00FFFF</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_orchid/DUT/orchid_i/orchid_0/inst/I_orchid_sync_a2b/a2b_req_sync0" type="logic">
+         <obj_property name="ElementShortName">a2b_req_sync0</obj_property>
+         <obj_property name="ObjectShortName">a2b_req_sync0</obj_property>
+         <obj_property name="CustomSignalColor">#00FFFF</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_orchid/DUT/orchid_i/orchid_0/inst/I_orchid_sync_a2b/a2b_req_sync1" type="logic">
+         <obj_property name="ElementShortName">a2b_req_sync1</obj_property>
+         <obj_property name="ObjectShortName">a2b_req_sync1</obj_property>
+         <obj_property name="CustomSignalColor">#00FFFF</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_orchid/DUT/orchid_i/orchid_0/inst/I_orchid_sync_a2b/a2b_req_sync2" type="logic">
+         <obj_property name="ElementShortName">a2b_req_sync2</obj_property>
+         <obj_property name="ObjectShortName">a2b_req_sync2</obj_property>
+         <obj_property name="CustomSignalColor">#00FFFF</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_orchid/DUT/orchid_i/orchid_0/inst/I_orchid_sync_a2b/sample_en" type="logic">
+         <obj_property name="ElementShortName">sample_en</obj_property>
+         <obj_property name="ObjectShortName">sample_en</obj_property>
+         <obj_property name="CustomSignalColor">#00FFFF</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_orchid/DUT/orchid_i/orchid_0/inst/I_orchid_sync_a2b/B_DATA_VALID" type="logic">
+         <obj_property name="ElementShortName">B_DATA_VALID</obj_property>
+         <obj_property name="ObjectShortName">B_DATA_VALID</obj_property>
+         <obj_property name="CustomSignalColor">#00FFFF</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_orchid/DUT/orchid_i/orchid_0/inst/I_orchid_sync_a2b/B_DATA" type="array">
+         <obj_property name="ElementShortName">B_DATA[31:0]</obj_property>
+         <obj_property name="ObjectShortName">B_DATA[31:0]</obj_property>
+         <obj_property name="CustomSignalColor">#00FFFF</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+   </wvobject>
+   <wvobject fp_name="group162" type="group">
+      <obj_property name="label">ORCHID</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <obj_property name="isExpanded"></obj_property>
+      <wvobject fp_name="/tb_orchid/DUT/orchid_i/orchid_0/inst/I_orchid_core/CLK" type="logic">
+         <obj_property name="ElementShortName">CLK</obj_property>
+         <obj_property name="ObjectShortName">CLK</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_orchid/DUT/orchid_i/orchid_0/inst/I_orchid_core/reset" type="logic">
+         <obj_property name="ElementShortName">reset</obj_property>
+         <obj_property name="ObjectShortName">reset</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_orchid/DUT/orchid_i/orchid_0/inst/I_orchid_core/start" type="logic">
+         <obj_property name="ElementShortName">start</obj_property>
+         <obj_property name="ObjectShortName">start</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_orchid/DUT/orchid_i/orchid_0/inst/I_orchid_core/dwell_n_cycles_mode00" type="array">
+         <obj_property name="ElementShortName">dwell_n_cycles_mode00[19:0]</obj_property>
+         <obj_property name="ObjectShortName">dwell_n_cycles_mode00[19:0]</obj_property>
+         <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_orchid/DUT/orchid_i/orchid_0/inst/I_orchid_core/dwell_n_cycles_normal" type="array">
+         <obj_property name="ElementShortName">dwell_n_cycles_normal[19:0]</obj_property>
+         <obj_property name="ObjectShortName">dwell_n_cycles_normal[19:0]</obj_property>
+         <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="group149" type="group">
+         <obj_property name="label">SCAN SEQ FSM</obj_property>
+         <obj_property name="DisplayName">label</obj_property>
+         <obj_property name="isExpanded"></obj_property>
+         <wvobject fp_name="/tb_orchid/DUT/orchid_i/orchid_0/inst/I_orchid_core/I_orchid_fsm_scan_seq/mode_q" type="array">
+            <obj_property name="ElementShortName">mode_q[1:0]</obj_property>
+            <obj_property name="ObjectShortName">mode_q[1:0]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/tb_orchid/DUT/orchid_i/orchid_0/inst/I_orchid_core/I_orchid_fsm_scan_seq/PROG_START" type="logic">
+            <obj_property name="ElementShortName">PROG_START</obj_property>
+            <obj_property name="ObjectShortName">PROG_START</obj_property>
+         </wvobject>
+         <wvobject fp_name="/tb_orchid/DUT/orchid_i/orchid_0/inst/I_orchid_core/I_orchid_fsm_scan_seq/PROG_DONE" type="logic">
+            <obj_property name="ElementShortName">PROG_DONE</obj_property>
+            <obj_property name="ObjectShortName">PROG_DONE</obj_property>
+         </wvobject>
+         <wvobject fp_name="/tb_orchid/DUT/orchid_i/orchid_0/inst/I_orchid_core/I_orchid_fsm_scan_seq/FORCE_ZEROS" type="logic">
+            <obj_property name="ElementShortName">FORCE_ZEROS</obj_property>
+            <obj_property name="ObjectShortName">FORCE_ZEROS</obj_property>
+         </wvobject>
+         <wvobject fp_name="/tb_orchid/DUT/orchid_i/orchid_0/inst/I_orchid_core/I_orchid_fsm_scan_seq/TABLE_SEL" type="array">
+            <obj_property name="ElementShortName">TABLE_SEL[1:0]</obj_property>
+            <obj_property name="ObjectShortName">TABLE_SEL[1:0]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/tb_orchid/DUT/orchid_i/orchid_0/inst/I_orchid_core/I_orchid_fsm_scan_seq/POL" type="logic">
+            <obj_property name="ElementShortName">POL</obj_property>
+            <obj_property name="ObjectShortName">POL</obj_property>
+         </wvobject>
+         <wvobject fp_name="/tb_orchid/DUT/orchid_i/orchid_0/inst/I_orchid_core/I_orchid_fsm_scan_seq/TP1" type="logic">
+            <obj_property name="ElementShortName">TP1</obj_property>
+            <obj_property name="ObjectShortName">TP1</obj_property>
+         </wvobject>
+         <wvobject fp_name="/tb_orchid/DUT/orchid_i/orchid_0/inst/I_orchid_core/I_orchid_fsm_scan_seq/state" type="array">
+            <obj_property name="ElementShortName">state[4:0]</obj_property>
+            <obj_property name="ObjectShortName">state[4:0]</obj_property>
+            <obj_property name="CustomSignalColor">#FF00FF</obj_property>
+            <obj_property name="UseCustomSignalColor">true</obj_property>
+            <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+         </wvobject>
+         <wvobject fp_name="/tb_orchid/DUT/orchid_i/orchid_0/inst/I_orchid_core/I_orchid_fsm_scan_seq/cnt" type="array">
+            <obj_property name="ElementShortName">cnt[19:0]</obj_property>
+            <obj_property name="ObjectShortName">cnt[19:0]</obj_property>
+            <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+         </wvobject>
+         <wvobject fp_name="/tb_orchid/DUT/orchid_i/orchid_0/inst/I_orchid_core/I_orchid_fsm_scan_seq/wait_for_dwell" type="logic">
+            <obj_property name="ElementShortName">wait_for_dwell</obj_property>
+            <obj_property name="ObjectShortName">wait_for_dwell</obj_property>
+         </wvobject>
+         <wvobject fp_name="/tb_orchid/DUT/orchid_i/orchid_0/inst/I_orchid_core/I_orchid_fsm_scan_seq/reset_cnt" type="logic">
+            <obj_property name="ElementShortName">reset_cnt</obj_property>
+            <obj_property name="ObjectShortName">reset_cnt</obj_property>
+         </wvobject>
+         <wvobject fp_name="/tb_orchid/DUT/orchid_i/orchid_0/inst/I_orchid_core/I_orchid_fsm_scan_seq/pol_cnt_done" type="logic">
+            <obj_property name="ElementShortName">pol_cnt_done</obj_property>
+            <obj_property name="ObjectShortName">pol_cnt_done</obj_property>
+         </wvobject>
+         <wvobject fp_name="/tb_orchid/DUT/orchid_i/orchid_0/inst/I_orchid_core/I_orchid_fsm_scan_seq/tp1_cnt_done" type="logic">
+            <obj_property name="ElementShortName">tp1_cnt_done</obj_property>
+            <obj_property name="ObjectShortName">tp1_cnt_done</obj_property>
+         </wvobject>
+         <wvobject fp_name="/tb_orchid/DUT/orchid_i/orchid_0/inst/I_orchid_core/I_orchid_fsm_scan_seq/dwell_cnt_done" type="logic">
+            <obj_property name="ElementShortName">dwell_cnt_done</obj_property>
+            <obj_property name="ObjectShortName">dwell_cnt_done</obj_property>
+         </wvobject>
+         <wvobject fp_name="/tb_orchid/DUT/orchid_i/orchid_0/inst/I_orchid_core/I_orchid_fsm_scan_seq/dwell_expired" type="logic">
+            <obj_property name="ElementShortName">dwell_expired</obj_property>
+            <obj_property name="ObjectShortName">dwell_expired</obj_property>
+         </wvobject>
+      </wvobject>
+      <wvobject fp_name="group163" type="group">
+         <obj_property name="label">DATA FSM</obj_property>
+         <obj_property name="DisplayName">label</obj_property>
+         <wvobject fp_name="/tb_orchid/DUT/orchid_i/orchid_0/inst/I_orchid_core/I_orchid_fsm_scan_seq/PROG_START" type="logic">
+            <obj_property name="ElementShortName">PROG_START</obj_property>
+            <obj_property name="ObjectShortName">PROG_START</obj_property>
+         </wvobject>
+         <wvobject fp_name="/tb_orchid/DUT/orchid_i/orchid_0/inst/I_orchid_core/I_orchid_fsm_lvds_data/state" type="array">
+            <obj_property name="ElementShortName">state[2:0]</obj_property>
+            <obj_property name="ObjectShortName">state[2:0]</obj_property>
+            <obj_property name="CustomSignalColor">#FF00FF</obj_property>
+            <obj_property name="UseCustomSignalColor">true</obj_property>
+         </wvobject>
+         <wvobject fp_name="/tb_orchid/DUT/orchid_i/orchid_0/inst/I_orchid_core/I_orchid_fsm_lvds_data/cnt" type="array">
+            <obj_property name="ElementShortName">cnt[3:0]</obj_property>
+            <obj_property name="ObjectShortName">cnt[3:0]</obj_property>
+            <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+         </wvobject>
+         <wvobject fp_name="/tb_orchid/DUT/orchid_i/orchid_0/inst/I_orchid_core/I_orchid_fsm_lvds_data/lvds_clk_phase" type="logic">
+            <obj_property name="ElementShortName">lvds_clk_phase</obj_property>
+            <obj_property name="ObjectShortName">lvds_clk_phase</obj_property>
+         </wvobject>
+         <wvobject fp_name="/tb_orchid/DUT/orchid_i/orchid_0/inst/I_orchid_core/I_orchid_fsm_scan_seq/PROG_DONE" type="logic">
+            <obj_property name="ElementShortName">PROG_DONE</obj_property>
+            <obj_property name="ObjectShortName">PROG_DONE</obj_property>
+         </wvobject>
+         <wvobject fp_name="/tb_orchid/DUT/orchid_i/orchid_0/inst/I_orchid_core/I_orchid_fsm_lvds_data/STEP" type="array">
+            <obj_property name="ElementShortName">STEP[7:0]</obj_property>
+            <obj_property name="ObjectShortName">STEP[7:0]</obj_property>
+            <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+         </wvobject>
+         <wvobject fp_name="/tb_orchid/DUT/orchid_i/orchid_0/inst/I_orchid_core/I_orchid_fsm_lvds_data/BIT_SEL" type="array">
+            <obj_property name="ElementShortName">BIT_SEL[2:0]</obj_property>
+            <obj_property name="ObjectShortName">BIT_SEL[2:0]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/tb_orchid/DUT/orchid_i/orchid_0/inst/I_orchid_core/I_orchid_fsm_lvds_data/LVDS_CLK" type="logic">
+            <obj_property name="ElementShortName">LVDS_CLK</obj_property>
+            <obj_property name="ObjectShortName">LVDS_CLK</obj_property>
+         </wvobject>
+         <wvobject fp_name="/tb_orchid/DUT/orchid_i/orchid_0/inst/I_orchid_core/I_orchid_fsm_lvds_data/RST_EN" type="logic">
+            <obj_property name="ElementShortName">RST_EN</obj_property>
+            <obj_property name="ObjectShortName">RST_EN</obj_property>
+         </wvobject>
+         <wvobject fp_name="/tb_orchid/DUT/orchid_i/orchid_0/inst/I_orchid_core/I_orchid_fsm_lvds_data/TX_EN" type="logic">
+            <obj_property name="ElementShortName">TX_EN</obj_property>
+            <obj_property name="ObjectShortName">TX_EN</obj_property>
+         </wvobject>
+      </wvobject>
+      <wvobject fp_name="group204" type="group">
+         <obj_property name="label">DATA MUX</obj_property>
+         <obj_property name="DisplayName">label</obj_property>
+         <wvobject fp_name="/tb_orchid/DUT/orchid_i/orchid_0/inst/I_orchid_core/I_orchid_data_mux/b0" type="array">
+            <obj_property name="ElementShortName">b0[7:0]</obj_property>
+            <obj_property name="ObjectShortName">b0[7:0]</obj_property>
+            <obj_property name="CustomSignalColor">#FFA500</obj_property>
+            <obj_property name="UseCustomSignalColor">true</obj_property>
+         </wvobject>
+         <wvobject fp_name="/tb_orchid/DUT/orchid_i/orchid_0/inst/I_orchid_core/I_orchid_data_mux/b1" type="array">
+            <obj_property name="ElementShortName">b1[7:0]</obj_property>
+            <obj_property name="ObjectShortName">b1[7:0]</obj_property>
+            <obj_property name="CustomSignalColor">#FFA500</obj_property>
+            <obj_property name="UseCustomSignalColor">true</obj_property>
+         </wvobject>
+         <wvobject fp_name="/tb_orchid/DUT/orchid_i/orchid_0/inst/I_orchid_core/I_orchid_data_mux/b2" type="array">
+            <obj_property name="ElementShortName">b2[7:0]</obj_property>
+            <obj_property name="ObjectShortName">b2[7:0]</obj_property>
+            <obj_property name="CustomSignalColor">#FFA500</obj_property>
+            <obj_property name="UseCustomSignalColor">true</obj_property>
+         </wvobject>
+         <wvobject fp_name="/tb_orchid/DUT/orchid_i/orchid_0/inst/I_orchid_core/I_orchid_data_mux/b3" type="array">
+            <obj_property name="ElementShortName">b3[7:0]</obj_property>
+            <obj_property name="ObjectShortName">b3[7:0]</obj_property>
+            <obj_property name="CustomSignalColor">#FFA500</obj_property>
+            <obj_property name="UseCustomSignalColor">true</obj_property>
+         </wvobject>
+         <wvobject fp_name="/tb_orchid/DUT/orchid_i/orchid_0/inst/I_orchid_core/I_orchid_data_mux/b4" type="array">
+            <obj_property name="ElementShortName">b4[7:0]</obj_property>
+            <obj_property name="ObjectShortName">b4[7:0]</obj_property>
+            <obj_property name="CustomSignalColor">#FFA500</obj_property>
+            <obj_property name="UseCustomSignalColor">true</obj_property>
+         </wvobject>
+         <wvobject fp_name="/tb_orchid/DUT/orchid_i/orchid_0/inst/I_orchid_core/I_orchid_data_mux/b5" type="array">
+            <obj_property name="ElementShortName">b5[7:0]</obj_property>
+            <obj_property name="ObjectShortName">b5[7:0]</obj_property>
+            <obj_property name="CustomSignalColor">#FFA500</obj_property>
+            <obj_property name="UseCustomSignalColor">true</obj_property>
+         </wvobject>
+      </wvobject>
+      <wvobject fp_name="/tb_orchid/DUT/orchid_i/orchid_0/inst/I_orchid_core/I_orchid_data_mux/lvds_data_muxed" type="array">
+         <obj_property name="ElementShortName">lvds_data_muxed[5:0]</obj_property>
+         <obj_property name="ObjectShortName">lvds_data_muxed[5:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_orchid/DUT/orchid_i/orchid_0/inst/I_orchid_core/I_orchid_data_mux/LVDS_DATA" type="array">
+         <obj_property name="ElementShortName">LVDS_DATA[5:0]</obj_property>
+         <obj_property name="ObjectShortName">LVDS_DATA[5:0]</obj_property>
+         <obj_property name="Reversed">false</obj_property>
+      </wvobject>
+   </wvobject>
+   <wvobject fp_name="group192" type="group">
+      <obj_property name="label">IO</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <obj_property name="isExpanded"></obj_property>
+      <wvobject fp_name="/tb_orchid/DUT/LVDS_CLK_P" type="logic">
+         <obj_property name="ElementShortName">LVDS_CLK_P</obj_property>
+         <obj_property name="ObjectShortName">LVDS_CLK_P</obj_property>
+         <obj_property name="CustomSignalColor">#FFD700</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_orchid/DUT/LVDS_0P" type="logic">
+         <obj_property name="ElementShortName">LVDS_0P</obj_property>
+         <obj_property name="ObjectShortName">LVDS_0P</obj_property>
+         <obj_property name="CustomSignalColor">#FFD700</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_orchid/DUT/LVDS_1P" type="logic">
+         <obj_property name="ElementShortName">LVDS_1P</obj_property>
+         <obj_property name="ObjectShortName">LVDS_1P</obj_property>
+         <obj_property name="CustomSignalColor">#FFD700</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_orchid/DUT/LVDS_2P" type="logic">
+         <obj_property name="ElementShortName">LVDS_2P</obj_property>
+         <obj_property name="ObjectShortName">LVDS_2P</obj_property>
+         <obj_property name="CustomSignalColor">#FFD700</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_orchid/DUT/LVDS_3P" type="logic">
+         <obj_property name="ElementShortName">LVDS_3P</obj_property>
+         <obj_property name="ObjectShortName">LVDS_3P</obj_property>
+         <obj_property name="CustomSignalColor">#FFD700</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_orchid/DUT/LVDS_4P" type="logic">
+         <obj_property name="ElementShortName">LVDS_4P</obj_property>
+         <obj_property name="ObjectShortName">LVDS_4P</obj_property>
+         <obj_property name="CustomSignalColor">#FFD700</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_orchid/DUT/LVDS_5P" type="logic">
+         <obj_property name="ElementShortName">LVDS_5P</obj_property>
+         <obj_property name="ObjectShortName">LVDS_5P</obj_property>
+         <obj_property name="CustomSignalColor">#FFD700</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_orchid/DUT/POL" type="logic">
+         <obj_property name="ElementShortName">POL</obj_property>
+         <obj_property name="ObjectShortName">POL</obj_property>
+         <obj_property name="CustomSignalColor">#FFD700</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_orchid/DUT/TP1" type="logic">
+         <obj_property name="ElementShortName">TP1</obj_property>
+         <obj_property name="ObjectShortName">TP1</obj_property>
+         <obj_property name="CustomSignalColor">#FFD700</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+   </wvobject>
+</wave_config>

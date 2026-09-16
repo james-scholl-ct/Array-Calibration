@@ -1,0 +1,18 @@
+
+cd unittests/
+rm -rf orchid/
+
+# list tests in a module
+nosetests --collect-only --verbose --nocapture test_orchid.py
+
+# run test(s), building simulation objects beforehand (building is off by default)
+nosetests test_orchid.py -m axi_loopback --tc=build_clean:1
+
+# run test(s) using a custom regexp for the test name (no building)
+nosetests test_orchid.py -m axi_loopback
+
+# view waveforms
+cd orchid/
+xsim -gui -view ~/git_repos/zynq_dev/sim_src/tb_orchid_behav.wcfg tb_orchid
+
+cd ..

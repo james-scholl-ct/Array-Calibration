@@ -1,0 +1,8 @@
+scipy
+matplotlib
+paramiko
+scp
+pyyaml
+numpy
+jinja2
+pandas

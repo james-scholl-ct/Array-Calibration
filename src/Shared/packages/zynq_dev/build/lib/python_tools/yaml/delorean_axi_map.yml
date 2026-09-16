@@ -1,0 +1,356 @@
+
+base_addrs:
+    # LCM must be aligned to 4KiB boundaries (12 addr LSBs zero).
+    lcm:        0x43C0_0000
+    # SPI must be aligned to 4KiB boundaries (12 addr LSBs zero).
+    spi:        0x43C1_0000
+    # CDMA must be aligned to 128-byte boundaries (7 addr LSBs zero).
+    cdma:       0x7E20_0000
+    # BRAM CTRL must be aligned to 4KiB boundaries (12 addr LSBs zero).
+    bram_ctrl:  0x8000_0000
+    hp0:        0x1000_0000
+
+fields:
+    lcm:
+        lcd_en:
+            offset: 0x00
+            pos: 0
+            size: 1
+        tcon_reset:
+            offset: 0x04
+            pos: 0
+            size: 1
+        tcon_enable:
+            offset: 0x04
+            pos: 1
+            size: 1
+        apply0:
+            offset: 0x08
+            pos: 0
+            size: 1
+        apply1:
+            offset: 0x0c
+            pos: 0
+            size: 1
+        tp1_period:
+            offset: 0x10
+            pos: 0
+            size: 24
+        reset_code:
+            offset: 0x14
+            pos: 0
+            size: 8
+            rd_mod_wr: True
+        pol_finish_ovr:
+            offset: 0x14
+            pos: 8
+            size: 1
+            rd_mod_wr: True
+        tp1_done_high:
+            offset: 0x14
+            pos: 9
+            size: 1
+            rd_mod_wr: True
+        aux_code_even:
+            offset: 0x18
+            pos: 0
+            size: 8
+            rd_mod_wr: True
+        aux_code_odd:
+            offset: 0x18
+            pos: 8
+            size: 8
+            rd_mod_wr: True
+        ito_tc:
+            offset: 0x1c
+            pos: 0
+            size: 18
+            rd_mod_wr: True
+        ito_invert:
+            offset: 0x1c
+            pos: 18
+            size: 1
+            rd_mod_wr: True
+        ito_async:
+            offset: 0x1c
+            pos: 19
+            size: 1
+            rd_mod_wr: True
+        n_steps:
+            offset: 0x20
+            pos: 0
+            size: 8
+            rd_mod_wr: True
+        rst_pw:
+            offset: 0x20
+            pos: 8
+            size: 4
+            rd_mod_wr: True
+        tx_wait:
+            offset: 0x20
+            pos: 12
+            size: 4
+            rd_mod_wr: True
+        tp1_pw:
+            offset: 0x20
+            pos: 16
+            size: 8
+            rd_mod_wr: True
+        pol_ovr_en:
+            offset: 0x24
+            pos: 0
+            size: 1
+            rd_mod_wr: True
+        pol_ovr_val:
+            offset: 0x24
+            pos: 1
+            size: 1
+            rd_mod_wr: True
+        prog_trigger_mode:
+            offset: 0x28
+            pos: 0
+            size: 1
+        laser_enable:
+            offset: 0x30
+            pos: 0
+            size: 1
+        laser_start:
+            offset: 0x30
+            pos: 0
+            size: 1
+        laser_pw_sel:
+            offset: 0x34
+            pos: 0
+            size: 16
+        clks_per_interval:
+            offset: 0x3c
+            pos: 0
+            size: 8
+        pulses_per_frame:
+            offset: 0x40
+            pos: 0
+            size: 8
+        intervals_per_frame:
+            offset: 0x44
+            pos: 0
+            size: 16
+        tx_pwr_en:
+            offset: 0x48
+            pos: 0
+            size: 1
+            rd_mod_wr: True
+        tx_pwr_switch:
+            offset: 0x48
+            pos: 1
+            size: 1
+            rd_mod_wr: True
+        clk_freq:
+            offset: 0x60
+            pos: 0
+            size: 16
+        loading:
+            offset: 0x64
+            pos: 0
+            size: 2
+        tcon_state_idle:
+            offset: 0x68
+            pos: 0
+            size: 1
+        tcon_state_init_tp1_1h:
+            offset: 0x68
+            pos: 1
+            size: 1
+        tcon_state_init_tp1_1l:
+            offset: 0x68
+            pos: 2
+            size: 1
+        tcon_state_init_tp1_2h:
+            offset: 0x68
+            pos: 3
+            size: 1
+        tcon_state_init_tp1_2l:
+            offset: 0x68
+            pos: 4
+            size: 1
+        tcon_state_init_tp1_3h:
+            offset: 0x68
+            pos: 5
+            size: 1
+        tcon_state_init_prog:
+            offset: 0x68
+            pos: 6
+            size: 1
+        tcon_state_init_tp1_4h:
+            offset: 0x68
+            pos: 7
+            size: 1
+        tcon_state_done:
+            offset: 0x68
+            pos: 8
+            size: 1
+        tcon_state_prog:
+            offset: 0x68
+            pos: 9
+            size: 1
+        tcon_state_wait:
+            offset: 0x68
+            pos: 10
+            size: 1
+        tcon_state_pol:
+            offset: 0x68
+            pos: 11
+            size: 1
+        tcon_state_tp1:
+            offset: 0x68
+            pos: 12
+            size: 1
+        tcon_state_prog_fin:
+            offset: 0x68
+            pos: 13
+            size: 1
+        tcon_state_wait_fin:
+            offset: 0x68
+            pos: 14
+            size: 1
+        tcon_state_pol_fin:
+            offset: 0x68
+            pos: 15
+            size: 1
+        tcon_state_tp1_fin:
+            offset: 0x68
+            pos: 16
+            size: 1
+        apply_cache:
+            offset: 0x6c
+            pos: 0
+            size: 2
+    spi:
+        rx_switch:
+            offset: 0x00
+            pos: 0
+            size: 16
+        tx_switch:
+            offset: 0x20
+            pos: 0
+            size: 16
+        clk_div_adc:
+            offset: 0x60
+            pos: 0
+            size: 5
+            rd_mod_wr: True
+        clk_div_switch:
+            offset: 0x60
+            pos: 5
+            size: 5
+            rd_mod_wr: True
+        clk_div_tmp:
+            offset: 0x60
+            pos: 10
+            size: 5
+            rd_mod_wr: True
+        clk_div_pot_ito:
+            offset: 0x60
+            pos: 15
+            size: 5
+            rd_mod_wr: True
+        clk_div_pot_tx:
+            offset: 0x60
+            pos: 20
+            size: 5
+            rd_mod_wr: True
+        fill_cmd_fifo:
+            offset: 0x64
+            pos: 0
+            size: 1
+            rd_mod_wr: True
+        daisy_en:
+            offset: 0x64
+            pos: 1
+            size: 1
+            rd_mod_wr: True
+        adc_ch_sel:
+            offset: 0x64
+            pos: 2
+            size: 2
+            rd_mod_wr: True
+        cmd_fifo:
+            offset: 0x68
+            pos: 0
+            size: 32
+        rsp_fifo_1:
+            offset: 0x74
+            pos: 0
+            size: 32
+        rsp_fifo_0:
+            offset: 0x78
+            pos: 0
+            size: 32
+        cmd_fifo_count:
+            offset: 0x7c
+            pos: 0
+            size: 4
+        cmd_fifo_full:
+            offset: 0x7c
+            pos: 4
+            size: 1
+
+spi_slave_map:
+    adc: 0
+    switch: 1
+    temp: 2
+    pot_ito: 3
+    pot_tx: 4
+
+spi_cmd_map:
+    standard: 0
+    jumbo: 1
+    stream: 2
+
+spi_switch_map:
+    rx:
+        spi_ch: 0
+        spi_reg: rx_switch
+        signal_pos:
+            rx_out_1021: 0
+            rx_out_1020: 1
+            rx_out_1018: 2
+            rx_out_1025: 3
+            rx_out_1026: 4
+            rx_out_1019: 5
+            rx_out_4: 6
+            rx_out_3: 7
+            rx_out_2: 8
+            rx_out_1: 9
+            rx_rtd_temp: 10
+            ito_dr_mon: 11
+            rx_pol: 12
+            rx_tp1: 13
+            ci: 14
+            tp177: 15
+    tx:
+        spi_ch: 1
+        spi_reg: tx_switch
+        signal_pos:
+            tx_out_1021: 0
+            tx_out_1020: 1
+            tx_out_1018: 2
+            tx_out_1025: 3
+            tx_out_1026: 4
+            tx_out_1019: 5
+            tx_out_4: 6
+            tx_out_3: 7
+            tx_out_2: 8
+            tx_out_1: 9
+            tx_rtd_temp: 10
+            vddatx: 11
+            tx_pol: 12
+            tx_tp1: 13
+            vddah: 14
+            tp159: 15
+
+adc_ch_map:
+    # format is [spi_ch, adc_ch_sel]
+    tx_curr_sense: [0, 0]
+    rx_curr_sense: [0, 1]
+    tx_switch_out: [1, 0]
+    rx_switch_out: [1, 1]

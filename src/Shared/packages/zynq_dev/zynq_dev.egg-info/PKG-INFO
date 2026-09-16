@@ -1,0 +1,7 @@
+Metadata-Version: 2.1
+Name: zynq-dev
+Version: 0.1.0
+Summary: Python libraries to interact with Lumotive's Zynq FPGA hardware
+Home-page: bitbucket.org/lumotive/zynq_dev
+Author: Tyler Williamson
+Author-email: tyler.williamson@lumotive.com
