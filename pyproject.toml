@@ -1,11 +1,18 @@
 [project]
 name = "reflectek-tools"
 version = "0.1.0"
-description = "Shared utilities for reflectarray SPSA experiments"
+description = "Shared utilities for reflectarray optimizations"
+
+dependencies = [
+    "numpy",
+    "scipy",
+    "pyvisa",
+    "pywin32; sys_platform == 'win32'",
+]
 
 [build-system]
 requires = ["setuptools"]
 build-backend = "setuptools.build_meta"
 
-[tool.setuptools]
-package-dir = {"" = "src"}
+[tool.setuptools.packages.find]
+where = ["src"]

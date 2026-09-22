@@ -5,8 +5,6 @@ Created on Wed Dec 31 11:17:10 2025
 @author: SchollJamesAC3CARILL
 """
 import win32com.client
-from win32com.client import VARIANT
-import pythoncom
 import gc
 import numpy as np
 from pathlib import Path
