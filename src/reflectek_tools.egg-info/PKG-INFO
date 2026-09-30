@@ -1,4 +1,8 @@
 Metadata-Version: 2.4
 Name: reflectek-tools
 Version: 0.1.0
-Summary: Shared utilities for reflectarray SPSA experiments
+Summary: Shared utilities for reflectarray optimizations
+Requires-Dist: numpy
+Requires-Dist: scipy
+Requires-Dist: pyvisa_py
+Requires-Dist: pywin32; sys_platform == "win32"

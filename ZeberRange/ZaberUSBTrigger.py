@@ -13,6 +13,8 @@ import time
 import matplotlib.pyplot as plt
 # from gpiozero import OutputDevice
 import serial
+from datetime import datetime
+from ElementController3000 import App 
 
 class UsbTrigger:
     def __init__(self, port, pulse_duration=0.002):
@@ -161,8 +163,10 @@ class VnaInstance:
         print(f"Got {len(raw)} values, expected {self.POINTS *2}")
         data = np.array(raw).reshape(-1, 2)
         complex_s = data[:, 0] + 1j * data[:, 1]
+        phase = np.round(np.angle(complex_s, deg=True), 2)
+        magnitude = 20*np.log10(np.abs(complex_s))
         
-        return 20*np.log10(np.abs(complex_s))
+        return phase, magnitude
     
 
 
@@ -214,6 +218,7 @@ class Zaber:
         
 def run_scan(zaber, vna, pin, span_deg, center_deg, num_angle_points, start_freq_ghz, stop_freq_ghz, num_freq_points): 
         magnitude = []
+        phase = []
         position_axis = []
         speed = zaber.speed
         accel = zaber.accel
@@ -259,7 +264,7 @@ def run_scan(zaber, vna, pin, span_deg, center_deg, num_angle_points, start_freq
       
         python_time = stop-start
         #print(f"Scan time={python_time}s")
-        magnitude = vna.stop_and_read_complex_data()
+        phase, magnitude = vna.stop_and_read_complex_data()
         
         time_axis =  np.linspace(0, len(magnitude) * (vna.sample_interval), len(magnitude))
         time_axis = time_axis[(time_axis <= python_time)]
@@ -269,13 +274,14 @@ def run_scan(zaber, vna, pin, span_deg, center_deg, num_angle_points, start_freq
         position_axis = position_axis[position_axis <= stop_position]
 
         magnitude = magnitude[0:len(position_axis)]
+        phase = phase[0:len(position_axis)]
         
         zaber.axis.home()
 
-        return magnitude, position_axis
+        return phase, magnitude, position_axis
         
 
-def main():
+def main(volt):
     port = "COM4"
     # port="/dev/ttyUSB0"
     vna_ip_addr = "TCPIP0::192.168.6.150::inst0::INSTR"
@@ -295,7 +301,7 @@ def main():
     vna = None
     
     pin = UsbTrigger(port="COM3")#OutputDevice(16)
-    
+    timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
     try:
         vna = VnaInstance(vna_ip_addr)
         #vna=1
@@ -303,11 +309,14 @@ def main():
         vna.setup_cw_time_sweep(start_freq_ghz, cw_points, ifbw_hz)
         zaber = Zaber(port)
         for i in range(1):
-                magnitude, position_axis = run_scan(zaber, vna, pin, span_deg, center_deg, num_angle_points, start_freq_ghz, stop_freq_ghz, num_freq_points)
+                phase, magnitude, position_axis = run_scan(zaber, vna, pin, span_deg, center_deg, num_angle_points, start_freq_ghz, stop_freq_ghz, num_freq_points)
                 peak_loc.append(position_axis[np.argmax(magnitude)])
                 #time.sleep(3)
+                
+        np.savez_compressed(rf"C:\Users\uconn\Downloads\RadiationPatVsVoltage\2026-06-04\MagVsAz_{volt}V.npz", phase=phase, magnitude=magnitude, position_axis=position_axis)
         plt.figure()
         plt.plot(position_axis, magnitude)
+        # plt.savefig(rf"C:\Users\uconn\Downloads\PartCoveredMeasurements\Optimized for Geometry\MagVsAz_LeftThird.png")
         plt.xlabel("Azimuth (°)")
         plt.ylabel("Magnitude (dB)")
         plt.title(f"Magnitude Vs Azimuth at {start_freq_ghz/1e9} Ghz")
@@ -321,5 +330,21 @@ def main():
         pin.close()
     
 if __name__ == "__main__":
-    main()
+    # INTERVAL_MINUTES = 10
+    # TOTAL_HOURS = 4
+
+    # interval = INTERVAL_MINUTES * 60
+    # total_runs = (TOTAL_HOURS * 60) // INTERVAL_MINUTES
+
+    # start_time = time.time()
+    app = App()
+    for i in range(11):
+        time.sleep(60)
+        voltages = voltages = np.full((64,32), i)
+        app.send_voltages(voltages,lb_or_hb='lb')
+        main(i)
+        # next_run = start_time + (i + 1) * interval
+        # sleep_for = next_run - time.time()
+        # if sleep_for > 0:
+        #     time.sleep(sleep_for)   
     

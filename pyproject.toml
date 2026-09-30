@@ -6,7 +6,7 @@ description = "Shared utilities for reflectarray optimizations"
 dependencies = [
     "numpy",
     "scipy",
-    "pyvisa",
+    "pyvisa_py",
     "pywin32; sys_platform == 'win32'",
 ]
 

@@ -1,0 +1,69 @@
+Metadata-Version: 2.4
+Name: lcm-testing
+Version: 0.0.13
+Summary: Carillon LCM testing and analysis utilities
+Home-page: https://bitbucket.geost.com/projects/CAR/repos/lcm-testing/
+Author: Rick Patton
+Author-email: rick.patton@geost.com
+License: GEOST Proprietary
+Requires-Python: <3.8, >3.0
+Description-Content-Type: text/markdown
+Requires-Dist: numpy
+Requires-Dist: scipy
+Requires-Dist: matplotlib
+Requires-Dist: pandas
+Requires-Dist: imutils
+Requires-Dist: opencv-python
+Requires-Dist: zernike
+Requires-Dist: h5py
+Requires-Dist: lcm_board @ git+https://bitbucket.geost.com/scm/car/lcm_board.git
+Requires-Dist: lcm_voltage_patterns @ git+https://bitbucket.geost.com/scm/car/lcm_voltage_patterns.git
+Requires-Dist: himax_model @ git+https://bitbucket.geost.com/scm/car/himax_model.git
+Requires-Dist: zynq_dev @ git+https://bitbucket.geost.com/scm/car/zynq_dev.git
+Dynamic: author
+Dynamic: author-email
+Dynamic: description
+Dynamic: description-content-type
+Dynamic: home-page
+Dynamic: license
+Dynamic: requires-dist
+Dynamic: requires-python
+Dynamic: summary
+
+lcm-testing
+===========
+`lcm-testing` is a repository of various files used during testing the LCM chips used in the Carillon project.
+
+Prerequisites
+-------------
+### External
+* Python 3.7
+* `git`
+
+
+Installing
+----------
+This package has only been tested on Windows and it is unknown whether LCM modules or thorlabs_kinesis modules will work on other operating systems, such as Linux.
+To install a local copy of this tool:
+1. `pip install git+https://bitbucket.geost.com/scm/car/lcm-testing.git`
+2. Installation will install the following packages:
+* `numpy`
+* `scipy`
+* `matplotlib`
+* `tkinter`
+* `functools`
+* `pandas`
+* `imutils`
+* `cv2`
+* `zernike`
+3. To use thorlabs_kinesis, the `pythonnet` package must be installed from conda-forge:
+* `conda install -c conda-forge pythonnet`
+
+### Updating
+To update this tool:
+1. Uninstall the package using: `pip uninstall lcm-testing`
+2. Reinstall the package using: `pip install git+https://bitbucket.geost.com/scm/car/lcm-testing.git`
+
+### Usage
+
+Examples still to come...

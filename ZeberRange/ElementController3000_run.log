@@ -1,0 +1,12 @@
+C:\WorkStation\Github\Array-Calibration\ZeberRange\ElementController3000.py:83: SyntaxWarning: "\C" is an invalid escape sequence. Such sequences will not work in the future. Did you mean "\\C"? A raw string is also an option.
+  r"\Carillon Technologies\CTMC Sharepoint - Documents\CTMC - Operations\
+C:\WorkStation\Github\Array-Calibration\ZeberRange\ElementController3000.py:122: SyntaxWarning: "\C" is an invalid escape sequence. Such sequences will not work in the future. Did you mean "\\C"? A raw string is also an option.
+  r"\Carillon Technologies\CTMC Sharepoint - Documents\CTMC - Operations\
+[PING] → 0x01
+[PING] ✓ FW=V70.1.6 ⚠ mismatch
+BATCH 1/2 {'ok': True, 'status': 0, 'status_name': 'OK', 'data': b'\x00\x02\x00\x00', 'error': None} 512
+BATCH 2/2 {'ok': True, 'status': 0, 'status_name': 'OK', 'data': b'\x00\x02\x00\x00', 'error': None} 512
+BATCH 1/4 {'ok': True, 'status': 0, 'status_name': 'OK', 'data': b'\x00\x02\x00\x00', 'error': None} 512
+BATCH 2/4 {'ok': True, 'status': 0, 'status_name': 'OK', 'data': b'\x00\x02\x00\x00', 'error': None} 512
+BATCH 3/4 {'ok': True, 'status': 0, 'status_name': 'OK', 'data': b'\x00\x02\x00\x00', 'error': None} 512
+BATCH 4/4 {'ok': True, 'status': 0, 'status_name': 'OK', 'data': b'\x00\x02\x00\x00', 'error': None} 512

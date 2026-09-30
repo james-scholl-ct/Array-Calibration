@@ -1,0 +1,6 @@
+numpy
+scipy
+pyvisa_py
+
+[:sys_platform == "win32"]
+pywin32

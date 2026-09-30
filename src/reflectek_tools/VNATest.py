@@ -9,8 +9,8 @@ instr = None
 def _ensure_open():
     global rm, instr
     if instr is None:
-        rm = pyvisa.ResourceManager()
-        instr = rm.open_resource("TCPIP0::192.168.6.150::inst0::INSTR")
+        rm = pyvisa.ResourceManager('@py')
+        instr = rm.open_resource("TCPIP0::169.254.232.150::inst0::INSTR")
         instr.timeout = 100000
 
 
@@ -22,7 +22,7 @@ def check_response(label):
     print("ERRORS", instr.query("SYST:ERR?"))
 
 
-def init(start, stop, points):
+def init(start, stop, points, port="S21"):
     _ensure_open()
     print(instr.query("*IDN?").strip())
     time.sleep(1)
@@ -34,7 +34,7 @@ def init(start, stop, points):
     time.sleep(1)
     instr.write(f":SENS1:SWE:POIN {points}")
     time.sleep(1)
-    instr.write(":CALC1:PAR1:DEF S11")
+    instr.write(f":CALC1:PAR1:DEF {port}")
     time.sleep(2)
     instr.write(":SENS:HOLD:FUNC HOLD")
 

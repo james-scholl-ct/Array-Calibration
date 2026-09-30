@@ -14,10 +14,10 @@ import time
 import numpy as np
 
 
-DACMAP_FILENAME = r"/home/carillon/Array-Calibration/ZeberRange/pinout_32x32.xlsx"
+DACMAP_FILENAME = r".\pinout_32x32.xlsx"
 #VOLTAGE_FILENAME
-#PORT = "COM4"
-PORT = "/dev/ttyACM0"
+PORT = "COM5"
+#PORT = "/dev/ttyACM0"
 MAX_V = 10
 MIN_V = 0
 # ─────────────────────────────────────────────
@@ -316,7 +316,8 @@ class App():
 if __name__ == "__main__":  
     app = App()
     #voltages = np.full((64,32), 8)
-    voltages = np.loadtxt("/home/carillon/Downloads/optimize/theta_+20_opt_voltages.csv", delimiter=",") 
+    voltages = np.full((32,32), 0)
+    voltages = np.loadtxt(r"C:\Users\uconn\Downloads\MiliBoxRangeOptimizations\CMA\2026-08-03_60_0\output\voltages_theta60_phi0.csv", delimiter=",") 
     app.send_voltages(voltages, "lb")
     app._disconnect()
     

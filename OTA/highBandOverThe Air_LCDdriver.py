@@ -42,8 +42,8 @@ def main():
         value = (i-1)*2.0
         if i == 0:
             value = 0
-        voltages = lcm_control.make_steering_array(np.full((24, 8), value), 'lb')
-        db.steer(voltages)
+        voltages = lcm_control.make_steering_array(np.full((24, 8), value), 'hb')
+        db.steer(voltages, 'rx')
         print(f"Voltage {value}")
         time.sleep(60)
             
